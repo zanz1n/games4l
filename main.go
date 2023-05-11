@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/games4l/telemetria/logger"
 	"github.com/games4l/telemetria/providers"
 	"github.com/goccy/go-json"
@@ -37,5 +39,5 @@ func main() {
 	app.Use(recover.New())
 	app.Use(cors.New())
 
-	app.Listen(":3333")
+	app.Listen(fmt.Sprintf(":%v", config.Port))
 }
