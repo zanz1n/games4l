@@ -3,14 +3,19 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/games4l/telemetria/logger"
 	"github.com/games4l/telemetria/providers"
+	"github.com/games4l/telemetria/routes"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
+
+var endCh = make(chan os.Signal)
 
 func init() {
 	logger.Init()
@@ -50,5 +55,12 @@ func main() {
 	app.Use(recover.New())
 	app.Use(cors.New())
 
-	app.Listen(fmt.Sprintf(":%v", config.Port))
+	routes.StartRouter(app)
+
+	signal.Notify(endCh, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+
+	go app.Listen(fmt.Sprintf(":%v", config.Port))
+
+	<-endCh
+	routes.ShutdownRouter(app)
 }
