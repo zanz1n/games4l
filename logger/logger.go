@@ -108,8 +108,8 @@ func Http(format string, args ...any) {
 	stdOutLogger.Output(2, fmt.Sprintf(config.HttpPrefix+format, args...))
 }
 
-func Fatal(format string, args ...any) {
-	Error(format, args...)
+func Fatal(args ...any) {
+	stdErrLogger.Println(args...)
 	os.Exit(1)
 }
 
