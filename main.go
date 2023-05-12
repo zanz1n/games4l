@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/games4l/telemetria/logger"
 	"github.com/games4l/telemetria/providers"
@@ -10,6 +11,16 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
+
+func init() {
+	logger.Init()
+
+	if os.Getenv("APP_CONFIG") != "" {
+		providers.AcquireFromEnv()
+	} else {
+		providers.AcquireFromFile(os.Getenv("APP_CONFIG_FILE"))
+	}
+}
 
 func main() {
 	config := providers.GetConfig()

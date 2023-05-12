@@ -9,19 +9,23 @@ import (
 )
 
 type Config struct {
-	Port       uint8  `json:"port"`
+	Port       uint16  `json:"port"`
 	WebhookSig string `json:"webhook_sig"`
 }
 
 var (
-	config   *Config
+	config   Config
 	validate = validator.New()
 )
 
 func parseJSON(buf []byte) {
-	json.Unmarshal(buf, &config)
+	err := json.Unmarshal(buf, &config)
 
-	err := validate.Struct(config)
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
+
+	err = validate.Struct(config)
 
 	if err != nil {
 		logger.Fatal("invalid config")
@@ -29,7 +33,7 @@ func parseJSON(buf []byte) {
 }
 
 func GetConfig() *Config {
-	return config
+	return &config
 }
 
 func AcquireFromFile(path string) {
