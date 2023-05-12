@@ -9,8 +9,9 @@ import (
 )
 
 type Config struct {
-	Port       uint16  `json:"port"`
-	WebhookSig string `json:"webhook_sig"`
+	Port       uint16 `json:"port,omitempty"`
+	WebhookSig string `json:"webhook_sig,omitempty"`
+	MongoUri   string `json:"mongo_uri,omitempty"`
 }
 
 var (
@@ -22,7 +23,7 @@ func parseJSON(buf []byte) {
 	err := json.Unmarshal(buf, &config)
 
 	if err != nil {
-		logger.Fatal(err.Error())
+		logger.Fatal(err)
 	}
 
 	err = validate.Struct(config)
