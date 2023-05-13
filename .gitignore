@@ -1,0 +1,7 @@
+dist/
+config.json
+.env
+*.log
+*.bin
+.idea/
+.vscode/
