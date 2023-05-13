@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	Port       uint16 `json:"port,omitempty"`
-	WebhookSig string `json:"webhook_sig,omitempty"`
-	MongoUri   string `json:"mongo_uri,omitempty"`
+	Port        uint16 `json:"port,omitempty"`
+	WebhookSig  string `json:"webhook_sig,omitempty"`
+	MongoUri    string `json:"mongo_uri,omitempty"`
+	MongoDbName string `json:"mongo_db_name,omitempty"`
 }
 
 var (
