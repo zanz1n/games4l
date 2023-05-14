@@ -109,6 +109,7 @@ func Http(format string, args ...any) {
 }
 
 func Fatal(args ...any) {
+	args = append([]any{config.ErrorPrefix}, args...)
 	stdErrLogger.Println(args...)
 	os.Exit(1)
 }
