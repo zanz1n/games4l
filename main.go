@@ -45,11 +45,6 @@ func main() {
 		return nil
 	})
 
-	app.Hooks().OnShutdown(func() error {
-		logger.Info("Shutting down ...")
-		return nil
-	})
-
 	app.Use(logger.NewFiberMiddleware())
 
 	app.Use(recover.New())
@@ -62,5 +57,6 @@ func main() {
 	go app.Listen(fmt.Sprintf(":%v", config.Port))
 
 	<-endCh
+	logger.Info("Shutting down ...")
 	routes.ShutdownRouter(app)
 }
