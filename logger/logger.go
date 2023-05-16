@@ -118,7 +118,15 @@ func NewFiberMiddleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		start := time.Now()
 
-		c.Next()
+		chainErr := c.Next()
+
+		errHandler := c.App().ErrorHandler
+
+		if chainErr != nil {
+			if err := errHandler(c, chainErr); err != nil {
+				_ = c.SendStatus(fiber.StatusInternalServerError)
+			}
+		}
 
 		end := time.Now()
 
