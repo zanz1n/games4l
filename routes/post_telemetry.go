@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/games4l/telemetria/providers"
+	"github.com/games4l/telemetry-service/providers"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )

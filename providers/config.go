@@ -3,7 +3,7 @@ package providers
 import (
 	"os"
 
-	"github.com/games4l/telemetria/logger"
+	"github.com/games4l/telemetry-service/logger"
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-json"
 )

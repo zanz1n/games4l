@@ -3,7 +3,7 @@ package routes
 import (
 	"fmt"
 
-	"github.com/games4l/telemetria/providers"
+	"github.com/games4l/telemetry-service/providers"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,7 +21,7 @@ func GetTelemetryUnit(ts *providers.TelemetryService) func(c *fiber.Ctx) error {
 
 		return c.JSON(fiber.Map{
 			"message": "registry found",
-			"data": item,
+			"data":    item,
 		})
 	}
 }

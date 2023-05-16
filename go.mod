@@ -1,4 +1,4 @@
-module github.com/games4l/telemetria
+module github.com/games4l/telemetry-service
 
 go 1.20
 

@@ -6,9 +6,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/games4l/telemetria/logger"
-	"github.com/games4l/telemetria/providers"
-	"github.com/games4l/telemetria/routes"
+	"github.com/games4l/telemetry-service/logger"
+	"github.com/games4l/telemetry-service/providers"
+	"github.com/games4l/telemetry-service/routes"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
