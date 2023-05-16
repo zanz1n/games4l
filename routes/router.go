@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 var (
@@ -20,17 +21,29 @@ func StartRouter(app *fiber.App) {
 
 	var err error
 
-	mongoClient, err = mongo.Connect(context.Background(), options.Client().ApplyURI(config.MongoUri))
+	mongoConnStartTime := time.Now()
+
+	serverApi := options.ServerAPI(options.ServerAPIVersion1)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 16*time.Second)
+
+	defer cancel()
+
+	opts := options.Client().ApplyURI(config.MongoUri).SetServerAPIOptions(serverApi)
+
+	mongoClient, err = mongo.Connect(ctx, opts)
 
 	if err != nil {
 		logger.Fatal(err)
 	}
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"Hello": "World",
-		})
-	})
+	err = mongoClient.Ping(ctx, readpref.Primary())
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	logger.Info("Connected to mongodb, handshake took %v", time.Since(mongoConnStartTime))
 }
 
 func ShutdownRouter(app *fiber.App) {
