@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  proxy:
+    build:
+      context: .
+      dockerfile: ./docker/proxy.dockerfile
+    restart: always
+    networks:
+      - app_network
+    ports:
+      - 8080:8080
+
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app.dockerfile
+    environment:
+      APP_CONFIG_FILE: /config.json
+    restart: always
+    volumes:
+      - ./config.json:/config.json
+    env_file: .env
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
