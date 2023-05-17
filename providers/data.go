@@ -11,19 +11,19 @@ import (
 )
 
 type CreateTelemetryUnitData struct {
-	DoneAt       int64 `json:"done_at,omitempty" validate:"required"`
-	CompleteTime int64 `json:"complete_time,omitempty" validate:"required"`
-	Answered     uint8 `json:"answered,omitempty" validate:"required"`
-	QuestionID   uint  `json:"quest_id,omitempty" validate:"required"`
+	DoneAt       int64   `json:"done_at,omitempty" validate:"required"`
+	CompleteTime int64   `json:"complete_time,omitempty" validate:"required"`
+	Answereds    []uint8 `json:"answereds,omitempty" validate:"required"`
+	QuestionID   uint    `json:"quest_id,omitempty" validate:"required"`
 }
 
 type TelemetryUnit struct {
-	ID           string `bson:"_id,omitempty" json:"id,omitempty" validate:"required"`
-	CreatedAt    int64  `bson:"created_at,omitempty" json:"created_at,omitempty" validate:"required"`
-	DoneAt       int64  `bson:"done_at,omitempty" json:"done_at,omitempty" validate:"required"`
-	CompleteTime int64  `bson:"complete_time,omitempty" json:"complete_time,omitempty" validate:"required"`
-	Answered     uint8  `bson:"answered,omitempty" json:"answered,omitempty" validate:"required"`
-	QuestionID   uint   `bbson:"quest_id,omitempty" json:"quest_id,omitempty" validate:"required"`
+	ID           string  `bson:"_id,omitempty" json:"id,omitempty" validate:"required"`
+	CreatedAt    int64   `bson:"created_at,omitempty" json:"created_at,omitempty" validate:"required"`
+	DoneAt       int64   `bson:"done_at,omitempty" json:"done_at,omitempty" validate:"required"`
+	CompleteTime int64   `bson:"complete_time,omitempty" json:"complete_time,omitempty" validate:"required"`
+	Answereds    []uint8 `bson:"answereds,omitempty" json:"answered,omitempty" validate:"required"`
+	QuestionID   uint    `bson:"quest_id,omitempty" json:"quest_id,omitempty" validate:"required"`
 }
 
 type TelemetryService struct {
@@ -75,7 +75,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *Telemetry
 	tu = &TelemetryUnit{
 		DoneAt:       data.DoneAt,
 		CompleteTime: data.CompleteTime,
-		Answered:     data.Answered,
+		Answereds:    data.Answereds,
 		QuestionID:   data.QuestionID,
 	}
 
