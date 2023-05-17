@@ -4,23 +4,26 @@ import (
 	"context"
 	"time"
 
+	"github.com/games4l/telemetry-service/logger"
 	nanoid "github.com/matoous/go-nanoid/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type CreateTelemetryUnitData struct {
-	DoneAt        int64 `json:"done_at,omitempty" validate:"required"`
-	CompleteTime  int64 `json:"complete_time,omitempty" validate:"required"`
-	AnsweredQuest uint8 `json:"answered_quest,omitempty" validate:"required"`
+	DoneAt       int64 `json:"done_at,omitempty" validate:"required"`
+	CompleteTime int64 `json:"complete_time,omitempty" validate:"required"`
+	Answered     uint8 `json:"answered,omitempty" validate:"required"`
+	QuestionID   uint  `json:"quest_id,omitempty" validate:"required"`
 }
 
 type TelemetryUnit struct {
-	ID            string `bson:"_id,omitempty" json:"id,omitempty" validate:"required"`
-	CreatedAt     int64  `bson:"created_at,omitempty" json:"created_at,omitempty" validate:"required"`
-	DoneAt        int64  `bson:"done_at,omitempty" json:"done_at,omitempty" validate:"required"`
-	CompleteTime  int64  `bson:"complete_time,omitempty" json:"complete_time,omitempty" validate:"required"`
-	AnsweredQuest uint8  `bson:"answered_quest,omitempty" json:"answered_quest,omitempty" validate:"required"`
+	ID           string `bson:"_id,omitempty" json:"id,omitempty" validate:"required"`
+	CreatedAt    int64  `bson:"created_at,omitempty" json:"created_at,omitempty" validate:"required"`
+	DoneAt       int64  `bson:"done_at,omitempty" json:"done_at,omitempty" validate:"required"`
+	CompleteTime int64  `bson:"complete_time,omitempty" json:"complete_time,omitempty" validate:"required"`
+	Answered     uint8  `bson:"answered,omitempty" json:"answered,omitempty" validate:"required"`
+	QuestionID   uint   `bbson:"quest_id,omitempty" json:"quest_id,omitempty" validate:"required"`
 }
 
 type TelemetryService struct {
@@ -46,9 +49,12 @@ func (ds *TelemetryService) FindById(id string) (tu *TelemetryUnit, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	tu = &TelemetryUnit{}
+
 	err = ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: id}}).Decode(tu)
 
 	if err != nil {
+		logger.Error(err.Error())
 		return
 	}
 
@@ -59,6 +65,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *Telemetry
 	err = validate.Struct(*data)
 
 	if err != nil {
+		logger.Error(err.Error())
 		return
 	}
 
@@ -66,14 +73,16 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *Telemetry
 	defer cancel()
 
 	tu = &TelemetryUnit{
-		DoneAt:        data.DoneAt,
-		CompleteTime:  data.CompleteTime,
-		AnsweredQuest: data.AnsweredQuest,
+		DoneAt:       data.DoneAt,
+		CompleteTime: data.CompleteTime,
+		Answered:     data.Answered,
+		QuestionID:   data.QuestionID,
 	}
 
 	tu.ID, err = nanoid.New(18)
 
 	if err != nil {
+		logger.Error(err.Error())
 		return
 	}
 
@@ -82,6 +91,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *Telemetry
 	_, err = ds.col.InsertOne(ctx, tu)
 
 	if err != nil {
+		logger.Error(err.Error())
 		return nil, err
 	}
 
