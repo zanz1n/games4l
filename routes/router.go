@@ -39,9 +39,14 @@ func StartRouter(app *fiber.App) {
 
 	err = mongoClient.Ping(ctx, readpref.Primary())
 
+	telemetryService := providers.NewTelemetryDataService(mongoClient)
+
 	if err != nil {
 		logger.Fatal(err)
 	}
+
+	app.Post(config.RoutePrefix + "/telemetry", PostTelemetry(telemetryService))
+	app.Get(config.RoutePrefix + "/telemetry/:id", GetTelemetryUnit(telemetryService))
 
 	logger.Info("Connected to mongodb, handshake took %v", time.Since(mongoConnStartTime))
 }
