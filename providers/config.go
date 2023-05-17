@@ -13,6 +13,7 @@ type Config struct {
 	WebhookSig  string `json:"webhook_sig,omitempty"`
 	MongoUri    string `json:"mongo_uri,omitempty"`
 	MongoDbName string `json:"mongo_db_name,omitempty"`
+	RoutePrefix string `json:"route_prefix"`
 }
 
 var (
