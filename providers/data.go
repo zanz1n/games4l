@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/google/uuid"
+	nanoid "github.com/matoous/go-nanoid/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -42,45 +42,48 @@ func NewTelemetryDataService(c *mongo.Client) *TelemetryService {
 	}
 }
 
-func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, error) {
+func (ds *TelemetryService) FindById(id string) (tu *TelemetryUnit, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	result := TelemetryUnit{}
-
-	err := ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: id}}).Decode(&result)
+	err = ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: id}}).Decode(tu)
 
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	return &result, nil
+	return
 }
 
-func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUnit, error) {
-	err := validate.Struct(*data)
+func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *TelemetryUnit, err error) {
+	err = validate.Struct(*data)
 
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	dt := TelemetryUnit{
+	tu = &TelemetryUnit{
 		DoneAt:        data.DoneAt,
 		CompleteTime:  data.CompleteTime,
 		AnsweredQuest: data.AnsweredQuest,
 	}
 
-	dt.ID = uuid.NewString()
-	dt.CreatedAt = time.Now().UnixMilli()
+	tu.ID, err = nanoid.New(18)
 
-	_, err = ds.col.InsertOne(ctx, dt)
+	if err != nil {
+		return
+	}
+
+	tu.CreatedAt = time.Now().UnixMilli()
+
+	_, err = ds.col.InsertOne(ctx, tu)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &dt, nil
+	return tu, nil
 }
