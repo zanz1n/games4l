@@ -1,5 +1,19 @@
 version: '3.9'
 
+x-mongo-default:
+  &mongo_default
+  image: mongo:6.0-jammy
+  env_file: .env
+  networks:
+    - app_network
+  deploy:
+    restart_policy:
+      condition: on-failure
+      max_attempts: 5
+      delay: 3s
+      window: 60s
+  entrypoint: /usr/bin/mongod --bind_ip_all --dbpath /data/db --replSet dbrs
+
 services:
   proxy:
     build:
@@ -20,9 +34,34 @@ services:
     restart: always
     volumes:
       - ./config.json:/config.json
+    depends_on:
+      - mongo_primary
     env_file: .env
     networks:
       - app_network
+
+  mongo_primary:
+    <<: *mongo_default
+    container_name: mongo_primary
+    volumes:
+      - ./.docker_volumes/mongo_primary:/data/db
+      - ./docker/rs-init.sh:/scripts/rs-init.sh
+      - ./docker/rs-stop.sh:/scripts/rs-stop.sh
+    links:
+      - mongo_secondary
+      - mongo_tertiary
+
+  mongo_secondary:
+    <<: *mongo_default
+    container_name: mongo_secondary
+    volumes:
+      - ./.docker_volumes/mongo_secondary:/data/db
+
+  mongo_tertiary:
+    <<: *mongo_default
+    container_name: mongo_tertiary
+    volumes:
+      - ./.docker_volumes/mongo_tertiary:/data/db
 
 networks:
   app_network:
