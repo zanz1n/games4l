@@ -38,7 +38,7 @@ func GetTelemetryUnit(ts *providers.TelemetryService, ap *providers.AuthProvider
 
 		encodingS := providers.ByteEncoding(authHeaderS[1])
 
-		if encodingS != providers.ByteEncodingBase64 && encodingS != providers.ByteEncodingBase64 {
+		if encodingS != providers.ByteEncodingBase64 && encodingS != providers.ByteEncodingHex {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "invalid encoding strategy " + authHeaderS[1],
 			})
