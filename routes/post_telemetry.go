@@ -12,9 +12,15 @@ func PostTelemetry(ts *providers.TelemetryService) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		telemetryData := providers.CreateTelemetryUnitData{}
 
-		c.BodyParser(&telemetryData)
+		err := c.BodyParser(&telemetryData)
 
-		err := validate.Struct(telemetryData)
+		if err != nil {
+			return c.JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		err = validate.Struct(telemetryData)
 
 		if err != nil {
 			return c.JSON(fiber.Map{
