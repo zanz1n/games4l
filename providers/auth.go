@@ -4,7 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
-	"errors"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type ByteEncoding string
@@ -24,13 +25,13 @@ func NewAuthProvider() *AuthProvider {
 	}
 }
 
-func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes []byte) (err error) {
+func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes []byte) StatusCodeErr {
 	digest := sha256.New()
 
-	_, err = digest.Write(body)
+	_, err := digest.Write(body)
 
 	if err != nil {
-		return
+		return NewStatusCodeErr("failed to hash request body", fiber.StatusBadRequest)
 	}
 
 	sum := digest.Sum(ap.sigKey)
@@ -42,13 +43,12 @@ func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes 
 	} else if method == ByteEncodingBase64 {
 		expected = base64.RawStdEncoding.EncodeToString(sum)
 	} else {
-		err = errors.New("invalid encoding method")
-		return
+		return NewStatusCodeErr("invalid encoding method", fiber.StatusBadRequest)
 	}
 
 	if expected != string(givenBytes) {
-		err = errors.New("signatures do not match")
+		return NewStatusCodeErr("signatures do not match", fiber.StatusUnauthorized)
 	}
 
-	return
+	return nil
 }

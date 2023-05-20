@@ -44,11 +44,11 @@ func GetTelemetryUnit(ts *providers.TelemetryService, ap *providers.AuthProvider
 			})
 		}
 
-		err = ap.ValidateSignature(encodingS, c.Body(), []byte(authHeaderS[2]))
+		vErr := ap.ValidateSignature(encodingS, c.Body(), []byte(authHeaderS[2]))
 
-		if err != nil {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": err.Error(),
+		if vErr != nil {
+			return c.Status(vErr.Status()).JSON(fiber.Map{
+				"error": vErr.Error(),
 			})
 		}
 
