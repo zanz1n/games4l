@@ -6,8 +6,8 @@ require (
 	github.com/go-playground/validator/v10 v10.13.0
 	github.com/goccy/go-json v0.10.2
 	github.com/gofiber/fiber/v2 v2.45.0
-	github.com/matoous/go-nanoid/v2 v2.0.0
 	go.mongodb.org/mongo-driver v1.11.6
+	golang.org/x/text v0.8.0
 )
 
 require (
@@ -38,5 +38,4 @@ require (
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.8.0 // indirect
 )
