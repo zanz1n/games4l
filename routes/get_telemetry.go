@@ -11,11 +11,11 @@ func GetTelemetryUnit(ts *providers.TelemetryService, ap *providers.AuthProvider
 	return func(c *fiber.Ctx) error {
 		idParam := c.Params("id")
 
-		item, err := ts.FindById(idParam)
+		item, fErr := ts.FindById(idParam)
 
-		if err != nil {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"error": "telemetry registry %s could not be found " + idParam,
+		if fErr != nil {
+			return c.Status(fErr.Status()).JSON(fiber.Map{
+				"error": fErr.Error(),
 			})
 		}
 

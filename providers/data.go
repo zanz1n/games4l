@@ -2,12 +2,11 @@ package providers
 
 import (
 	"context"
-	"errors"
 	"strings"
 	"time"
 	"unicode"
 
-	"github.com/games4l/telemetry-service/logger"
+	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -55,47 +54,42 @@ func NewTelemetryDataService(c *mongo.Client) *TelemetryService {
 	}
 }
 
-func (ds *TelemetryService) FindById(id string) (tu *TelemetryUnit, err error) {
+func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, StatusCodeErr) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	tu = &TelemetryUnit{}
+	tu := TelemetryUnit{}
 
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		err = errors.New("invalid object id format")
-		return
+		return nil, NewStatusCodeErr("invalid object id format", fiber.StatusBadRequest)
 	}
 
-	err = ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(tu)
+	err = ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&tu)
 
 	if err != nil {
-		logger.Error(err.Error())
-		return
+		return nil, NewStatusCodeErr("not find", fiber.StatusNotFound)
 	}
 
-	return
+	return &tu, nil
 }
 
-func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *TelemetryUnit, err error) {
-	err = validate.Struct(*data)
+func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUnit, StatusCodeErr) {
+	err := validate.Struct(*data)
 
 	if err != nil {
-		logger.Error(err.Error())
-		return
+		return nil, NewStatusCodeErr("invalid body schema", fiber.StatusBadRequest)
 	}
 
 	for _, answred := range data.Answereds {
 		if answred > 4 || answred < 1 {
-			err = errors.New("invalid answered range")
-			return
+			return nil, NewStatusCodeErr("invalid answered range on done_at", fiber.StatusBadRequest)
 		}
 	}
 
 	if data.DoneAt < GetConfig().ProjectEpoch {
-		err = errors.New("invalid done_at prop: timestamp out of accepted range")
-		return
+		return nil, NewStatusCodeErr("timestamp out of accepted range on done_at", fiber.StatusBadRequest)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -103,7 +97,11 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *Telemetry
 
 	normalizedName, _, err := transform.String(normalizer, strings.ToLower(data.PacientName))
 
-	tu = &TelemetryUnit{
+	if err != nil {
+		return nil, NewStatusCodeErr("something went wrong", fiber.StatusInternalServerError)
+	}
+
+	tu := TelemetryUnit{
 		DoneAt:       primitive.NewDateTimeFromTime(time.UnixMilli(data.DoneAt)),
 		CompleteTime: data.CompleteTime,
 		Answereds:    data.Answereds,
@@ -113,19 +111,13 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (tu *Telemetry
 
 	tu.ID = primitive.NewObjectID()
 
-	if err != nil {
-		logger.Error(err.Error())
-		return
-	}
-
 	tu.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 
 	_, err = ds.col.InsertOne(ctx, tu)
 
 	if err != nil {
-		logger.Error(err.Error())
-		return nil, err
+		return nil, NewStatusCodeErr("something went wrong", fiber.StatusInternalServerError)
 	}
 
-	return tu, nil
+	return &tu, nil
 }

@@ -2,37 +2,26 @@ package routes
 
 import (
 	"github.com/games4l/telemetry-service/providers"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
 func PostTelemetry(ts *providers.TelemetryService) func(c *fiber.Ctx) error {
-	validate := validator.New()
-
 	return func(c *fiber.Ctx) error {
 		telemetryData := providers.CreateTelemetryUnitData{}
 
 		err := c.BodyParser(&telemetryData)
 
 		if err != nil {
-			return c.JSON(fiber.Map{
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
 
-		err = validate.Struct(telemetryData)
+		result, fErr := ts.Create(&telemetryData)
 
-		if err != nil {
-			return c.JSON(fiber.Map{
-				"error": err.Error(),
-			})
-		}
-
-		result, err := ts.Create(&telemetryData)
-
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "something went wrong",
+		if fErr != nil {
+			return c.Status(fErr.Status()).JSON(fiber.Map{
+				"error": fErr.Error(),
 			})
 		}
 
