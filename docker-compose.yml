@@ -2,7 +2,7 @@ version: '3.9'
 
 x-mongo-default:
   &mongo_default
-  image: mongo:6.0-jammy
+  image: mongo:6-jammy
   env_file: .env
   networks:
     - app_network
@@ -28,7 +28,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./docker/app.dockerfile
+      dockerfile: ./services/telemetry/Dockerfile
     environment:
       APP_CONFIG_FILE: /config.json
     restart: always
