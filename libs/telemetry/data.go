@@ -1,12 +1,16 @@
-package providers
+package telemetry
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 	"unicode"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/games4l/backend/libs/config"
+	"github.com/games4l/backend/libs/utils"
+	"github.com/games4l/backend/libs/utils/httpcodes"
+	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,7 +19,10 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
-var normalizer = transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+var (
+	normalizer = transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+	validate   = validator.New()
+)
 
 type CreateTelemetryUnitData struct {
 	DoneAt       int64  `json:"done_at,omitempty" validate:"required"`
@@ -39,22 +46,23 @@ type TelemetryService struct {
 	client *mongo.Client
 	db     *mongo.Database
 	col    *mongo.Collection
+	cfg    *config.Config
 }
 
-func NewTelemetryDataService(c *mongo.Client) *TelemetryService {
-	config := GetConfig()
+func NewTelemetryDataService(c *mongo.Client, cfg *config.Config) *TelemetryService {
+	db := c.Database(cfg.MongoDbName)
 
-	db := c.Database(config.MongoDbName)
 	col := db.Collection("telemetry_data")
 
 	return &TelemetryService{
 		client: c,
 		db:     db,
 		col:    col,
+		cfg:    cfg,
 	}
 }
 
-func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, StatusCodeErr) {
+func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, utils.StatusCodeErr) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -63,33 +71,33 @@ func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, StatusCodeErr) 
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		return nil, NewStatusCodeErr("invalid object id format", fiber.StatusBadRequest)
+		return nil, utils.NewStatusCodeErr("invalid object id format", httpcodes.StatusBadRequest)
 	}
 
 	err = ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&tu)
 
 	if err != nil {
-		return nil, NewStatusCodeErr("not find", fiber.StatusNotFound)
+		return nil, utils.NewStatusCodeErr("not find", httpcodes.StatusNotFound)
 	}
 
 	return &tu, nil
 }
 
-func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUnit, StatusCodeErr) {
+func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUnit, utils.StatusCodeErr) {
 	err := validate.Struct(*data)
 
 	if err != nil {
-		return nil, NewStatusCodeErr("invalid body schema", fiber.StatusBadRequest)
+		return nil, utils.NewStatusCodeErr("invalid body schema", httpcodes.StatusBadRequest)
 	}
 
-	for _, answred := range data.Answereds {
+	for i, answred := range data.Answereds {
 		if answred > 4 || answred < 1 {
-			return nil, NewStatusCodeErr("invalid answered range on done_at", fiber.StatusBadRequest)
+			return nil, utils.NewStatusCodeErr(fmt.Sprintf("invalid answered range on %v idx", i), httpcodes.StatusBadRequest)
 		}
 	}
 
-	if data.DoneAt < GetConfig().ProjectEpoch {
-		return nil, NewStatusCodeErr("timestamp out of accepted range on done_at", fiber.StatusBadRequest)
+	if data.DoneAt < ds.cfg.ProjectEpoch {
+		return nil, utils.NewStatusCodeErr("timestamp out of accepted range on done_at", httpcodes.StatusBadRequest)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -98,7 +106,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	normalizedName, _, err := transform.String(normalizer, strings.ToLower(data.PacientName))
 
 	if err != nil {
-		return nil, NewStatusCodeErr("something went wrong", fiber.StatusInternalServerError)
+		return nil, utils.NewStatusCodeErr("something went wrong", httpcodes.StatusInternalServerError)
 	}
 
 	tu := TelemetryUnit{
@@ -116,7 +124,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	_, err = ds.col.InsertOne(ctx, tu)
 
 	if err != nil {
-		return nil, NewStatusCodeErr("something went wrong", fiber.StatusInternalServerError)
+		return nil, utils.NewStatusCodeErr("something went wrong", httpcodes.StatusInternalServerError)
 	}
 
 	return &tu, nil

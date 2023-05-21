@@ -1,9 +1,9 @@
-package providers
+package config
 
 import (
 	"os"
 
-	"github.com/games4l/telemetry-service/logger"
+	"github.com/games4l/backend/libs/logger"
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-json"
 )

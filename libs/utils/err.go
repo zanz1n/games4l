@@ -1,4 +1,4 @@
-package providers
+package utils
 
 type StatusCodeErr interface {
 	error
