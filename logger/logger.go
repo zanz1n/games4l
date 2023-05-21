@@ -123,6 +123,7 @@ func NewFiberMiddleware() fiber.Handler {
 		errHandler := c.App().ErrorHandler
 
 		if chainErr != nil {
+			Error("%v", chainErr)
 			if err := errHandler(c, chainErr); err != nil {
 				_ = c.SendStatus(fiber.StatusInternalServerError)
 			}
