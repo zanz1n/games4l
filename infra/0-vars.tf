@@ -9,3 +9,9 @@ variable "aws_secret_key" {
   description = "aws secret key to deploy the project"
   sensitive   = true
 }
+
+variable "environment_type" {
+  type        = string
+  description = "dev or prod"
+  default     = "dev"
+}

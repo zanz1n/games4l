@@ -22,4 +22,13 @@ provider "aws" {
 
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
+
+  default_tags {
+    tags = {
+      Project     = "Games 4 life"
+      ManagedBy   = "Terraform"
+      CreatedAt   = "May 2023"
+      Environment = var.environment_type
+    }
+  }
 }
