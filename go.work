@@ -8,4 +8,5 @@ use (
 	./libs/utils
 
 	./services/telemetry
+	./services/telemetry_lambda
 )
