@@ -47,12 +47,6 @@ resource "aws_lambda_function" "telemetry" {
 
   source_code_hash = data.archive_file.lambda_telemetry.output_base64sha256
 
-  environment {
-    variables = {
-      AMOGUS = "AAAAA"
-    }
-  }
-
   role = aws_iam_role.telemetry_lambda_exec.arn
 }
 
