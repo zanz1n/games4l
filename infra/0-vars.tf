@@ -15,3 +15,7 @@ variable "environment_type" {
   description = "dev or prod"
   default     = "dev"
 }
+
+locals {
+  mime_types = jsondecode(file("./0-mime.json"))
+}
