@@ -16,6 +16,10 @@ variable "environment_type" {
   default     = "dev"
 }
 
+variable "website_bucket_name" {
+  type = string
+}
+
 locals {
   mime_types = jsondecode(file("./0-mime.json"))
 }

@@ -1,10 +1,5 @@
-resource "random_pet" "website_bucket_name" {
-  prefix = "website"
-  length = 2
-}
-
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = random_pet.website_bucket_name.id
+  bucket = var.website_bucket_name
 }
 
 resource "aws_s3_bucket_public_access_block" "website_bucket" {
