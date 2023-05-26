@@ -46,9 +46,12 @@ resource "aws_lambda_function" "telemetry" {
   handler = "main"
 
   environment {
-    MONGO_URI           = var.telemetry_mongo_database_uri
-    MONGO_DATABASE_NAME = var.telemetry_mongo_database_name
-    WEBHOOK_SIG         = var.webhook_signature
+    variables = {
+      MONGO_URI           = var.telemetry_mongo_database_uri
+      MONGO_DATABASE_NAME = var.telemetry_mongo_database_name
+      WEBHOOK_SIG         = var.webhook_signature
+      API_GATEWAY_PREFIX  = var.environment_type
+    }
   }
 
   source_code_hash = data.archive_file.lambda_telemetry.output_base64sha256
