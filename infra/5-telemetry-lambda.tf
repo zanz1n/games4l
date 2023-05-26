@@ -45,6 +45,12 @@ resource "aws_lambda_function" "telemetry" {
   runtime = "go1.x"
   handler = "main"
 
+  environment {
+    MONGO_URI           = var.telemetry_mongo_database_uri
+    MONGO_DATABASE_NAME = var.telemetry_mongo_database_name
+    WEBHOOK_SIG         = var.webhook_signature
+  }
+
   source_code_hash = data.archive_file.lambda_telemetry.output_base64sha256
 
   role = aws_iam_role.telemetry_lambda_exec.arn

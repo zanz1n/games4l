@@ -10,6 +10,24 @@ variable "aws_secret_key" {
   sensitive   = true
 }
 
+variable "telemetry_mongo_database_uri" {
+  type        = string
+  description = "mongodb database uri"
+  sensitive   = true
+}
+
+variable "telemetry_mongo_database_name" {
+  type        = string
+  description = "mongodb database name"
+  sensitive   = true
+}
+
+variable "webhook_signature" {
+  type        = string
+  description = "webhook signature"
+  sensitive   = true
+}
+
 variable "environment_type" {
   type        = string
   description = "dev or prod"
