@@ -14,8 +14,12 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 	if req.Path == "/telemetry" {
 		var (
 			fErr utils.StatusCodeErr
-			res  events.APIGatewayProxyResponse
+			res  *events.APIGatewayProxyResponse
 		)
+
+		if req.HTTPMethod == "POST" || req.HTTPMethod == "GET" {
+			Connect()
+		}
 
 		if req.HTTPMethod == "POST" {
 			res, fErr = HandlePost(req)
@@ -31,7 +35,7 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 			}, nil
 		}
 
-		return res, nil
+		return *res, nil
 	}
 
 	return events.APIGatewayProxyResponse{
