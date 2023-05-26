@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -11,7 +12,9 @@ import (
 )
 
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	if req.Path == "/telemetry" {
+	prefix := os.Getenv("API_GATEWAY_PREFIX")
+
+	if req.Path == "/"+prefix+"/telemetry" {
 		var (
 			fErr utils.StatusCodeErr
 			res  *events.APIGatewayProxyResponse
@@ -28,9 +31,14 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 		}
 
 		if fErr != nil {
+			errBody, _ := json.Marshal(JSON{
+				"error": fErr.Error(),
+			})
+
 			return events.APIGatewayProxyResponse{
 				StatusCode:      fErr.Status(),
-				Body:            fErr.Error(),
+				Headers:         applicationJsonHeader,
+				Body:            string(errBody),
 				IsBase64Encoded: false,
 			}, nil
 		}
@@ -38,9 +46,14 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 		return *res, nil
 	}
 
+	errBody, _ := json.Marshal(JSON{
+		"error": "method not allowed",
+	})
+
 	return events.APIGatewayProxyResponse{
 		StatusCode:      httpcodes.StatusMethodNotAllowed,
-		Body:            "Method not allowed",
+		Headers:         applicationJsonHeader,
+		Body:            string(errBody),
 		IsBase64Encoded: false,
 	}, nil
 }
