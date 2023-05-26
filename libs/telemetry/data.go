@@ -96,7 +96,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 
 	for i, answred := range data.Answereds {
 		if answred > 4 || answred < 1 {
-			return nil, utils.NewStatusCodeErr(fmt.Sprintf("invalid answered range on %v idx", i), httpcodes.StatusBadRequest)
+			return nil, utils.NewStatusCodeErr(fmt.Sprintf("invalid answered range on %v° item", i+1), httpcodes.StatusBadRequest)
 		}
 	}
 
