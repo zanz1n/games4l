@@ -7,7 +7,6 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/games4l/backend/libs/config"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
 	"github.com/go-playground/validator/v10"
@@ -23,6 +22,11 @@ var (
 	normalizer = transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
 	validate   = validator.New()
 )
+
+type Config struct {
+	ProjectEpoch int64
+	MongoDbName  string
+}
 
 type CreateTelemetryUnitData struct {
 	DoneAt       int64  `json:"done_at,omitempty" validate:"required"`
@@ -46,10 +50,10 @@ type TelemetryService struct {
 	client *mongo.Client
 	db     *mongo.Database
 	col    *mongo.Collection
-	cfg    *config.Config
+	cfg    *Config
 }
 
-func NewTelemetryDataService(c *mongo.Client, cfg *config.Config) *TelemetryService {
+func NewTelemetryDataService(c *mongo.Client, cfg *Config) *TelemetryService {
 	db := c.Database(cfg.MongoDbName)
 
 	col := db.Collection("telemetry_data")
