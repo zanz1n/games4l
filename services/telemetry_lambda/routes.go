@@ -24,6 +24,8 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		return nil, utils.NewStatusCodeErr("malformed body", httpcodes.StatusBadGateway)
 	}
 
+	Connect()
+
 	result, fErr := dba.Create(&telemetryData)
 
 	if fErr != nil {
@@ -42,11 +44,11 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 }
 
 func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
-	authHeader, ok := req.Headers["Authorization"]
+	authHeader, ok := req.Headers["authorization"]
 
 	if !ok {
 		return nil, utils.NewStatusCodeErr(
-			"this route requires authorization and the 'Authorization' header",
+			"this route requires the 'Authorization' header",
 			httpcodes.StatusBadRequest,
 		)
 	}
@@ -90,7 +92,9 @@ func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxy
 		)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	Connect()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
 	defer cancel()
 
 	result, err := dba.FindSimilarName(ctx, nameParam)

@@ -27,10 +27,6 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 			res  *events.APIGatewayProxyResponse
 		)
 
-		if req.HTTPMethod == "POST" || req.HTTPMethod == "GET" {
-			Connect()
-		}
-
 		if req.HTTPMethod == "POST" {
 			res, fErr = HandlePost(req)
 		} else if req.HTTPMethod == "GET" {
