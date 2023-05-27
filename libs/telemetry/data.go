@@ -3,10 +3,13 @@ package telemetry
 import (
 	"context"
 	"fmt"
+	"math"
 	"strings"
+	"sync"
 	"time"
 	"unicode"
 
+	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
 	"github.com/go-playground/validator/v10"
@@ -53,6 +56,11 @@ type TelemetryService struct {
 	cfg    *Config
 }
 
+type similarNameResult struct {
+	res []TelemetryUnit
+	err utils.StatusCodeErr
+}
+
 func NewTelemetryDataService(c *mongo.Client, cfg *Config) *TelemetryService {
 	db := c.Database(cfg.MongoDbName)
 
@@ -64,6 +72,27 @@ func NewTelemetryDataService(c *mongo.Client, cfg *Config) *TelemetryService {
 		col:    col,
 		cfg:    cfg,
 	}
+}
+
+func eliminateDuplicates(arr []TelemetryUnit) []TelemetryUnit {
+	cache := make(map[string]struct{})
+
+	newArr := []TelemetryUnit{}
+
+	var (
+		ok bool
+		v  TelemetryUnit
+	)
+	for _, v = range arr {
+		if _, ok = cache[v.ID.Hex()]; ok {
+			continue
+		}
+
+		newArr = append(newArr, v)
+		cache[v.ID.Hex()] = struct{}{}
+	}
+
+	return newArr
 }
 
 func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, utils.StatusCodeErr) {
@@ -132,4 +161,125 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	}
 
 	return &tu, nil
+}
+
+func (ds *TelemetryService) FindSimilarName(ctx context.Context, name string) ([]TelemetryUnit, utils.StatusCodeErr) {
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
+	defer cancel()
+
+	spl := strings.Split(name, " ")
+
+	if len(spl) < 2 || len(spl) > 9 {
+		return nil, utils.NewStatusCodeErr("at least one surname must be provided", httpcodes.StatusBadRequest)
+	}
+
+	deadline, ok := ctx.Deadline()
+
+	if !ok {
+		return nil, utils.NewStatusCodeErr("invalid context was provided", httpcodes.StatusInternalServerError)
+	}
+
+	done := make(chan similarNameResult)
+
+	go func() {
+		res, err := ds.findSimilarName(deadline, name)
+
+		done <- similarNameResult{
+			err: err,
+			res: res,
+		}
+	}()
+
+	select {
+	case result := <-done:
+		return result.res, result.err
+	case <-ctx.Done():
+		return nil, utils.NewStatusCodeErr("query timeout exceded", httpcodes.StatusRequestTimeout)
+	}
+}
+
+func (ds *TelemetryService) findSimilarName(deadline time.Time, name string) ([]TelemetryUnit, utils.StatusCodeErr) {
+	spl := strings.Split(name, " ")
+
+	queryStart := time.Now()
+
+	firstName, surnames := spl[0], spl[1:]
+
+	resultChan := make(chan struct{})
+
+	maxOpDelay := time.Duration(math.Floor(float64(18)/float64(len(surnames)))) * time.Second
+
+	results := []TelemetryUnit{}
+	resultsM := sync.Mutex{}
+
+	for i_, surname_ := range surnames {
+		i := i_
+		surname := surname_
+
+		go func() {
+			logger.Info("Op started - (%v, %s) after %v", i, surname, time.Since(queryStart))
+			opStart := time.Now()
+
+			ctx, cancel := context.WithTimeout(context.Background(), maxOpDelay)
+			defer cancel()
+
+			filter := bson.M{
+				"pacient_name": bson.M{
+					"$regex": fmt.Sprintf("(?<=%s)(.*)(?=%s)", firstName, surname),
+				},
+			}
+
+			cursor, err := ds.col.Find(ctx, filter)
+
+			if err != nil {
+				logger.Info("Op (%v, %s) failed in (*mongo.Collection).Find() in %v", i, surname, time.Since(opStart))
+				resultChan <- struct{}{}
+				return
+			}
+
+			ctx2, cancel2 := context.WithTimeout(context.Background(), maxOpDelay)
+			defer cancel2()
+
+			res := []TelemetryUnit{}
+
+			if err = cursor.All(ctx2, &res); err != nil {
+				logger.Info("Op (%v, %s) failed in (*mongo.Cursor).All() in %v", i, surname, time.Since(opStart))
+				resultChan <- struct{}{}
+				return
+			}
+
+			resultsM.Lock()
+			results = append(results, res...)
+			resultsM.Unlock()
+
+			logger.Info("Op completed - (%v, %s) in %v", i, surname, time.Since(opStart))
+			resultChan <- struct{}{}
+		}()
+	}
+
+	retCh := make(chan struct{})
+	timeoutTicker := time.NewTicker(deadline.Sub(queryStart.Add(24 * time.Millisecond)))
+
+	go func() {
+		ti := 1
+		for {
+			<-resultChan
+			ti++
+			if ti == len(surnames) {
+				retCh <- struct{}{}
+				break
+			}
+		}
+	}()
+
+	results = eliminateDuplicates(results)
+
+	select {
+	case <-timeoutTicker.C:
+		logger.Info("Query timed out in %v", time.Since(queryStart))
+	case <-retCh:
+		logger.Info("Query completed successfully in %v", time.Since(queryStart))
+	}
+
+	return results, nil
 }
