@@ -54,6 +54,10 @@ resource "aws_lambda_function" "telemetry" {
     }
   }
 
+  memory_size = 512
+
+  timeout = 8
+
   source_code_hash = data.archive_file.lambda_telemetry.output_base64sha256
 
   role = aws_iam_role.telemetry_lambda_exec.arn
