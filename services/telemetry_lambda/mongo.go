@@ -11,8 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var dba *telemetry.TelemetryService
-
 func Connect() error {
 	uri := os.Getenv("MONGO_URI")
 	dbName := os.Getenv("MONGO_DATABASE_NAME")

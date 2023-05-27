@@ -1,22 +1,17 @@
 package main
 
 import (
+	"context"
+	"strings"
+	"time"
+
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/telemetry"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
-	"github.com/go-playground/validator"
 	"github.com/goccy/go-json"
 )
-
-var (
-	applicationJsonHeader = map[string]string{
-		"Content-Type": "application/json",
-	}
-	validate = validator.New()
-)
-
-type JSON map[string]interface{}
 
 func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
 	telemetryData := telemetry.CreateTelemetryUnitData{}
@@ -35,31 +30,82 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		return nil, fErr
 	}
 
-	resultEnc, err := json.Marshal(JSON{
-		"message": "data created",
-		"data":    result,
-	})
-
-	if err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"internal server error when creating the data, try again later",
-			httpcodes.StatusInternalServerError,
-		)
-	}
-
 	return &events.APIGatewayProxyResponse{
-		StatusCode:      httpcodes.StatusCreated,
-		Headers:         applicationJsonHeader,
-		Body:            string(resultEnc),
+		StatusCode: httpcodes.StatusCreated,
+		Headers:    applicationJsonHeader,
+		Body: MarshalJSON(JSON{
+			"message": "data created",
+			"data":    result,
+		}),
 		IsBase64Encoded: false,
 	}, nil
 }
 
 func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
+	authHeader, ok := req.Headers["Authorization"]
+
+	if !ok {
+		return nil, utils.NewStatusCodeErr(
+			"this route requires authorization and the 'Authorization' header",
+			httpcodes.StatusBadRequest,
+		)
+	}
+
+	authHeaderS := strings.Split(authHeader, " ")
+
+	if len(authHeaderS) < 3 {
+		return nil, utils.NewStatusCodeErr(
+			"this route requires admin authorization",
+			httpcodes.StatusBadRequest,
+		)
+	}
+
+	if authHeaderS[0] != "Signature" {
+		return nil, utils.NewStatusCodeErr(
+			"invalid auth strategy "+authHeaderS[0], httpcodes.StatusBadRequest,
+		)
+	}
+
+	encodingS := auth.ByteEncoding(authHeaderS[1])
+
+	if encodingS != auth.ByteEncodingBase64 && encodingS != auth.ByteEncodingHex {
+		return nil, utils.NewStatusCodeErr(
+			"invalid encoding strategy "+authHeaderS[1],
+			httpcodes.StatusBadRequest,
+		)
+	}
+
+	err := ap.ValidateSignature(encodingS, []byte(req.Body), []byte(authHeaderS[2]))
+
+	if err != nil {
+		return nil, err
+	}
+
+	nameParam, ok := req.QueryStringParameters["name"]
+
+	if !ok {
+		return nil, utils.NewStatusCodeErr(
+			"name query param must be provided",
+			httpcodes.StatusBadRequest,
+		)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	result, err := dba.FindSimilarName(ctx, nameParam)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &events.APIGatewayProxyResponse{
-		StatusCode:      httpcodes.StatusMethodNotAllowed,
-		Body:            "{\"error\":\"method not allowed\"}",
+		StatusCode:      httpcodes.StatusOK,
 		Headers:         applicationJsonHeader,
 		IsBase64Encoded: false,
+		Body: MarshalJSON(JSON{
+			"message": "success",
+			"data":    result,
+		}),
 	}, nil
 }

@@ -6,9 +6,16 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/logger"
+	"github.com/games4l/backend/libs/telemetry"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
+)
+
+var (
+	dba *telemetry.TelemetryService
+	ap  *auth.AuthProvider
 )
 
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -61,5 +68,6 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 func main() {
 	os.Setenv("NO_COLOR", "1")
 	logger.Init()
+	ap = auth.NewAuthProvider([]byte(os.Getenv("WEBHOOK_SIG")))
 	lambda.Start(Handler)
 }
