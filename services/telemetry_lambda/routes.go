@@ -97,7 +97,7 @@ func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxy
 	ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
 	defer cancel()
 
-	result, err := dba.FindSimilarName(ctx, nameParam)
+	result, err := dba.FindSimilarNameWithCtx(ctx, nameParam)
 
 	if err != nil {
 		return nil, err

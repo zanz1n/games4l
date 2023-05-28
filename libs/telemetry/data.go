@@ -61,6 +61,11 @@ type similarNameResult struct {
 	err utils.StatusCodeErr
 }
 
+type findOneResult struct {
+	res *TelemetryUnit
+	err utils.StatusCodeErr
+}
+
 func NewTelemetryDataService(c *mongo.Client, cfg *Config) *TelemetryService {
 	db := c.Database(cfg.MongoDbName)
 
@@ -93,6 +98,29 @@ func eliminateDuplicates(arr []TelemetryUnit) []TelemetryUnit {
 	}
 
 	return newArr
+}
+
+func (ds *TelemetryService) FindByIdWithCtx(ctx context.Context, id string) (*TelemetryUnit, utils.StatusCodeErr) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	done := make(chan findOneResult)
+
+	go func() {
+		resultR, errR := ds.FindById(id)
+
+		done <- findOneResult{
+			res: resultR,
+			err: errR,
+		}
+	}()
+
+	select {
+	case <-ctx.Done():
+		return nil, utils.NewStatusCodeErr("operation took to long", httpcodes.StatusRequestTimeout)
+	case result := <-done:
+		return result.res, result.err
+	}
 }
 
 func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, utils.StatusCodeErr) {
@@ -163,7 +191,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	return &tu, nil
 }
 
-func (ds *TelemetryService) FindSimilarName(ctx context.Context, name string) ([]TelemetryUnit, utils.StatusCodeErr) {
+func (ds *TelemetryService) FindSimilarNameWithCtx(ctx context.Context, name string) ([]TelemetryUnit, utils.StatusCodeErr) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
@@ -182,7 +210,7 @@ func (ds *TelemetryService) FindSimilarName(ctx context.Context, name string) ([
 	done := make(chan similarNameResult)
 
 	go func() {
-		res, err := ds.findSimilarName(deadline, name)
+		res, err := ds.FindSimilarName(deadline, name)
 
 		done <- similarNameResult{
 			err: err,
@@ -198,7 +226,7 @@ func (ds *TelemetryService) FindSimilarName(ctx context.Context, name string) ([
 	}
 }
 
-func (ds *TelemetryService) findSimilarName(deadline time.Time, name string) ([]TelemetryUnit, utils.StatusCodeErr) {
+func (ds *TelemetryService) FindSimilarName(deadline time.Time, name string) ([]TelemetryUnit, utils.StatusCodeErr) {
 	spl := strings.Split(name, " ")
 
 	queryStart := time.Now()

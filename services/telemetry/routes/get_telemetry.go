@@ -53,7 +53,7 @@ func GetBySimilarName(ts *telemetry.TelemetryService, ap *auth.AuthProvider) fun
 		ctx, cancel := context.WithTimeout(context.Background(), 32*time.Second)
 		defer cancel()
 
-		result, err := ts.FindSimilarName(ctx, nameParam)
+		result, err := ts.FindSimilarNameWithCtx(ctx, nameParam)
 
 		if err != nil {
 			return c.Status(err.Status()).JSON(fiber.Map{
