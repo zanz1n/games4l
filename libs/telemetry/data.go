@@ -272,14 +272,14 @@ func (ds *TelemetryService) findSimilarName(deadline time.Time, name string) ([]
 		}
 	}()
 
-	results = eliminateDuplicates(results)
-
 	select {
 	case <-timeoutTicker.C:
 		logger.Info("Query timed out in %v", time.Since(queryStart))
 	case <-retCh:
 		logger.Info("Query completed successfully in %v", time.Since(queryStart))
 	}
+
+	results = eliminateDuplicates(results)
 
 	return results, nil
 }
