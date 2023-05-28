@@ -2,11 +2,9 @@ package main
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/telemetry"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
@@ -43,43 +41,46 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	}, nil
 }
 
-func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
-	authHeader, ok := req.Headers["authorization"]
+func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
+	idParam, ok := req.PathParameters["id"]
 
-	if !ok {
+	if !ok || idParam == "" {
 		return nil, utils.NewStatusCodeErr(
-			"this route requires the 'Authorization' header",
+			"id path param not provided",
 			httpcodes.StatusBadRequest,
 		)
 	}
 
-	authHeaderS := strings.Split(authHeader, " ")
+	Connect()
 
-	if len(authHeaderS) < 3 {
-		return nil, utils.NewStatusCodeErr(
-			"this route requires admin authorization",
-			httpcodes.StatusBadRequest,
-		)
-	}
+	ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
+	defer cancel()
 
-	if authHeaderS[0] != "Signature" {
-		return nil, utils.NewStatusCodeErr(
-			"invalid auth strategy "+authHeaderS[0], httpcodes.StatusBadRequest,
-		)
-	}
-
-	encodingS := auth.ByteEncoding(authHeaderS[1])
-
-	if encodingS != auth.ByteEncodingBase64 && encodingS != auth.ByteEncodingHex {
-		return nil, utils.NewStatusCodeErr(
-			"invalid encoding strategy "+authHeaderS[1],
-			httpcodes.StatusBadRequest,
-		)
-	}
-
-	err := ap.ValidateSignature(encodingS, []byte(req.Body), []byte(authHeaderS[2]))
+	result, err := dba.FindByIdWithCtx(ctx, idParam)
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err = AuthBySig(req.Headers["authorization"], req.Body); err != nil {
+		result.PacientName = "<OMITTED>"
+	}
+
+	res := events.APIGatewayProxyResponse{
+		StatusCode:      httpcodes.StatusOK,
+		Headers:         applicationJsonHeader,
+		IsBase64Encoded: false,
+		Body: MarshalJSON(JSON{
+			"data":    result,
+			"message": "",
+		}),
+	}
+
+	return &res, nil
+}
+
+func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
+	if err := AuthBySig(req.Headers["authorization"], req.Body); err != nil {
 		return nil, err
 	}
 

@@ -21,3 +21,11 @@ resource "aws_apigatewayv2_route" "get_telemetry" {
 
   target = "integrations/${aws_apigatewayv2_integration.lambda_telemetry.id}"
 }
+
+resource "aws_apigatewayv2_route" "get_telemetry_by_id" {
+  api_id = aws_apigatewayv2_api.main.id
+
+  route_key = "GET /telemetry/{id}"
+
+  target = "integrations/${aws_apigatewayv2_integration.lambda_telemetry.id}"
+}

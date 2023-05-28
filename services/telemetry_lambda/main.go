@@ -1,8 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -21,44 +21,41 @@ var (
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	prefix := os.Getenv("API_GATEWAY_PREFIX")
 
+	var (
+		fErr utils.StatusCodeErr
+		res  *events.APIGatewayProxyResponse
+	)
+
 	if req.Path == "/"+prefix+"/telemetry" {
-		var (
-			fErr utils.StatusCodeErr
-			res  *events.APIGatewayProxyResponse
-		)
 
 		if req.HTTPMethod == "POST" {
 			res, fErr = HandlePost(req)
 		} else if req.HTTPMethod == "GET" {
 			res, fErr = HandleGetByName(req)
 		}
-
-		if fErr != nil {
-			errBody, _ := json.Marshal(JSON{
-				"error": fErr.Error(),
-			})
-
-			return events.APIGatewayProxyResponse{
-				StatusCode:      fErr.Status(),
-				Headers:         applicationJsonHeader,
-				Body:            string(errBody),
-				IsBase64Encoded: false,
-			}, nil
+	} else if strings.HasPrefix(req.Path, "/"+prefix+"/telemetry/") {
+		if req.HTTPMethod == "GET" {
+			res, fErr = HandleGetByID(req)
 		}
-
-		return *res, nil
+	} else {
+		fErr = utils.NewStatusCodeErr(
+			"method not allowed",
+			httpcodes.StatusMethodNotAllowed,
+		)
 	}
 
-	errBody, _ := json.Marshal(JSON{
-		"error": "method not allowed",
-	})
+	if fErr != nil {
+		res = &events.APIGatewayProxyResponse{
+			StatusCode:      fErr.Status(),
+			Headers:         applicationJsonHeader,
+			IsBase64Encoded: false,
+			Body: MarshalJSON(JSON{
+				"error": fErr.Error(),
+			}),
+		}
+	}
 
-	return events.APIGatewayProxyResponse{
-		StatusCode:      httpcodes.StatusMethodNotAllowed,
-		Headers:         applicationJsonHeader,
-		Body:            string(errBody),
-		IsBase64Encoded: false,
-	}, nil
+	return *res, nil
 }
 
 func main() {
