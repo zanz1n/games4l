@@ -6,4 +6,5 @@ config.json
 .idea/
 .vscode/
 .docker_volumes/
+node_modules/
 *.zip
