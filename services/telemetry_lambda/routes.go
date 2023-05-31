@@ -19,7 +19,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	err := validate.Struct(telemetryData)
 
 	if err != nil {
-		return nil, utils.NewStatusCodeErr("malformed body", httpcodes.StatusBadGateway)
+		return nil, utils.NewStatusCodeErr("malformed body", httpcodes.StatusBadRequest)
 	}
 
 	Connect()
