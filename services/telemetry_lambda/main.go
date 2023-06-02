@@ -61,6 +61,6 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 func main() {
 	os.Setenv("NO_COLOR", "1")
 	logger.Init()
-	ap = auth.NewAuthProvider([]byte(os.Getenv("WEBHOOK_SIG")))
+	ap = auth.NewAuthProvider([]byte(os.Getenv("WEBHOOK_SIG")), []byte(os.Getenv("JWT_SIG")))
 	lambda.Start(Handler)
 }

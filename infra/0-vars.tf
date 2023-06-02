@@ -34,6 +34,12 @@ variable "environment_type" {
   default     = "dev"
 }
 
+variable "jwt_signature" {
+  type        = string
+  description = "jwt signature"
+  sensitive   = true
+}
+
 variable "website_bucket_name" {
   type = string
 }

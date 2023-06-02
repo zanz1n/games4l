@@ -51,6 +51,7 @@ resource "aws_lambda_function" "telemetry" {
       MONGO_DATABASE_NAME = var.telemetry_mongo_database_name
       WEBHOOK_SIG         = var.webhook_signature
       API_GATEWAY_PREFIX  = var.environment_type
+      JWT_SIG             = var.jwt_signature
     }
   }
 
