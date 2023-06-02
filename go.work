@@ -9,4 +9,5 @@ use (
 
 	./services/telemetry
 	./services/telemetry_lambda
+	./libs/user
 )
