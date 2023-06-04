@@ -1,4 +1,4 @@
-package authdba
+package user
 
 import (
 	"context"
