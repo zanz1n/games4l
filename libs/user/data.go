@@ -15,6 +15,7 @@ import (
 type Config struct {
 	MongoDbName      string
 	BcryptSaltLength int
+	JwtExpiryTime    time.Duration
 }
 
 type UserService struct {
@@ -83,7 +84,7 @@ func (s *UserService) SignInUser(parentCtx context.Context, credential string, p
 		ID:       user.ID,
 		Username: user.Username,
 		Role:     user.Role,
-	})
+	}, s.cfg.JwtExpiryTime)
 
 	if err != nil {
 		return "", utils.NewStatusCodeErr(

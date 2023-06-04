@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
@@ -49,13 +50,13 @@ func NewAuthProvider(sigKey []byte, jwtKey []byte) *AuthProvider {
 
 func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCodeErr) {
 	var (
-		valId string
+		valId       string
 		valUsername string
-		valRole UserRole
+		valRole     UserRole
 	)
 	token, err := jwt.Parse(payload, func(t *jwt.Token) (interface{}, error) {
 		var (
-			ok bool
+			ok     bool
 			claims jwt.MapClaims
 		)
 
@@ -90,6 +91,10 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCode
 			return nil, formatErr
 		}
 
+		if t.Claims.(jwt.MapClaims)["exp"].(float64) < float64(time.Now().Unix()) {
+			return nil, errors.New("token is expired")
+		}
+
 		return []byte(ap.jwtKey), nil
 	})
 
@@ -98,17 +103,18 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCode
 	}
 
 	return &JwtUserData{
-		ID: valId,
-		Role: valRole,
+		ID:       valId,
+		Role:     valRole,
 		Username: valUsername,
 	}, nil
 }
 
-func (ap *AuthProvider) GenerateUserJwtToken(info JwtUserData) (string, error) {
+func (ap *AuthProvider) GenerateUserJwtToken(info JwtUserData, exp time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
 		"id":       info.ID,
 		"username": info.Username,
 		"role":     info.Role,
+		"exp": time.Now().Add(exp).Unix(),
 	})
 
 	tokenEnc, err := token.SignedString(ap.jwtKey)
