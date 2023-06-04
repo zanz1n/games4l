@@ -1,24 +1,7 @@
 resource "aws_iam_role" "telemetry_lambda_exec" {
   name = "telemetry-lambda"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": [
-          "apigateway.amazonaws.com",
-          "lambda.amazonaws.com"
-        ]
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
+  assume_role_policy = data.aws_iam_policy_document.lambda_exec_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "telemetry_lambda_policy" {

@@ -27,6 +27,25 @@ resource "aws_apigatewayv2_stage" "prod" {
   }
 }
 
+data "aws_iam_policy_document" "lambda_exec_policy" {
+  statement {
+    sid    = ""
+    effect = "Allow"
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "apigateway.amazonaws.com",
+        "lambda.amazonaws.com"
+      ]
+    }
+
+    actions = [
+      "sts:AssumeRole"
+    ]
+  }
+}
+
 resource "aws_cloudwatch_log_group" "main_api_gw" {
   name = "/aws/api-gw/${aws_apigatewayv2_api.main.name}"
 
