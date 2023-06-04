@@ -1,6 +1,11 @@
 resource "aws_apigatewayv2_api" "main" {
   name          = "games4l_main"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_methods = ["*"]
+  }
 }
 
 resource "aws_apigatewayv2_stage" "prod" {
