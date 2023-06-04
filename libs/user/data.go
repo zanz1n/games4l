@@ -7,6 +7,7 @@ import (
 	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -56,10 +57,55 @@ func NewUserService(client *mongo.Client, cfg *Config) *UserService {
 	}
 }
 
+func (s *UserService) SignInUser(parentCtx context.Context, credential string, passwd string) (string, utils.StatusCodeErr) {
+	ctx, cancel := context.WithTimeout(parentCtx, 15*time.Second)
+	defer cancel()
+
+	var (
+		err  error
+		user = User{}
+	)
+
+	if emailIsValid(credential) {
+		err = s.col.FindOne(ctx, bson.D{{Key: "email", Value: credential}}).Decode(&user)
+	} else {
+		err = s.col.FindOne(ctx, bson.D{{Key: "username", Value: credential}}).Decode(&user)
+	}
+
+	if err != nil {
+		return "", utils.NewStatusCodeErr(
+			"user do not exist or password do not match",
+			httpcodes.StatusUnauthorized,
+		)
+	}
+
+	tokenPayload, err := s.ap.GenerateUserJwtToken(auth.JwtUserData{
+		ID:       user.ID,
+		Username: user.Username,
+		Role:     user.Role,
+	})
+
+	if err != nil {
+		return "", utils.NewStatusCodeErr(
+			"something went wrong when trying to generate the auth token",
+			httpcodes.StatusInternalServerError,
+		)
+	}
+
+	return tokenPayload, nil
+}
+
 func (s *UserService) CreateUser(parentCtx context.Context, role auth.UserRole, data *CreateUserData) (*User, utils.StatusCodeErr) {
 	if !utils.SliceContains(auth.ValidUserRoles, role) {
 		return nil, utils.NewStatusCodeErr(
 			"invalid user role enum type",
+			httpcodes.StatusBadRequest,
+		)
+	}
+
+	if !emailIsValid(data.Email) {
+		return nil, utils.NewStatusCodeErr(
+			"the provided email address is not valid",
 			httpcodes.StatusBadRequest,
 		)
 	}
@@ -80,13 +126,6 @@ func (s *UserService) CreateUser(parentCtx context.Context, role auth.UserRole, 
 		return nil, utils.NewStatusCodeErr(
 			"failed to hash the password",
 			httpcodes.StatusInternalServerError,
-		)
-	}
-
-	if !emailIsValid(data.Email) {
-		return nil, utils.NewStatusCodeErr(
-			"the provided email address is not valid "+mailRegex,
-			httpcodes.StatusBadRequest,
 		)
 	}
 
