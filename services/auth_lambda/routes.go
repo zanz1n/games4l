@@ -5,14 +5,15 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
 	"github.com/goccy/go-json"
 )
 
 type SigInBody struct {
-	Credential string `json:"credential,omitempty"`
-	Password   string `json:"password,omitempty"`
+	Credential string `json:"credential,omitempty" validate:"required"`
+	Password   string `json:"password,omitempty" validate:"required"`
 }
 
 func HandleSignIn(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
@@ -32,7 +33,14 @@ func HandleSignIn(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRes
 		)
 	}
 
-	Connect()
+	if err := Connect(); err != nil {
+		logger.Error(err.Error())
+
+		return nil, utils.NewStatusCodeErr(
+			"failed to connect to database",
+			httpcodes.StatusInternalServerError,
+		)
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
