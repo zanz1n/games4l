@@ -18,6 +18,10 @@ var (
 	ap  *auth.AuthProvider
 )
 
+func hPrx(s, prefix string) bool {
+	return strings.HasPrefix(s, prefix)
+}
+
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	prefix := os.Getenv("API_GATEWAY_PREFIX")
 
@@ -26,14 +30,13 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 		res  *events.APIGatewayProxyResponse
 	)
 
-	if req.Path == "/"+prefix+"/telemetry" {
-
+	if req.Path == "/"+prefix+"/telemetry" || req.Path == "/telemetry" {
 		if req.HTTPMethod == "POST" {
 			res, fErr = HandlePost(req)
 		} else if req.HTTPMethod == "GET" {
 			res, fErr = HandleGetByName(req)
 		}
-	} else if strings.HasPrefix(req.Path, "/"+prefix+"/telemetry/") {
+	} else if hPrx(req.Path, "/"+prefix+"/telemetry/") || hPrx(req.Path, "/telemetry") {
 		if req.HTTPMethod == "GET" {
 			res, fErr = HandleGetByID(req)
 		}

@@ -26,7 +26,7 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 	)
 
 	if req.HTTPMethod == "POST" {
-		if req.Path == "/"+prefix+"/auth/signin" {
+		if req.Path == "/"+prefix+"/auth/signin" || req.Path == "/auth/signin" {
 			res, fErr = HandleSignIn(req)
 		} else {
 			fErr = utils.NewStatusCodeErr(
