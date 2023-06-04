@@ -7,12 +7,14 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/logger"
+	userlib "github.com/games4l/backend/libs/user"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
 )
 
 var (
-	ap *auth.AuthProvider
+	ap  *auth.AuthProvider
+	dba *userlib.UserService
 )
 
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
