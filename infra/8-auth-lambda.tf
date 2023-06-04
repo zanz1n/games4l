@@ -31,6 +31,7 @@ resource "aws_lambda_function" "auth" {
 
   environment {
     variables = {
+      BCRYPT_SALT_LEN     = 12
       MONGO_URI           = var.users_mongo_database_uri
       MONGO_DATABASE_NAME = var.users_mongo_database_name
       WEBHOOK_SIG         = var.webhook_signature
