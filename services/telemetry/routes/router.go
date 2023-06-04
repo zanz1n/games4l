@@ -50,7 +50,7 @@ func StartRouter(app *fiber.App) {
 		logger.Fatal(err)
 	}
 
-	authProvider := auth.NewAuthProvider([]byte(cfg.WebhookSig))
+	authProvider := auth.NewAuthProvider([]byte(cfg.WebhookSig), []byte(cfg.WebhookSig))
 
 	app.Post(cfg.RoutePrefix+"/telemetry", PostTelemetry(telemetryService))
 	app.Get(cfg.RoutePrefix+"/telemetry/:id", GetTelemetryUnit(telemetryService, authProvider))
