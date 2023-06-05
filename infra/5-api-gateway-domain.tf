@@ -4,7 +4,7 @@ resource "aws_acm_certificate" "api_gateway_domain" {
 
   validation_option {
     domain_name       = var.apigateway_cloudflare_domain
-    validation_domain = var.apigateway_cloudflare_root_domain
+    validation_domain = var.cloudflare_root_domain
   }
 }
 

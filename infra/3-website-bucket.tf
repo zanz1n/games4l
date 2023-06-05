@@ -1,5 +1,10 @@
+resource "random_pet" "website_bucket" {
+  prefix = "games4l-website"
+  length = 2
+}
+
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = var.website_bucket_name
+  bucket = random_pet.website_bucket.id
 }
 
 resource "aws_s3_bucket_public_access_block" "website_bucket" {

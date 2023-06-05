@@ -69,13 +69,14 @@ variable "apigateway_cloudflare_domain" {
   description = "the domain (with the root and the subdomains) that will be used in api gateway"
 }
 
-variable "apigateway_cloudflare_root_domain" {
+variable "cloudflare_root_domain" {
   type        = string
   description = "the root domain that will be used in api gateway"
 }
 
-variable "website_bucket_name" {
-  type = string
+variable "website_cloudflare_domain" {
+  type        = string
+  description = "the domain (with the root and the subdomains) that will be used in the s3 website"
 }
 
 locals {
