@@ -6,9 +6,10 @@ use (
 	./libs/logger
 	./libs/telemetry
 	./libs/utils
+	./libs/user
+	./libs/question
 
 	./services/telemetry
 	./services/telemetry_lambda
 	./services/auth_lambda
-	./libs/user
 )
