@@ -21,7 +21,7 @@ terraform {
     }
 
     cloudflare = {
-      source = "cloudflare/cloudflare"
+      source  = "cloudflare/cloudflare"
       version = "~> 4.7.1"
     }
   }
@@ -35,6 +35,24 @@ provider "cloudflare" {
 
 provider "aws" {
   region = "sa-east-1"
+
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+
+  default_tags {
+    tags = {
+      Project     = "Games 4 life"
+      ManagedBy   = "Terraform"
+      CreatedAt   = "May 2023"
+      Environment = var.environment_type
+    }
+  }
+}
+
+provider "aws" {
+  alias = "virginia"
+
+  region = "us-east-1"
 
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
