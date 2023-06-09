@@ -114,7 +114,7 @@ func (ap *AuthProvider) GenerateUserJwtToken(info JwtUserData, exp time.Duration
 		"id":       info.ID,
 		"username": info.Username,
 		"role":     info.Role,
-		"exp": time.Now().Add(exp).Unix(),
+		"exp":      time.Now().Add(exp).Unix(),
 	})
 
 	tokenEnc, err := token.SignedString(ap.jwtKey)
