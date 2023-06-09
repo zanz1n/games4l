@@ -14,9 +14,8 @@ import (
 func Connect() error {
 	uri := os.Getenv("MONGO_URI")
 	dbName := os.Getenv("MONGO_DATABASE_NAME")
-	WebhookSig := os.Getenv("WEBHOOK_SIG")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 
 	mongoConnStartTime := time.Now()
 
@@ -36,8 +35,6 @@ func Connect() error {
 		ProjectEpoch: 1684542947161,
 		MongoDbName: dbName,
 	})
-
-	_ = WebhookSig
 
 	logger.Info("Connected to mongodb, handshake took %v", time.Since(mongoConnStartTime))
 
