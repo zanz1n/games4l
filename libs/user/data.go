@@ -81,6 +81,14 @@ func (s *UserService) SignInUser(parentCtx context.Context, credential string, p
 		)
 	}
 
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passwd))
+	if err != nil {
+		return "", utils.NewStatusCodeErr(
+			"user do not exist or password do not match",
+			httpcodes.StatusUnauthorized,
+		)
+	}
+
 	tokenPayload, err := s.ap.GenerateUserJwtToken(auth.JwtUserData{
 		ID:       user.ID,
 		Username: user.Username,
