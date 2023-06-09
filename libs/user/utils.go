@@ -36,3 +36,12 @@ func GenerateID() string {
 
 	return id
 }
+
+func (u *User) ToEncodable() *UserJsonEncodable {
+	return &UserJsonEncodable{
+		ID:       u.ID,
+		Email:    u.Email,
+		Username: u.Username,
+		Role:     u.Role,
+	}
+}
