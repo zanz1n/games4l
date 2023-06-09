@@ -35,6 +35,8 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 			} else {
 				res, fErr = HandleGetMany(req)
 			}
+		} else if req.HTTPMethod == "POST" {
+			res, fErr = HandlePost(req)
 		} else {
 			fErr = utils.NewStatusCodeErr(
 				"no such route "+req.Path,
