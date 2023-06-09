@@ -8,6 +8,8 @@ import (
 	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/question"
+	"github.com/games4l/backend/libs/utils"
+	"github.com/games4l/backend/libs/utils/httpcodes"
 )
 
 var (
@@ -16,7 +18,41 @@ var (
 )
 
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	panic("")
+	prefix := os.Getenv("API_GATEWAY_PREFIX")
+
+	var (
+		fErr utils.StatusCodeErr
+		res  *events.APIGatewayProxyResponse
+	)
+
+	if req.Path == "/"+prefix+"/question" || req.Path == "/question" {
+		if req.HTTPMethod == "GET" {
+			res, fErr = HandleGetMany(req)
+		} else {
+			fErr = utils.NewStatusCodeErr(
+				"no such route "+req.Path,
+				httpcodes.StatusMethodNotAllowed,
+			)
+		}
+	} else {
+		fErr = utils.NewStatusCodeErr(
+			"method not allowed",
+			httpcodes.StatusMethodNotAllowed,
+		)
+	}
+
+	if fErr != nil {
+		res = &events.APIGatewayProxyResponse{
+			StatusCode:      fErr.Status(),
+			Headers:         applicationJsonHeader,
+			IsBase64Encoded: false,
+			Body: MarshalJSON(JSON{
+				"error": fErr.Error(),
+			}),
+		}
+	}
+
+	return *res, nil
 }
 
 func main() {
