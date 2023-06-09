@@ -13,3 +13,11 @@ resource "aws_apigatewayv2_route" "post_sign_in" {
 
   target = "integrations/${aws_apigatewayv2_integration.lambda_auth.id}"
 }
+
+resource "aws_apigatewayv2_route" "post_user" {
+  api_id = aws_apigatewayv2_api.main.id
+
+  route_key = "POST /user"
+
+  target = "integrations/${aws_apigatewayv2_integration.lambda_auth.id}"
+}

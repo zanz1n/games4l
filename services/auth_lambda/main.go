@@ -28,6 +28,8 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 	if req.HTTPMethod == "POST" {
 		if req.Path == "/"+prefix+"/auth/signin" || req.Path == "/auth/signin" {
 			res, fErr = HandleSignIn(req)
+		} else if req.Path == "/"+prefix+"/user" || req.Path == "/user" {
+			res, fErr = HandleUserCreation(req)
 		} else {
 			fErr = utils.NewStatusCodeErr(
 				"no such route "+req.Path,
