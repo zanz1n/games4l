@@ -47,10 +47,10 @@ func NewQuestionService(c *mongo.Client, cfg *Config) *QuestionService {
 	}
 }
 
-func (s*QuestionService) GetMany(ctx context.Context, limit int64) ([]QuestionDbData, utils.StatusCodeErr) {
-	maxExecTime := 20*time.Second
+func (s *QuestionService) GetMany(ctx context.Context, limit int64) ([]QuestionDbData, utils.StatusCodeErr) {
+	maxExecTime := 20 * time.Second
 
-	if deadLine, ok  := ctx.Deadline(); ok {
+	if deadLine, ok := ctx.Deadline(); ok {
 		maxExecTime = time.Until(deadLine)
 	}
 
@@ -112,4 +112,67 @@ func (s *QuestionService) Create(ctx context.Context, numId int, data *Question)
 	}
 
 	return &insertData, nil
+}
+
+func (s *QuestionService) GetByNumID(ctx context.Context, numId int) (*QuestionDbData, utils.StatusCodeErr) {
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+
+	result := QuestionDbData{}
+
+	err := s.col.FindOne(ctx, bson.D{{Key: "n_id", Value: numId}}).Decode(&result)
+
+	if err != nil {
+		return nil, utils.NewStatusCodeErr(
+			"could not find a result with this numeric id",
+			httpcodes.StatusNotFound,
+		)
+	}
+
+	if err = validate.Struct(result); err != nil {
+		return nil, utils.NewStatusCodeErr(
+			"could not find a result with this numeric id",
+			httpcodes.StatusNotFound,
+		)
+
+		// Implement here: delete the result after it's invalidated
+	}
+
+	return &result, nil
+}
+
+func (s *QuestionService) GetByID(ctx context.Context, hexID string) (*QuestionDbData, utils.StatusCodeErr) {
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+
+	oid, err := primitive.ObjectIDFromHex(hexID)
+
+	if err != nil {
+		return nil, utils.NewStatusCodeErr(
+			"invalid object id format",
+			httpcodes.StatusBadRequest,
+		)
+	}
+
+	result := QuestionDbData{}
+
+	err = s.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&result)
+
+	if err != nil {
+		return nil, utils.NewStatusCodeErr(
+			"could not find a result with this id",
+			httpcodes.StatusNotFound,
+		)
+	}
+
+	if err = validate.Struct(result); err != nil {
+		return nil, utils.NewStatusCodeErr(
+			"could not find a result with this id",
+			httpcodes.StatusNotFound,
+		)
+
+		// Implement here: delete the result after it's invalidated
+	}
+
+	return &result, nil
 }
