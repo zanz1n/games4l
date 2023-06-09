@@ -37,7 +37,7 @@ func Connect() error {
 		return err
 	}
 
-	dba = user.NewUserService(client, &user.Config{
+	dba = user.NewUserService(client, ap, &user.Config{
 		MongoDbName:      dbName,
 		BcryptSaltLength: bcryptSaltLen,
 		JwtExpiryTime:    21 * 24 * time.Hour, // 21 days

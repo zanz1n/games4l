@@ -46,7 +46,7 @@ type UserJsonEncodable struct {
 	Role     auth.UserRole `json:"role"`
 }
 
-func NewUserService(client *mongo.Client, cfg *Config) *UserService {
+func NewUserService(client *mongo.Client, ap *auth.AuthProvider, cfg *Config) *UserService {
 	db := client.Database(cfg.MongoDbName)
 
 	col := db.Collection("users")
@@ -55,6 +55,7 @@ func NewUserService(client *mongo.Client, cfg *Config) *UserService {
 		client: client,
 		cfg:    cfg,
 		col:    col,
+		ap:     ap,
 	}
 }
 
