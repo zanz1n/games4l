@@ -140,8 +140,8 @@ func (s *UserService) CreateUser(parentCtx context.Context, role auth.UserRole, 
 
 	if _, err = s.col.InsertOne(ctx, user); err != nil {
 		return nil, utils.NewStatusCodeErr(
-			"failed to insert data into database",
-			httpcodes.StatusInternalServerError,
+			"the user already exists",
+			httpcodes.StatusConflict,
 		)
 	}
 
