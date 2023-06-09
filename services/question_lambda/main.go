@@ -27,7 +27,14 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 
 	if req.Path == "/"+prefix+"/question" || req.Path == "/question" {
 		if req.HTTPMethod == "GET" {
-			res, fErr = HandleGetMany(req)
+			_, ok1 := req.QueryStringParameters["id"]
+			_, ok2 := req.QueryStringParameters["uid"]
+
+			if ok1 || ok2 {
+				res, fErr = HandleGetByID(req)
+			} else {
+				res, fErr = HandleGetMany(req)
+			}
 		} else {
 			fErr = utils.NewStatusCodeErr(
 				"no such route "+req.Path,
