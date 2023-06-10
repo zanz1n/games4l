@@ -6,8 +6,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/config"
+	fiberutils "github.com/games4l/backend/libs/fiber_utils"
+	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/services/telemetry/routes"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
@@ -45,7 +46,7 @@ func main() {
 		return nil
 	})
 
-	app.Use(logger.NewFiberMiddleware())
+	app.Use(fiberutils.NewLoggerMiddleware())
 
 	app.Use(recover.New())
 	app.Use(cors.New())
