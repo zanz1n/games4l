@@ -53,7 +53,7 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 			Headers:         applicationJsonHeader,
 			IsBase64Encoded: false,
 			Body: MarshalJSON(JSON{
-				"error": fErr.Error(),
+				"error": utils.FirstUpper(fErr.Error()),
 			}),
 		}
 	}
