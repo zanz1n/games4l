@@ -106,6 +106,33 @@ func (s *UserService) SignInUser(ctx context.Context, credential string, passwd 
 	return tokenPayload, nil
 }
 
+func (s *UserService) FindByID(ctx context.Context, hexID string) (*User, utils.StatusCodeErr) {
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+
+	oid, err := primitive.ObjectIDFromHex(hexID)
+
+	if err != nil {
+		return nil, utils.NewStatusCodeErr(
+			"invalid object id format",
+			httpcodes.StatusBadRequest,
+		)
+	}
+
+	user := User{}
+
+	err = s.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&user)
+
+	if err != nil {
+		return nil, utils.NewStatusCodeErr(
+			"user could not be found",
+			httpcodes.StatusNotFound,
+		)
+	}
+
+	return &user, nil
+}
+
 func (s *UserService) CreateUser(ctx context.Context, role auth.UserRole, data *CreateUserData) (*User, utils.StatusCodeErr) {
 	if !utils.SliceContains(auth.ValidUserRoles, role) {
 		return nil, utils.NewStatusCodeErr(
