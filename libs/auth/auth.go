@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
 	"github.com/golang-jwt/jwt/v4"
@@ -52,7 +53,7 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCode
 	var (
 		valId       string
 		valUsername string
-		valRole     UserRole
+		valRole     string
 	)
 	token, err := jwt.Parse(payload, func(t *jwt.Token) (interface{}, error) {
 		var (
@@ -72,22 +73,27 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCode
 		}
 
 		if claims, ok = t.Claims.(jwt.MapClaims); !ok {
+			logger.Error("Jwt token invalidation: is not jwt.MapClaims")
 			return nil, formatErr
 		}
 
 		if valId, ok = claims["id"].(string); !ok {
+			logger.Error("Jwt token invalidation: does not contain an id")
 			return nil, formatErr
 		}
 
 		if valUsername, ok = claims["username"].(string); !ok {
+			logger.Error("Jwt token invalidation: does not contain an username")
 			return nil, formatErr
 		}
 
-		if valRole, ok = claims["role"].(UserRole); !ok {
+		if valRole, ok = claims["role"].(string); !ok {
+			logger.Error("Jwt token invalidation: does not contain a role")
 			return nil, formatErr
 		}
 
-		if !utils.SliceContains(ValidUserRoles, valRole) {
+		if !utils.SliceContains(ValidUserRoles, UserRole(valRole)) {
+			logger.Error("Jwt token invalidation: the role is not valid")
 			return nil, formatErr
 		}
 
@@ -104,7 +110,7 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCode
 
 	return &JwtUserData{
 		ID:       valId,
-		Role:     valRole,
+		Role:     UserRole(valRole),
 		Username: valUsername,
 	}, nil
 }
