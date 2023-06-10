@@ -8,6 +8,7 @@ use (
 	./libs/utils
 	./libs/user
 	./libs/question
+	./libs/fiber_utils
 
 	./services/telemetry
 	./services/telemetry_lambda
