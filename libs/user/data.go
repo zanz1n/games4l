@@ -8,6 +8,7 @@ import (
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -26,11 +27,11 @@ type UserService struct {
 }
 
 type User struct {
-	ID       string        `bson:"_id,omitempty" validate:"required"`      // Primary key
-	Username string        `bson:"username,omitempty" validate:"required"` // Index
-	Email    string        `bson:"email,omitempty" validate:"required"`    // Index
-	Password string        `bson:"password,omitempty" validate:"required"`
-	Role     auth.UserRole `bson:"role,omitempty" validate:"required"`
+	ID       primitive.ObjectID `bson:"_id,omitempty" validate:"required"`      // Primary key
+	Username string             `bson:"username,omitempty" validate:"required"` // Index
+	Email    string             `bson:"email,omitempty" validate:"required"`    // Index
+	Password string             `bson:"password,omitempty" validate:"required"`
+	Role     auth.UserRole      `bson:"role,omitempty" validate:"required"`
 }
 
 type CreateUserData struct {
@@ -59,8 +60,8 @@ func NewUserService(client *mongo.Client, ap *auth.AuthProvider, cfg *Config) *U
 	}
 }
 
-func (s *UserService) SignInUser(parentCtx context.Context, credential string, passwd string) (string, utils.StatusCodeErr) {
-	ctx, cancel := context.WithTimeout(parentCtx, 15*time.Second)
+func (s *UserService) SignInUser(ctx context.Context, credential string, passwd string) (string, utils.StatusCodeErr) {
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
 	var (
@@ -90,7 +91,7 @@ func (s *UserService) SignInUser(parentCtx context.Context, credential string, p
 	}
 
 	tokenPayload, err := s.ap.GenerateUserJwtToken(auth.JwtUserData{
-		ID:       user.ID,
+		ID:       user.ID.Hex(),
 		Username: user.Username,
 		Role:     user.Role,
 	}, s.cfg.JwtExpiryTime)
@@ -105,7 +106,7 @@ func (s *UserService) SignInUser(parentCtx context.Context, credential string, p
 	return tokenPayload, nil
 }
 
-func (s *UserService) CreateUser(parentCtx context.Context, role auth.UserRole, data *CreateUserData) (*User, utils.StatusCodeErr) {
+func (s *UserService) CreateUser(ctx context.Context, role auth.UserRole, data *CreateUserData) (*User, utils.StatusCodeErr) {
 	if !utils.SliceContains(auth.ValidUserRoles, role) {
 		return nil, utils.NewStatusCodeErr(
 			"invalid user role enum type",
@@ -127,7 +128,7 @@ func (s *UserService) CreateUser(parentCtx context.Context, role auth.UserRole, 
 		)
 	}
 
-	ctx, cancel := context.WithTimeout(parentCtx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
 	passwdEnc, err := bcrypt.GenerateFromPassword([]byte(data.Password), s.cfg.BcryptSaltLength)
@@ -139,8 +140,10 @@ func (s *UserService) CreateUser(parentCtx context.Context, role auth.UserRole, 
 		)
 	}
 
+	oid := primitive.NewObjectID()
+
 	user := User{
-		ID:       GenerateID(),
+		ID:       oid,
 		Username: data.Username,
 		Email:    data.Email,
 		Password: string(passwdEnc),
