@@ -20,19 +20,13 @@ func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	if ok {
 		l, err := strconv.Atoi(limitParam)
 		if err != nil || l <= 0 {
-			return nil, utils.NewStatusCodeErr(
-				"limit query param must be null or a valid unsigned integer",
-				httpcodes.StatusBadRequest,
-			)
+			return nil, utils.DefaultErrorList.InvalidRequestEntity
 		}
 		limit = l
 	}
 
 	if err := Connect(); err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"failed to connect to database",
-			httpcodes.StatusInternalServerError,
-		)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 6*time.Second)
@@ -59,10 +53,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	authHeader, ok := req.Headers["authorization"]
 
 	if !ok {
-		return nil, utils.NewStatusCodeErr(
-			"this route requires admin authorization",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.RouteRequiresAdminAuth
 	}
 
 	if err := AuthAdmin(authHeader, req.Body); err != nil {
@@ -77,17 +68,11 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		bodyP := question.Question{}
 
 		if err := json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-			return nil, utils.NewStatusCodeErr(
-				"invalid body json payload",
-				httpcodes.StatusBadRequest,
-			)
+			return nil, utils.DefaultErrorList.MalformedOrTooBigBody
 		}
 
 		if err := validate.Struct(bodyP); err != nil || !bodyP.IsValid() {
-			return nil, utils.NewStatusCodeErr(
-				"invalid body data payload",
-				httpcodes.StatusBadRequest,
-			)
+			return nil, utils.DefaultErrorList.InvalidRequestEntity
 		}
 
 		qb = &bodyP
@@ -95,25 +80,16 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		bodyP := question.QuestionAlternativeFmt{}
 
 		if err := json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-			return nil, utils.NewStatusCodeErr(
-				"invalid body json payload",
-				httpcodes.StatusBadRequest,
-			)
+			return nil, utils.DefaultErrorList.MalformedOrTooBigBody
 		}
 
 		if err := validate.Struct(bodyP); err != nil || !bodyP.IsValid() {
-			return nil, utils.NewStatusCodeErr(
-				"invalid body data payload",
-				httpcodes.StatusBadRequest,
-			)
+			return nil, utils.DefaultErrorList.InvalidRequestEntity
 		}
 
 		qb = bodyP.Parse()
 	} else {
-		return nil, utils.NewStatusCodeErr(
-			"the 'fmt' query param mus be 'old' or 'new', no other string is accepted",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.InvalidFMTQueryParam
 	}
 
 	nidParam := req.QueryStringParameters["nid"]
@@ -121,17 +97,11 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	nid, err := strconv.Atoi(nidParam)
 
 	if err != nil || 0 >= nid {
-		return nil, utils.NewStatusCodeErr(
-			"the nid query param is required and it must be a valid unsigned integer",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.InvalidNIDQueryParam
 	}
 
 	if err := Connect(); err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"failed to connect to the database",
-			httpcodes.StatusInternalServerError,
-		)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -170,26 +140,17 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 		idParam, ok = req.QueryStringParameters["nid"]
 
 		if !ok {
-			return nil, utils.NewStatusCodeErr(
-				"the id/nid query parameter must be provided",
-				httpcodes.StatusBadRequest,
-			)
+			return nil, utils.DefaultErrorList.InvalidRequestEntity
 		}
 
 		id, err := strconv.Atoi(idParam)
 
 		if err != nil {
-			return nil, utils.NewStatusCodeErr(
-				"the nid query parameter must be a valid integer",
-				httpcodes.StatusBadRequest,
-			)
+			return nil, utils.DefaultErrorList.InvalidNIDQueryParam
 		}
 
 		if err = Connect(); err != nil {
-			return nil, utils.NewStatusCodeErr(
-				"failed to connect to the database",
-				httpcodes.StatusInternalServerError,
-			)
+			return nil, utils.DefaultErrorList.InternalServerError
 		}
 
 		result, fErr := dba.GetByNumID(ctx, id)
@@ -207,10 +168,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	}
 
 	if err := Connect(); err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"failed to connect to the database",
-			httpcodes.StatusInternalServerError,
-		)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	result, err := dba.GetByID(ctx, idParam)

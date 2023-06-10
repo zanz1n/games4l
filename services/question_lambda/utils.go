@@ -5,7 +5,6 @@ import (
 
 	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/games4l/backend/libs/utils/httpcodes"
 	"github.com/go-playground/validator"
 	"github.com/goccy/go-json"
 )
@@ -33,10 +32,7 @@ func AuthAdmin(header string, body string) utils.StatusCodeErr {
 	l := len(authHeaderS)
 
 	if l < 2 || l > 3 {
-		return utils.NewStatusCodeErr(
-			"this route requires admin authorization",
-			httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.RouteRequiresAdminAuth
 	}
 
 	if authHeaderS[0] == "Signature" {
@@ -48,10 +44,7 @@ func AuthAdmin(header string, body string) utils.StatusCodeErr {
 
 		// This may change depending on the jwt algorithm used
 		if len(jwtToken) < 100 || l > 2 {
-			return utils.NewStatusCodeErr(
-				"the provided jwt token is invalid",
-				httpcodes.StatusUnauthorized,
-			)
+			return utils.DefaultErrorList.InvalidJwtTokenFormat
 		}
 
 		user, err := ap.AuthUser(jwtToken)
@@ -61,16 +54,10 @@ func AuthAdmin(header string, body string) utils.StatusCodeErr {
 		}
 
 		if user.Role != auth.UserRoleAdmin {
-			return utils.NewStatusCodeErr(
-				"the provided jwt token is not from an admin user",
-				httpcodes.StatusUnauthorized,
-			)
+			return utils.DefaultErrorList.RouteRequiresAdminAuth
 		}
 	} else {
-		return utils.NewStatusCodeErr(
-			"invalid auth strategy "+authHeaderS[0],
-			httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.InvalidAuthStrategy
 	}
 
 	return nil
@@ -80,25 +67,17 @@ func AuthBySig(header string, body string) utils.StatusCodeErr {
 	authHeaderS := strings.Split(header, " ")
 
 	if len(authHeaderS) < 3 {
-		return utils.NewStatusCodeErr(
-			"this route requires admin authorization",
-			httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.RouteRequiresAdminAuth
 	}
 
 	if authHeaderS[0] != "Signature" {
-		return utils.NewStatusCodeErr(
-			"invalid auth strategy "+authHeaderS[0], httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.InvalidAuthStrategy
 	}
 
 	encodingS := auth.ByteEncoding(authHeaderS[1])
 
 	if encodingS != auth.ByteEncodingBase64 && encodingS != auth.ByteEncodingHex {
-		return utils.NewStatusCodeErr(
-			"invalid encoding strategy "+authHeaderS[1],
-			httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.InvalidAuthSignatureEncodingMethod
 	}
 
 	err := ap.ValidateSignature(encodingS, []byte(body), []byte(authHeaderS[2]))

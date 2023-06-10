@@ -19,7 +19,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	err := validate.Struct(telemetryData)
 
 	if err != nil {
-		return nil, utils.NewStatusCodeErr("malformed body", httpcodes.StatusBadRequest)
+		return nil, utils.DefaultErrorList.MalformedOrTooBigBody
 	}
 
 	Connect()
@@ -45,10 +45,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	idParam, ok := req.PathParameters["id"]
 
 	if !ok || idParam == "" {
-		return nil, utils.NewStatusCodeErr(
-			"id path param not provided",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.InvalidRequestEntity
 	}
 
 	Connect()
@@ -87,10 +84,7 @@ func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxy
 	nameParam, ok := req.QueryStringParameters["name"]
 
 	if !ok {
-		return nil, utils.NewStatusCodeErr(
-			"name query param must be provided",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.InvalidRequestEntity
 	}
 
 	Connect()

@@ -3,6 +3,7 @@ package utils
 type StatusCodeErr interface {
 	error
 	Status() int
+	SetMsg(s string)
 }
 
 type statusCodeErr struct {
@@ -16,6 +17,10 @@ func (se *statusCodeErr) Error() string {
 
 func (se *statusCodeErr) Status() int {
 	return se.code
+}
+
+func (se *statusCodeErr) SetMsg(s string) {
+	se.msg = s
 }
 
 func NewStatusCodeErr(msg string, code int) StatusCodeErr {

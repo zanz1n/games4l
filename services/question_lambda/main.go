@@ -9,7 +9,6 @@ import (
 	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/question"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/games4l/backend/libs/utils/httpcodes"
 )
 
 var (
@@ -38,16 +37,10 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 		} else if req.HTTPMethod == "POST" {
 			res, fErr = HandlePost(req)
 		} else {
-			fErr = utils.NewStatusCodeErr(
-				"no such route "+req.Path,
-				httpcodes.StatusMethodNotAllowed,
-			)
+			fErr = utils.DefaultErrorList.MethodNotAllowed
 		}
 	} else {
-		fErr = utils.NewStatusCodeErr(
-			"method not allowed",
-			httpcodes.StatusMethodNotAllowed,
-		)
+		fErr = utils.DefaultErrorList.NoSuchRoute
 	}
 
 	if fErr != nil {

@@ -9,7 +9,6 @@ import (
 	"github.com/games4l/backend/libs/logger"
 	userlib "github.com/games4l/backend/libs/user"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/games4l/backend/libs/utils/httpcodes"
 )
 
 var (
@@ -31,16 +30,10 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 		} else if req.Path == "/"+prefix+"/user" || req.Path == "/user" {
 			res, fErr = HandleUserCreation(req)
 		} else {
-			fErr = utils.NewStatusCodeErr(
-				"no such route "+req.Path,
-				httpcodes.StatusMethodNotAllowed,
-			)
+			fErr = utils.DefaultErrorList.NoSuchRoute
 		}
 	} else {
-		fErr = utils.NewStatusCodeErr(
-			"method not allowed",
-			httpcodes.StatusMethodNotAllowed,
-		)
+		fErr = utils.DefaultErrorList.MethodNotAllowed
 	}
 
 	if fErr != nil {

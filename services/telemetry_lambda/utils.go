@@ -5,7 +5,6 @@ import (
 
 	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/games4l/backend/libs/utils/httpcodes"
 	"github.com/go-playground/validator"
 	"github.com/goccy/go-json"
 )
@@ -32,25 +31,17 @@ func AuthBySig(header string, body string) utils.StatusCodeErr {
 	authHeaderS := strings.Split(header, " ")
 
 	if len(authHeaderS) < 3 {
-		return utils.NewStatusCodeErr(
-			"this route requires admin authorization",
-			httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.RouteRequiresAdminAuth
 	}
 
 	if authHeaderS[0] != "Signature" {
-		return utils.NewStatusCodeErr(
-			"invalid auth strategy "+authHeaderS[0], httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.InvalidAuthStrategy
 	}
 
 	encodingS := auth.ByteEncoding(authHeaderS[1])
 
 	if encodingS != auth.ByteEncodingBase64 && encodingS != auth.ByteEncodingHex {
-		return utils.NewStatusCodeErr(
-			"invalid encoding strategy "+authHeaderS[1],
-			httpcodes.StatusBadRequest,
-		)
+		return utils.DefaultErrorList.InvalidAuthSignatureEncodingMethod
 	}
 
 	err := ap.ValidateSignature(encodingS, []byte(body), []byte(authHeaderS[2]))

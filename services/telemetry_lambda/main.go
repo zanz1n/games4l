@@ -10,7 +10,6 @@ import (
 	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/telemetry"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/games4l/backend/libs/utils/httpcodes"
 )
 
 var (
@@ -35,16 +34,17 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 			res, fErr = HandlePost(req)
 		} else if req.HTTPMethod == "GET" {
 			res, fErr = HandleGetByName(req)
+		} else {
+			fErr = utils.DefaultErrorList.MethodNotAllowed
 		}
 	} else if hPrx(req.Path, "/"+prefix+"/telemetry/") || hPrx(req.Path, "/telemetry") {
 		if req.HTTPMethod == "GET" {
 			res, fErr = HandleGetByID(req)
+		} else {
+			fErr = utils.DefaultErrorList.MethodNotAllowed
 		}
 	} else {
-		fErr = utils.NewStatusCodeErr(
-			"method not allowed",
-			httpcodes.StatusMethodNotAllowed,
-		)
+		fErr = utils.DefaultErrorList.NoSuchRoute
 	}
 
 	if fErr != nil {

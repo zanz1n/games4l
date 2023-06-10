@@ -11,7 +11,6 @@ import (
 
 	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/games4l/backend/libs/utils/httpcodes"
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -117,7 +116,7 @@ func (ds *TelemetryService) FindByIdWithCtx(ctx context.Context, id string) (*Te
 
 	select {
 	case <-ctx.Done():
-		return nil, utils.NewStatusCodeErr("operation took to long", httpcodes.StatusRequestTimeout)
+		return nil, utils.DefaultErrorList.ServerOperationTookTooLong
 	case result := <-done:
 		return result.res, result.err
 	}
@@ -132,13 +131,13 @@ func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, utils.StatusCod
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		return nil, utils.NewStatusCodeErr("invalid object id format", httpcodes.StatusBadRequest)
+		return nil, utils.DefaultErrorList.InvalidObjectID
 	}
 
 	err = ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&tu)
 
 	if err != nil {
-		return nil, utils.NewStatusCodeErr("not find", httpcodes.StatusNotFound)
+		return nil, utils.DefaultErrorList.EntityNotFound
 	}
 
 	return &tu, nil
@@ -148,17 +147,17 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	err := validate.Struct(*data)
 
 	if err != nil {
-		return nil, utils.NewStatusCodeErr("invalid body schema", httpcodes.StatusBadRequest)
+		return nil, utils.DefaultErrorList.InvalidRequestEntity
 	}
 
-	for i, answred := range data.Answereds {
+	for _, answred := range data.Answereds {
 		if answred > 4 || answred < 1 {
-			return nil, utils.NewStatusCodeErr(fmt.Sprintf("invalid answered range on %v° item", i+1), httpcodes.StatusBadRequest)
+			return nil, utils.DefaultErrorList.InvalidRequestEntity
 		}
 	}
 
 	if data.DoneAt < ds.cfg.ProjectEpoch {
-		return nil, utils.NewStatusCodeErr("timestamp out of accepted range on done_at", httpcodes.StatusBadRequest)
+		return nil, utils.DefaultErrorList.InvalidRequestEntity
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -167,7 +166,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	normalizedName, _, err := transform.String(normalizer, strings.ToLower(data.PacientName))
 
 	if err != nil {
-		return nil, utils.NewStatusCodeErr("something went wrong", httpcodes.StatusInternalServerError)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	tu := TelemetryUnit{
@@ -185,7 +184,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	_, err = ds.col.InsertOne(ctx, tu)
 
 	if err != nil {
-		return nil, utils.NewStatusCodeErr("something went wrong", httpcodes.StatusInternalServerError)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	return &tu, nil
@@ -198,13 +197,13 @@ func (ds *TelemetryService) FindSimilarNameWithCtx(ctx context.Context, name str
 	spl := strings.Split(name, " ")
 
 	if len(spl) < 2 || len(spl) > 9 {
-		return nil, utils.NewStatusCodeErr("at least one surname must be provided", httpcodes.StatusBadRequest)
+		return nil, utils.DefaultErrorList.SurnameSearchInvalid
 	}
 
 	deadline, ok := ctx.Deadline()
 
 	if !ok {
-		return nil, utils.NewStatusCodeErr("invalid context was provided", httpcodes.StatusInternalServerError)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	done := make(chan similarNameResult)
@@ -222,7 +221,7 @@ func (ds *TelemetryService) FindSimilarNameWithCtx(ctx context.Context, name str
 	case result := <-done:
 		return result.res, result.err
 	case <-ctx.Done():
-		return nil, utils.NewStatusCodeErr("query timeout exceded", httpcodes.StatusRequestTimeout)
+		return nil, utils.DefaultErrorList.ServerOperationTookTooLong
 	}
 }
 

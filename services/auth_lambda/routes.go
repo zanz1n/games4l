@@ -29,26 +29,17 @@ func HandleSignIn(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRes
 	bodyP := SigInBody{}
 
 	if err := json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"failed to decode body",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.MalformedOrTooBigBody
 	}
 
 	if err := validate.Struct(bodyP); err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"invalid body format",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.InvalidRequestEntity
 	}
 
 	if err := Connect(); err != nil {
 		logger.Error(err.Error())
 
-		return nil, utils.NewStatusCodeErr(
-			"failed to connect to database",
-			httpcodes.StatusInternalServerError,
-		)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -75,17 +66,11 @@ func HandleUserCreation(req events.APIGatewayProxyRequest) (*events.APIGatewayPr
 	bodyP := CreateUserBody{}
 
 	if err := json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"invalid body json payload",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.MalformedOrTooBigBody
 	}
 
 	if err := validate.Struct(bodyP); err != nil {
-		return nil, utils.NewStatusCodeErr(
-			"invalid body data payload",
-			httpcodes.StatusBadRequest,
-		)
+		return nil, utils.DefaultErrorList.MalformedOrTooBigBody
 	}
 
 	if err := AuthBySig(req.Headers["authorization"], req.Body); err != nil {
@@ -95,10 +80,7 @@ func HandleUserCreation(req events.APIGatewayProxyRequest) (*events.APIGatewayPr
 	if err := Connect(); err != nil {
 		logger.Error(err.Error())
 
-		return nil, utils.NewStatusCodeErr(
-			"failed to connect to database",
-			httpcodes.StatusInternalServerError,
-		)
+		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

@@ -61,7 +61,7 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCode
 			claims jwt.MapClaims
 		)
 
-		formatErr := errors.New("invalid auth token metadata format, please sign-out ang log-in again")
+		formatErr := errors.New(utils.DefaultErrorList.InvalidJwtTokenFormat.Error())
 
 		if _, ok = t.Method.(*jwt.SigningMethodHMAC); !ok {
 			headerAlg, ok := t.Header["alg"].(string)
@@ -98,7 +98,7 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, utils.StatusCode
 		}
 
 		if t.Claims.(jwt.MapClaims)["exp"].(float64) < float64(time.Now().Unix()) {
-			return nil, errors.New("token is expired")
+			return nil, errors.New(utils.DefaultErrorList.JwtTokenExpired.Error())
 		}
 
 		return []byte(ap.jwtKey), nil
@@ -134,7 +134,7 @@ func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes 
 	_, err := digest.Write(body)
 
 	if err != nil {
-		return utils.NewStatusCodeErr("failed to hash request body", httpcodes.StatusBadRequest)
+		return utils.DefaultErrorList.MalformedOrTooBigBody
 	}
 
 	sum := digest.Sum(ap.sigKey)
@@ -146,11 +146,11 @@ func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes 
 	} else if method == ByteEncodingBase64 {
 		expected = base64.RawStdEncoding.EncodeToString(sum)
 	} else {
-		return utils.NewStatusCodeErr("invalid encoding method", httpcodes.StatusBadRequest)
+		return utils.DefaultErrorList.InvalidAuthSignatureEncodingMethod
 	}
 
 	if expected != string(givenBytes) {
-		return utils.NewStatusCodeErr("signatures do not match", httpcodes.StatusUnauthorized)
+		return utils.DefaultErrorList.InvalidAuthSignature
 	}
 
 	return nil
