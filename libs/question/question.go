@@ -25,7 +25,7 @@ type Question struct {
 	Type  QuestionType  `json:"type,omitempty" bson:"type,omitempty" validate:"required"`
 	Style QuestionStyle `json:"style,omitempty" bson:"style,omitempty" validate:"required"`
 
-	File string `json:"file,omitempty" bson:"file,omitempty" validate:"required"`
+	File *string `json:"file" bson:"file"`
 
 	ImageWidth  *int `json:"image_width" bson:"image_width"`  // Nullable
 	ImageHeight *int `json:"image_height" bson:"image_width"` // Nullable
@@ -45,6 +45,10 @@ func (q *Question) IsValid() bool {
 			return false
 		}
 	} else {
+		return false
+	}
+
+	if q.Style != QuestionStyleText && q.File == nil {
 		return false
 	}
 
@@ -73,10 +77,12 @@ func (q *Question) Parse() *QuestionAlternativeFmt {
 		nq.ImageWidth = q.ImageWidth
 	}
 
-	if q.Style == QuestionStyleAudio {
-		nq.Audio = &q.File
-	} else {
-		nq.File = &q.File
+	if q.File != nil {
+		if q.Style == QuestionStyleAudio {
+			nq.Audio = q.File
+		} else {
+			nq.File = q.File
+		}
 	}
 
 	nq.Answer1 = q.Answers[0]
@@ -133,8 +139,16 @@ func (q *QuestionAlternativeFmt) IsValid() bool {
 		if q.Audio == nil {
 			return false
 		}
-	} else if q.File == nil {
-		return false
+	} else {
+		if q.Audio != nil {
+			return false
+		}
+	}
+
+	if q.Style != QuestionStyleText {
+		if q.Audio == nil && q.File == nil {
+			return false
+		}
 	}
 
 	if (q.ImageHeight != nil && q.ImageWidth == nil) ||
@@ -161,9 +175,9 @@ func (q *QuestionAlternativeFmt) Parse() *Question {
 	}
 
 	if q.Style == QuestionStyleAudio {
-		nq.File = *q.Audio
+		nq.File = q.Audio
 	} else {
-		nq.File = *q.File
+		nq.File = q.File
 	}
 
 	return &nq
