@@ -1,5 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
+:root {
+    --background: #282a36;
+    --current-line: #44475a;
+    --foreground: #f8f8f2;
+    --comment: #6272a4;
+    --cyan: #8be9fd;
+    --cyan-hover: #6cb9ca;
+    --green: #3ec25f;
+    --green-hover: #298a41;
+    --orange: #ffb86c;
+    --pink: #ff79c6;
+    --pink-hover: #db589a;
+    --purple: #bd93f9;
+    --purple-hover: #9b6fe7;
+    --red: #ff5555;
+    --yellow: #f1fa8c;
+    --yellow-hover: #e1e656;
+}
+
 * {
     padding: 0;
     margin: 0;
