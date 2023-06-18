@@ -28,7 +28,7 @@ type Question struct {
 	File *string `json:"file" bson:"file"`
 
 	ImageWidth  *int `json:"image_width" bson:"image_width"`  // Nullable
-	ImageHeight *int `json:"image_height" bson:"image_width"` // Nullable
+	ImageHeight *int `json:"image_height" bson:"image_height"` // Nullable
 }
 
 func (q *Question) IsValid() bool {
