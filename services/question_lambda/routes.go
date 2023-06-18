@@ -109,7 +109,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 
 	result, fErr := dba.Create(ctx, nid, qb)
 
-	if err != nil {
+	if fErr != nil {
 		return nil, fErr
 	}
 
