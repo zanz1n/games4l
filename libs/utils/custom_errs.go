@@ -211,7 +211,7 @@ var DefaultErrorList = ErrorList{
 		httpcodes.StatusBadRequest,
 	),
 	InvalidNIDQueryParam: NewStatusCodeErr(
-		"the nid query param is required and it must be a valid unsigned integer",
+		"the 'nid' query param is required and it must be a valid unsigned integer",
 		httpcodes.StatusBadRequest,
 	),
 }
