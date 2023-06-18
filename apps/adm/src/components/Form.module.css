@@ -1,0 +1,109 @@
+.main {
+    --green-disabled: #8cc78e;
+    width: 100vw;
+    height: calc(100vh - 70px);
+    background-color: var(--background-bright);
+    display: grid;
+    place-items: center;
+    background-color: #1c1522;
+}
+
+.formContainer {
+    background-color: var(--background);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.226);
+    width: 480px;
+    padding: 32px;
+    border-radius: 12px;
+}
+
+.formContainer form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.inputLabel {
+    font-size: 1.2rem;
+    color: var(--foreground);
+    margin-bottom: 10px;
+}
+
+.formInput input {
+    width: 100%;
+    height: 36px;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    background-color: var(--current-line);
+    color: var(--foreground);
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.226);
+}
+
+.form button {
+    width: 100%;
+    height: 36px;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    background-color: var(--green);
+    color: var(--background);
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.226);
+}
+
+.form button:hover {
+    background-color: var(--green-hover);
+}
+
+.form button:disabled {
+    background-color: var(--green-disabled);
+    cursor: not-allowed;
+}
+
+.formInput input:focus {
+    outline: 2px solid var(--cyan);
+}
+
+.topError {
+    align-self: center;
+    color: var(--red);
+    margin-bottom: 12px;
+    margin: 12px;
+    text-align: center;
+}
+
+.invisible {
+    color: var(--background);
+}
+
+.switchPages {
+    align-self: center;
+}
+
+.switchPages a {
+    color: var(--cyan);
+}
+
+.formTitle {
+    text-align: center;
+}
+
+.switchPages a:hover {
+    color: var(--cyan-hover);
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 540px) {
+    .formContainer {
+        width: 94%;
+        padding: 18px;
+    }
+}
