@@ -88,12 +88,10 @@ func eliminateDuplicates(arr []TelemetryUnit) []TelemetryUnit {
 		v  TelemetryUnit
 	)
 	for _, v = range arr {
-		if _, ok = cache[v.ID.Hex()]; ok {
-			continue
+		if _, ok = cache[v.ID.Hex()]; !ok {
+			newArr = append(newArr, v)
+			cache[v.ID.Hex()] = struct{}{}
 		}
-
-		newArr = append(newArr, v)
-		cache[v.ID.Hex()] = struct{}{}
 	}
 
 	return newArr
