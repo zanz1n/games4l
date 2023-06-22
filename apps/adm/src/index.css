@@ -29,5 +29,5 @@
 body {
     font-family: 'Roboto', sans-serif;
     color: var(--foreground);
-    background-color: var(--background);
+    background-color: var(--background-bright);
 }

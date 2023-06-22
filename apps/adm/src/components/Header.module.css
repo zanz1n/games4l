@@ -93,3 +93,27 @@
 .right .green:hover {
     background-color: var(--green-hover);
 }
+
+@media screen and (max-width: 540px) {
+    .nav {
+        display: none;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+
+    .right {
+        gap: 12px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .right button {
+        width: 82px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+}
