@@ -6,7 +6,6 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/games4l/backend/libs/auth"
-	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/question"
 	"github.com/games4l/backend/libs/utils"
 )
@@ -58,8 +57,8 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 }
 
 func main() {
+	utils.DefaultErrorList.Apply(utils.PtBtMessages)
 	os.Setenv("NO_COLOR", "1")
-	logger.Init()
 	ap = auth.NewAuthProvider([]byte(os.Getenv("WEBHOOK_SIG")), []byte(os.Getenv("JWT_SIG")))
 	lambda.Start(Handler)
 }
