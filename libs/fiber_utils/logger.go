@@ -7,6 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var log = logger.NewLogger("http_log")
+
 func statusColor(code int, colors fiber.Colors) string {
 	switch {
 	case code >= fiber.StatusOK && code < fiber.StatusMultipleChoices:
@@ -58,8 +60,8 @@ func NewLoggerMiddleware() fiber.Handler {
 
 		end := time.Now()
 
-		if logger.LoggerCfg.Colors {
-			logger.Http(
+		if logger.DefaultConfig.Colors {
+			logger.Info(
 				"[%s]:%s  %s%s\x1b[0m  %s  %s%v\x1b[0m  %s%v\x1b[0m",
 				c.IP(),
 				c.Port(),
@@ -72,7 +74,7 @@ func NewLoggerMiddleware() fiber.Handler {
 				end.Sub(start),
 			)
 		} else {
-			logger.Http(
+			logger.Info(
 				"[%s]:%s  %s  %s  %v  %v",
 				c.IP(),
 				c.Port(),
