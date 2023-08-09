@@ -18,14 +18,6 @@
     background-color: #1c1522;
 }
 
-.formSmallContainer,
-.formBigContainer {
-    background-color: var(--background);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.226);
-    padding: 32px;
-    border-radius: 12px;
-}
-
 .menu {
     display: flex;
     flex-direction: column;
@@ -63,7 +55,7 @@
     color: var(--foreground);
 }
 
-@media screen and (max-width: 816px) {
+@media screen and (max-width: 1024px) {
     .dashMenuContainer {
         width: 64px;
     }

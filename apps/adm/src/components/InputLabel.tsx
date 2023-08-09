@@ -1,14 +1,14 @@
 import styles from "./Form.module.css";
 
-export interface InputLabelProps {
+export type InputLabelProps = React.PropsWithChildren<{
     type: React.HTMLInputTypeAttribute
     identifier: string;
     required?: boolean;
     withError?: boolean;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+}>
 
-export default function InputLabel({ required, type, identifier, children, onChange }: React.PropsWithChildren<InputLabelProps>) {
+export default function InputLabel({ required, type, identifier, children, onChange }: InputLabelProps) {
     return (
         <div className={styles.inputLabel}>
             <label htmlFor={identifier}>{children}</label>
