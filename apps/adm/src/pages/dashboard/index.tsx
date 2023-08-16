@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import styles from "./index.module.css";
 import { useAuth } from "../../lib/Auth";
 import { useEffect } from "react";
+import CreateQuestionMenu from "./CreateQuestion";
 
 export interface DashBoardProps {
     route: string;
@@ -40,7 +41,7 @@ export default function DashBoardMain({ route }: DashBoardProps) {
                 {
                     route == "create-question"
                         ?
-                        ""
+                        <CreateQuestionMenu/>
                         : ""
                 }
             </main>
