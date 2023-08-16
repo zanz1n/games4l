@@ -4,11 +4,12 @@ export interface FormProps {
     error?: string | null;
     onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
     children: React.ReactElement | React.ReactElement[];
+    id?: string;
 }
 
-export default function Form({ error, onSubmit, children }: FormProps) {
+export default function Form({ error, onSubmit, children, id }: FormProps) {
     return(
-        <form className={styles.form} onSubmit={(e) => {
+        <form id={id} className={styles.form} onSubmit={(e) => {
             e.preventDefault();
             onSubmit?.(e);
         }}>

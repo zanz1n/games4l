@@ -21,9 +21,9 @@ export function InputLabel({ identifier, onChange, children, required, type }: I
     );
 }
 
-export function BigForm({ error, onSubmit, children }: FormProps) {
+export function BigForm({ error, onSubmit, children, id }: FormProps) {
     return(
-        <form className={styles.form} onSubmit={(e) => {
+        <form id={id} className={styles.form} onSubmit={(e) => {
             e.preventDefault();
             onSubmit?.(e);
         }}>
