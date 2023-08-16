@@ -1,5 +1,4 @@
 .main {
-    --green-disabled: #8cc78e;
     min-height: calc(100vh - 70px);
     display: grid;
     place-items: center;
