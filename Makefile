@@ -1,7 +1,7 @@
 build-lambdas:
-	cd ./services/auth_lambda && make build
-	cd ./services/telemetry_lambda && make build
-	cd ./services/question_lambda && make build
+	cd ./services/auth_lambda && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o dist/main .
+	cd ./services/telemetry_lambda && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o dist/main .
+	cd ./services/question_lambda && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o dist/main .
 
 deploy:
 	make build-lambdas
