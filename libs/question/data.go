@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
@@ -102,6 +103,24 @@ func (s *QuestionService) Create(ctx context.Context, numId int, data *Question)
 	}
 
 	return &insertData, nil
+}
+
+func (s *QuestionService) Update(ctx context.Context, hexID string, data *QuestionUpdateData) utils.StatusCodeErr {
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+
+	oid, err := primitive.ObjectIDFromHex(hexID)
+
+	if err != nil {
+		return utils.DefaultErrorList.InvalidObjectID
+	}
+
+	if _, err = s.col.UpdateByID(ctx, oid, *data); err != nil {
+		logger.Error("%s", err.Error())
+		return utils.DefaultErrorList.InternalServerError
+	}
+
+	return nil
 }
 
 func (s *QuestionService) GetByNumID(ctx context.Context, numId int) (*QuestionDbData, utils.StatusCodeErr) {

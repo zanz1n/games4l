@@ -16,6 +16,16 @@ const (
 	QuestionType4Alt QuestionType = "4Alt"
 )
 
+type QuestionUpdateData struct {
+	Question      *string       `json:"question"`
+	Answers       []string      `json:"answers"`
+	CorrectAnswer *string       `json:"correct_answer"`
+	Type          *QuestionType `json:"type"`
+	File          *string       `json:"file"`
+	ImageWidth    *int          `json:"image_width"`
+	ImageHeight   *int          `json:"image_height"`
+}
+
 type Question struct {
 	Question string   `json:"question,omitempty" bson:"question,omitempty" validate:"required"`
 	Answers  []string `json:"answers,omitempty" bson:"answers,omitempty" validate:"required"`
@@ -27,7 +37,7 @@ type Question struct {
 
 	File *string `json:"file" bson:"file"`
 
-	ImageWidth  *int `json:"image_width" bson:"image_width"`  // Nullable
+	ImageWidth  *int `json:"image_width" bson:"image_width"`   // Nullable
 	ImageHeight *int `json:"image_height" bson:"image_height"` // Nullable
 }
 
