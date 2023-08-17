@@ -5,7 +5,7 @@ import (
 
 	"github.com/games4l/backend/libs/auth"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-json"
 )
 
