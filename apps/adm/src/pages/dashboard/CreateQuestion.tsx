@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { BigForm, InputLabel, SubmitButton } from "../../components/BigForm";
-import styles from "../../components/BigForm.module.css";
+import { BigForm, InputLabel, SubmitButton } from "../../components/form/BigForm";
+import styles from "../../components/form/BigForm.module.css";
 
 type AltType = 2 | 4;
 type QuestionStyle = "image" | "audio" | "video" | "text";

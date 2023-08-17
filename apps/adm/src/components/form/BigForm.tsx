@@ -1,8 +1,6 @@
 import styles from "./BigForm.module.css";
 import otherStyles from "./Form.module.css";
-import { FormProps } from "./Form";
-import { InputLabelProps } from "./InputLabel";
-import { SubmitButtonProps } from "./SubmitButton";
+import { FormProps, InputLabelProps, SubmitButtonProps } from "./types";
 
 export function SubmitButton({ children, enabled }: SubmitButtonProps) {
     return (
@@ -22,7 +20,7 @@ export function InputLabel({ identifier, onChange, children, required, type }: I
 }
 
 export function BigForm({ error, onSubmit, children, id }: FormProps) {
-    return(
+    return (
         <form id={id} className={styles.form} onSubmit={(e) => {
             e.preventDefault();
             onSubmit?.(e);

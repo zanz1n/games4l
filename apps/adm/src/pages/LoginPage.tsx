@@ -1,10 +1,7 @@
 import { useState } from "react";
-import styles from "../components/Form.module.css";
+import styles from "../components/form/Form.module.css";
 import Header from "../components/Header";
-import Form from "../components/Form";
-import InputLabel from "../components/InputLabel";
-import SubmitButton from "../components/SubmitButton";
-import SwitchPages from "../components/SwitchPage";
+import { Form, InputLabel, SubmitButton, SwitchPages } from "../components/form/Form";
 import globals from "../lib/globals";
 import { useAuth } from "../lib/Auth";
 import { useEffect } from "react";
@@ -70,7 +67,7 @@ export default function LoginPage() {
                 await logIn(username, password);
                 setError(null);
                 navigate("/");
-            } catch(e) {
+            } catch (e) {
                 e instanceof Error ? setError(e.message) : setError("Algo deu errado");
             }
         } else {
@@ -90,7 +87,7 @@ export default function LoginPage() {
 
     return (
         <>
-            <Header/>
+            <Header />
             <main className={styles.main}>
                 <div className={styles.formContainer}>
                     <div className={styles.formTitle}>
@@ -109,7 +106,7 @@ export default function LoginPage() {
                         </InputLabel>
 
                         <SubmitButton enabled={sendable}>Log In</SubmitButton>
-                        <SwitchPages 
+                        <SwitchPages
                             plain="Algum Problema? Contacte no"
                             to={globals.TeamsUrl}>Teams
                         </SwitchPages>
