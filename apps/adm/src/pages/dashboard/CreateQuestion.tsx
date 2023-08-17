@@ -1,63 +1,19 @@
 import { useEffect, useState } from "react";
 import { BigForm, InputLabel, SubmitButton } from "../../components/form/BigForm";
 import styles from "../../components/form/BigForm.module.css";
-
-type AltType = 2 | 4;
-type QuestionStyle = "image" | "audio" | "video" | "text";
+import { QuestionCorrect, QuestionStyle, validateFormData } from "../../lib/question";
 
 export default function CreateQuestionMenu() {
     const [error, setError] = useState<string | null>(null);
 
     const [question, setQuestion] = useState("");
     const [answers, setAnswers] = useState(["", "", "", ""]);
-    const [correct, setCorrect] = useState("");
+    const [correct, setCorrect] = useState("" as QuestionCorrect);
     const [questionStyle, setQuestionStyle] = useState("" as QuestionStyle);
     const [file, setFile] = useState("");
 
     useEffect(() => {
-        console.log("updatedAt: " + Date.now().toString());
-
-        if (question == "") {
-            return setError("A pergunta não pode estar em branco!");
-        }
-
-        if (questionStyle != "audio" &&
-            questionStyle != "image" &&
-            questionStyle != "text" &&
-            questionStyle != "video"
-        ) {
-            return setError("Somente os estilos ('audio', 'image', 'text' ou 'video') são aceitos!");
-        }
-
-        if (questionStyle != "text") {
-            return setError("Para os estilos ('audio', 'image', ou 'video'), uma arquivo precisa ser fornecido");
-        }
-
-        const altType: AltType = answers[2] == "" && answers[3] == "" ? 2 : 4;
-
-        if (altType == 2) {
-            if (answers[0] == "") {
-                return setError("A resposta 1 precisa ser preenchida!");
-            } else if (answers[1] == "") {
-                return setError("A reposta 2 precisa ser preenchida!");
-            }
-
-            if (correct != "1" && correct != "2") {
-                return setError("Como a resposta 3 e 4 não foram fornecidas, apenas opções (1 ou 2) podem estar corretas");
-            }
-        } else if (altType == 4) {
-            if (answers[2] == "") {
-                return setError("A resposta 3 precisa ser preenchida!");
-            } else if (answers[3] == "") {
-                return setError("A reposta 4 precisa ser preenchida!");
-            }
-
-            if (correct != "1" && correct != "2" && correct != "3" && correct != "4") {
-                return setError("Somente opções (1, 2, 3 ou 4) podem estar corretas!");
-            }
-        }
-
-        setError(null);
+        setError(validateFormData({ answers, correct, question, questionStyle, file }));
     }, [question, answers, correct, questionStyle, file]);
 
     function updateAnswer(idx: number) {
@@ -81,7 +37,7 @@ export default function CreateQuestionMenu() {
                     >Pergunta</InputLabel>
 
                     <InputLabel identifier="correct_answer" type="text"
-                        onChange={(e) => { setCorrect(e.target.value); }}
+                        onChange={(e) => { setCorrect(e.target.value as QuestionCorrect); }}
                     >Resposta correta</InputLabel>
 
                     <InputLabel identifier="question_style" type="text"

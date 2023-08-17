@@ -34,7 +34,7 @@ export default function Header() {
                         </>
                     ) : (
                         <>
-                            <button 
+                            <button
                                 onClick={() => navigate("/auth/login")}
                                 className={styles.green}>Sign In
                             </button>
