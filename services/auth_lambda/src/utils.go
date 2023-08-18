@@ -1,4 +1,4 @@
-package main
+package src
 
 import (
 	"strings"
@@ -7,6 +7,7 @@ import (
 	"github.com/games4l/backend/libs/utils"
 	"github.com/goccy/go-json"
 
+	userlib "github.com/games4l/backend/libs/user"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -15,6 +16,8 @@ var (
 		"Content-Type": "application/json",
 	}
 	validate = validator.New()
+	ap       *auth.AuthProvider
+	dba      *userlib.UserService
 )
 
 type JSON map[string]interface{}

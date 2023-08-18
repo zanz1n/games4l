@@ -11,4 +11,6 @@ use (
 	./services/telemetry_lambda
 	./services/auth_lambda
 	./services/question_lambda
+
+	./tools/lambda-dev
 )
