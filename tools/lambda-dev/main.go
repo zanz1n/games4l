@@ -4,6 +4,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 	"unsafe"
@@ -13,7 +14,20 @@ import (
 	authsrc "github.com/games4l/backend/services/auth_lambda/src"
 	questionsrc "github.com/games4l/backend/services/question_lambda/src"
 	telemetrysrc "github.com/games4l/backend/services/telemetry_lambda/src"
+	"github.com/joho/godotenv"
 )
+
+func init() {
+	if os.Getenv("APP_ENV") == "" {
+		if err := godotenv.Load(); err != nil {
+			logger.Error("Failed to load .env file: " + err.Error())
+		} else {
+			logger.Info("Loaded environment configuration from .env file")
+		}
+	} else {
+		logger.Info("Loaded environment configuration from shell variables")
+	}
+}
 
 func main() {
 	server := Server{}
