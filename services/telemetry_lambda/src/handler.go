@@ -14,8 +14,6 @@ func hPrx(s, prefix string) bool {
 }
 
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	ap = auth.NewAuthProvider([]byte(os.Getenv("WEBHOOK_SIG")), []byte(os.Getenv("JWT_SIG")))
-
 	prefix := os.Getenv("API_GATEWAY_PREFIX")
 
 	var (
@@ -53,4 +51,8 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 	}
 
 	return *res, nil
+}
+
+func init() {
+	ap = auth.NewAuthProvider([]byte(os.Getenv("WEBHOOK_SIG")), []byte(os.Getenv("JWT_SIG")))
 }
