@@ -158,6 +158,8 @@ func init() {
 		target: "",
 		cfg:    DefaultConfig,
 	}
+
+	httpLogger = NewLogger("http_log")
 }
 
 func SetLevel(t string) {
