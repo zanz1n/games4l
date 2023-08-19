@@ -5,7 +5,9 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 	"unsafe"
 
@@ -30,9 +32,26 @@ func init() {
 }
 
 func main() {
-	server := Server{}
+	endCh := make(chan os.Signal, 1)
+	signal.Notify(endCh, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
-	http.ListenAndServe(":8080", &server)
+	go func() {
+		server := Server{}
+
+		addr := os.Getenv("APP_LNADDR")
+		if addr == "" {
+			addr = ":8080"
+		}
+
+		logger.Info("Listening on addr " + addr)
+
+		if err := http.ListenAndServe(addr, &server); err != nil {
+			logger.Fatal(err)
+		}
+	}()
+
+	<-endCh
+	logger.Info("Stopping ...")
 }
 
 type Server struct{}
@@ -102,8 +121,8 @@ func ConvertRequest(r *http.Request) (*events.APIGatewayProxyRequest, error) {
 		HTTPMethod:                      r.Method,
 		IsBase64Encoded:                 false,
 		MultiValueHeaders:               r.Header,
-		Headers:                         ConvertMultivalueMap(r.Header),
-		QueryStringParameters:           ConvertMultivalueMap(query),
+		Headers:                         ConvertMultivalueMap(r.Header, true),
+		QueryStringParameters:           ConvertMultivalueMap(query, false),
 		MultiValueQueryStringParameters: query,
 		PathParameters:                  make(map[string]string),
 		RequestContext:                  *new(events.APIGatewayProxyRequestContext),
@@ -111,17 +130,21 @@ func ConvertRequest(r *http.Request) (*events.APIGatewayProxyRequest, error) {
 	}, nil
 }
 
-func ConvertMultivalueMap(multivalue map[string][]string) map[string]string {
+func ConvertMultivalueMap(multivalue map[string][]string, lowerfy bool) map[string]string {
 	m := make(map[string]string)
 
 	for k, v := range multivalue {
 		s := ""
 
 		for _, sv := range v {
-			s += ", " + sv
+			s += sv
 		}
 
-		m[k] = s
+		if lowerfy {
+			m[strings.ToLower(k)] = s
+		} else {
+			m[k] = s
+		}
 	}
 
 	return m
