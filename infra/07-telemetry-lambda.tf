@@ -1,5 +1,10 @@
+resource "random_pet" "lambda_telemetry_name" {
+  prefix = "games4l-telemetry"
+  length = 2
+}
+
 resource "aws_iam_role" "telemetry_lambda_exec" {
-  name = "telemetry-lambda"
+  name = random_pet.lambda_telemetry_name
 
   assume_role_policy = data.aws_iam_policy_document.lambda_exec_policy.json
 }
@@ -20,7 +25,7 @@ resource "aws_lambda_permission" "telemetry_lambda_gtw" {
 }
 
 resource "aws_lambda_function" "telemetry" {
-  function_name = "telemetry"
+  function_name = random_pet.lambda_telemetry_name
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_telemetry.key

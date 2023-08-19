@@ -1,5 +1,10 @@
+resource "random_pet" "lambda_auth_name" {
+  prefix = "games4l-auth"
+  length = 2
+}
+
 resource "aws_iam_role" "auth_lambda_exec" {
-  name = "auth-lambda"
+  name = random_pet.lambda_auth_name
 
   assume_role_policy = data.aws_iam_policy_document.lambda_exec_policy.json
 }
@@ -21,7 +26,7 @@ resource "aws_lambda_permission" "auth_lambda_gtw" {
 }
 
 resource "aws_lambda_function" "auth" {
-  function_name = "auth"
+  function_name = random_pet.lambda_auth_name
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_auth.key

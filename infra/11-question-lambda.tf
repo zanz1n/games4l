@@ -1,5 +1,10 @@
+resource "random_pet" "lambda_question_name" {
+  prefix = "games4l-question"
+  length = 2
+}
+
 resource "aws_iam_role" "question_lambda_exec" {
-  name = "question-lambda"
+  name = random_pet.lambda_question_name
 
   assume_role_policy = data.aws_iam_policy_document.lambda_exec_policy.json
 }
@@ -21,7 +26,7 @@ resource "aws_lambda_permission" "question_lambda_gtw" {
 }
 
 resource "aws_lambda_function" "question" {
-  function_name = "question"
+  function_name = random_pet.lambda_question_name
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_question.key

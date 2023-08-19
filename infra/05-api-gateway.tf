@@ -1,5 +1,10 @@
+resource "random_pet" "apigateway_name" {
+  prefix = "games4l-apigateway"
+  length = 2
+}
+
 resource "aws_apigatewayv2_api" "main" {
-  name          = "games4l_main"
+  name          = random_pet.apigateway_name
   protocol_type = "HTTP"
 
   cors_configuration {
