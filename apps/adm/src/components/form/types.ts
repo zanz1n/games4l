@@ -1,21 +1,24 @@
+import { ComponentChildren, JSX } from "preact";
+
 export interface FormProps {
     error?: string | null;
-    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
-    children: React.ReactElement | React.ReactElement[];
+    onSubmit?: JSX.GenericEventHandler<HTMLFormElement>;
+    children: ComponentChildren;
     id?: string;
 }
 
-export type InputLabelProps = React.PropsWithChildren<{
-    type: React.HTMLInputTypeAttribute
+export interface InputLabelProps {
+    type: string;
     identifier: string;
     required?: boolean;
     withError?: boolean;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}>
+    onChange?: JSX.GenericEventHandler<HTMLInputElement>;
+    children: ComponentChildren;
+}
 
 export interface SubmitButtonProps {
     enabled?: boolean;
-    children: React.ReactElement | React.ReactElement[] | string;
+    children: ComponentChildren;
 }
 
 export interface SwitchPagesProps {

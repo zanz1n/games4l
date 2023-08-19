@@ -1,11 +1,11 @@
-import { useState } from "react";
 import styles from "../components/form/Form.module.css";
 import Header from "../components/Header";
 import { Form, InputLabel, SubmitButton, SwitchPages } from "../components/form/Form";
 import globals from "../lib/globals";
-import { useAuth } from "../lib/Auth";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { JSX } from "preact";
+import { AuthService } from "../lib/Auth";
+import { useEffect, useState } from "preact/hooks";
+import { useRouter } from "preact-router";
 
 interface SignInDomData {
     username: {
@@ -37,11 +37,13 @@ function validate(target: unknown): target is SignInDomData {
 }
 
 export default function LoginPage() {
-    const navigate = useNavigate();
-    const { logIn, isLoggedIn } = useAuth();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, navigate] = useRouter();
+
+    const auth = AuthService.getInstance();
 
     useEffect(() => {
-        if (isLoggedIn()) {
+        if (auth.isLoggedIn()) {
             navigate("/");
         }
     }, []);
@@ -56,7 +58,7 @@ export default function LoginPage() {
 
     const [sendable, setSendable] = useState<boolean>(false);
 
-    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function onSubmit(e: JSX.TargetedEvent<HTMLFormElement>) {
         const target: unknown = e.target;
 
         if (validate(target)) {
@@ -64,7 +66,7 @@ export default function LoginPage() {
             const password = target.password.value;
 
             try {
-                await logIn(username, password);
+                await auth.logIn(username, password);
                 setError(null);
                 navigate("/");
             } catch (e) {

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 import { BigForm, InputLabel, SubmitButton } from "../../components/form/BigForm";
 import styles from "../../components/form/BigForm.module.css";
 import { QuestionCorrect, QuestionStyle, validateFormData } from "../../lib/question";
+import { JSX } from "preact";
 
 export default function CreateQuestionMenu() {
     const [error, setError] = useState<string | null>(null);
@@ -17,8 +18,10 @@ export default function CreateQuestionMenu() {
     }, [question, answers, correct, questionStyle, file]);
 
     function updateAnswer(idx: number) {
-        return (e: React.ChangeEvent<HTMLInputElement>) => {
+        return (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
             const mutation = [...answers];
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             mutation[idx] = e.target.value;
 
             setAnswers(mutation);
@@ -33,18 +36,26 @@ export default function CreateQuestionMenu() {
             <div className={styles.bigFormBody}>
                 <div>
                     <InputLabel identifier="question" type="text"
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
                         onChange={(e) => { setQuestion(e.target.value); }}
                     >Pergunta</InputLabel>
 
                     <InputLabel identifier="correct_answer" type="text"
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
                         onChange={(e) => { setCorrect(e.target.value as QuestionCorrect); }}
                     >Resposta correta</InputLabel>
 
                     <InputLabel identifier="question_style" type="text"
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
                         onChange={(e) => { setQuestionStyle(e.target.value as QuestionStyle); }}
                     >Estilo</InputLabel>
 
                     <InputLabel identifier="file" type="text"
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
                         onChange={(e) => { setFile(e.target.value); }}
                     >Arquivo (imagem/video/audio)</InputLabel>
                 </div>

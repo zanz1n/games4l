@@ -1,30 +1,31 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useRouter } from "preact-router";
 import styles from "./Header.module.css";
-import { useAuth } from "../lib/Auth";
+import { AuthService } from "../lib/Auth";
 
 export default function Header() {
-    const { isLoggedIn, getInfo, logOut } = useAuth();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, navigate] = useRouter();
 
-    const user = getInfo();
+    const auth = AuthService.getInstance();
 
-    const navigate = useNavigate();
+    const user = auth.getInfo();
 
     return (
         <div className={styles.header}>
             <header className={styles.headerContainer}>
                 <div className={styles.left}>
-                    <Link to="/">
+                    <Link href="/">
                         <h1 className={styles.title}>Games4Life</h1>
                     </Link>
                 </div>
                 <div className={styles.right}>
-                    {isLoggedIn() ? (
+                    {auth.isLoggedIn() ? (
                         <>
                             <nav className={styles.nav}>
-                                <Link to="/">Home</Link>
+                                <Link href="/">Home</Link>
                             </nav>
                             <button onClick={() => {
-                                logOut();
+                                auth.logOut();
                                 navigate("/auth/login");
                             }} className={styles.purple}>Logout</button>
                             <div className={styles.sideUsername}>

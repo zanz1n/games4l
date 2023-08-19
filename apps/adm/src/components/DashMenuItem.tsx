@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "preact-router";
 import styles from "../pages/dashboard/index.module.css";
 
 export interface DashMenuItemProps {
@@ -8,10 +8,11 @@ export interface DashMenuItemProps {
 }
 
 export default function DashMenuItem({ icon, text, to }: DashMenuItemProps) {
-    const navigate = useNavigate();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, navigate] = useRouter();
 
-    return <button className={styles.item} onClick={() => {navigate(to);}}>
-        <img width="32px" height="32px" src={icon} alt={text+"-IMG"} />
+    return <button className={styles.item} onClick={() => { navigate(to); }}>
+        <img width="32px" height="32px" src={icon} alt={text + "-IMG"} />
         <div className={styles.itemText}>
             <p>{text}</p>
         </div>

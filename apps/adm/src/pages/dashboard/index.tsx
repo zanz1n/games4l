@@ -1,27 +1,29 @@
-import { useNavigate } from "react-router-dom";
 import DashMenuItem from "../../components/DashMenuItem";
 import Header from "../../components/Header";
 import styles from "./index.module.css";
-import { useAuth } from "../../lib/Auth";
-import { useEffect } from "react";
+import { useEffect } from "preact/hooks";
 import CreateQuestionMenu from "./CreateQuestion";
+import { AuthService } from "../../lib/Auth";
+import { useRouter } from "preact-router";
 
 export interface DashBoardProps {
     route: string;
 }
 
-export default function DashBoardMain({ route }: DashBoardProps) {
-    const { isLoggedIn } = useAuth();
-    const navigate = useNavigate();
+export default function DashBoardMain() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [route, navigate] = useRouter();
+
+    const auth = AuthService.getInstance();
 
     useEffect(() => {
-        if (!isLoggedIn()) {
+        if (!auth.isLoggedIn()) {
             navigate("/auth/login");
         }
     }, []);
 
     return <>
-        <Header/>
+        <Header />
         <div className={styles.main}>
             <div className={styles.dashMenuContainer}>
                 <div className={styles.menu}>
@@ -39,9 +41,9 @@ export default function DashBoardMain({ route }: DashBoardProps) {
             </div>
             <main className={styles.dashBody}>
                 {
-                    route == "create-question"
+                    route.path == "create-question"
                         ?
-                        <CreateQuestionMenu/>
+                        <CreateQuestionMenu />
                         : ""
                 }
             </main>
