@@ -6,6 +6,12 @@ build-lambdas:
 run-lambdas:
 	go run github.com/games4l/backend/tools/lambda_dev
 
+cli:
+	go run github.com/games4l/backend/tools/cli
+
+test:
+	go test ./tools/cli/... -v --race
+
 deploy:
 	make build-lambdas
 	cd infra && terraform apply

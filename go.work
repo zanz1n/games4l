@@ -13,4 +13,5 @@ use (
 	./services/question_lambda
 
 	./tools/lambda-dev
+	./tools/cli
 )
