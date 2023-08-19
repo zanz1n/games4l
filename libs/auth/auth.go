@@ -129,15 +129,18 @@ func (ap *AuthProvider) GenerateUserJwtToken(info JwtUserData, exp time.Duration
 }
 
 func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes []byte) utils.StatusCodeErr {
+	var err error
+
 	digest := sha256.New()
 
-	_, err := digest.Write(body)
-
-	if err != nil {
+	if _, err = digest.Write(body); err != nil {
+		return utils.DefaultErrorList.MalformedOrTooBigBody
+	}
+	if _, err = digest.Write(ap.sigKey); err != nil {
 		return utils.DefaultErrorList.MalformedOrTooBigBody
 	}
 
-	sum := digest.Sum(ap.sigKey)
+	sum := digest.Sum([]byte{})
 
 	var expected string
 
