@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/telemetry"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
@@ -48,7 +49,10 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 		return nil, utils.DefaultErrorList.InvalidRequestEntity
 	}
 
-	Connect()
+	if err := Connect(); err != nil {
+		logger.Error("Connect call failed: " + err.Error())
+		return nil, utils.DefaultErrorList.InternalServerError
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
 	defer cancel()
@@ -87,7 +91,10 @@ func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxy
 		return nil, utils.DefaultErrorList.InvalidRequestEntity
 	}
 
-	Connect()
+	if err := Connect(); err != nil {
+		logger.Error("Connect call failed: " + err.Error())
+		return nil, utils.DefaultErrorList.InternalServerError
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
 	defer cancel()

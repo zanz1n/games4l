@@ -37,8 +37,7 @@ func HandleSignIn(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRes
 	}
 
 	if err := Connect(); err != nil {
-		logger.Error(err.Error())
-
+		logger.Error("Connect call failed: " + err.Error())
 		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
@@ -78,8 +77,7 @@ func HandleUserCreation(req events.APIGatewayProxyRequest) (*events.APIGatewayPr
 	}
 
 	if err := Connect(); err != nil {
-		logger.Error(err.Error())
-
+		logger.Error("Connect call failed: " + err.Error())
 		return nil, utils.DefaultErrorList.InternalServerError
 	}
 

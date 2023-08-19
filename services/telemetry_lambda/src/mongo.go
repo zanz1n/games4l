@@ -33,7 +33,7 @@ func Connect() error {
 	client, err := mongo.Connect(ctx, opts)
 
 	if err != nil {
-		return errors.New("Failed to connect to mongodb: " + err.Error())
+		return errors.New("failed to connect to mongodb: " + err.Error())
 	}
 
 	dba = telemetry.NewTelemetryDataService(client, &telemetry.Config{

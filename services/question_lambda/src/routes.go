@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/question"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
@@ -26,6 +27,7 @@ func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	}
 
 	if err := Connect(); err != nil {
+		logger.Error("Connect call failed: " + err.Error())
 		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
@@ -101,6 +103,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	}
 
 	if err := Connect(); err != nil {
+		logger.Error("Connect call failed: " + err.Error())
 		return nil, utils.DefaultErrorList.InternalServerError
 	}
 
@@ -149,7 +152,8 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 			return nil, utils.DefaultErrorList.InvalidNIDQueryParam
 		}
 
-		if err = Connect(); err != nil {
+		if err := Connect(); err != nil {
+			logger.Error("Connect call failed: " + err.Error())
 			return nil, utils.DefaultErrorList.InternalServerError
 		}
 
@@ -168,6 +172,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	}
 
 	if err := Connect(); err != nil {
+		logger.Error("Connect call failed: " + err.Error())
 		return nil, utils.DefaultErrorList.InternalServerError
 	}
 

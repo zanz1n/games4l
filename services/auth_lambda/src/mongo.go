@@ -24,7 +24,7 @@ func Connect() error {
 	bcryptSaltLen, err := strconv.Atoi(os.Getenv("BCRYPT_SALT_LEN"))
 
 	if err != nil {
-		return errors.New("Failed to connect to mongodb: " + err.Error())
+		return errors.New("failed to parse BCRYPT_SALT_LEN environment variable")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -39,13 +39,13 @@ func Connect() error {
 	client, err := mongo.Connect(ctx, opts)
 
 	if err != nil {
-		return errors.New("Failed to connect to mongodb: " + err.Error())
+		return errors.New("failed to connect to mongodb: " + err.Error())
 	}
 
 	dba = user.NewUserService(client, ap, &user.Config{
 		MongoDbName:      dbName,
 		BcryptSaltLength: bcryptSaltLen,
-		JwtExpiryTime:    21 * 24 * time.Hour, // 21 days
+		JwtExpiryTime:    time.Hour,
 	})
 
 	logger.Info("Connected to mongodb, handshake took %v", time.Since(mongoConnStartTime))
