@@ -41,7 +41,7 @@ export default function DashBoardMain() {
             </div>
             <main className={styles.dashBody}>
                 {
-                    route.path == "create-question"
+                    route.path == "/dash/create-question"
                         ?
                         <CreateQuestionMenu />
                         : ""
