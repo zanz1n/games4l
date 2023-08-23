@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useState } from "preact/hooks";
 import { BigForm, InputLabel, SubmitButton } from "../../components/form/BigForm";
 import styles from "../../components/form/BigForm.module.css";
@@ -20,7 +21,6 @@ export default function CreateQuestionMenu() {
     function updateAnswer(idx: number) {
         return (e: JSX.TargetedEvent<HTMLInputElement, Event>) => {
             const mutation = [...answers];
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             mutation[idx] = e.target.value;
 
@@ -36,25 +36,21 @@ export default function CreateQuestionMenu() {
             <div className={styles.bigFormBody}>
                 <div>
                     <InputLabel identifier="question" type="text"
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         onChange={(e) => { setQuestion(e.target.value); }}
                     >Pergunta</InputLabel>
 
                     <InputLabel identifier="correct_answer" type="text"
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         onChange={(e) => { setCorrect(e.target.value as QuestionCorrect); }}
                     >Resposta correta</InputLabel>
 
                     <InputLabel identifier="question_style" type="text"
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         onChange={(e) => { setQuestionStyle(e.target.value as QuestionStyle); }}
                     >Estilo</InputLabel>
 
                     <InputLabel identifier="file" type="text"
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         onChange={(e) => { setFile(e.target.value); }}
                     >Arquivo (imagem/video/audio)</InputLabel>
