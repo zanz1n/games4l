@@ -4,7 +4,7 @@ resource "random_pet" "lambda_auth_name" {
 }
 
 resource "aws_iam_role" "auth_lambda_exec" {
-  name = random_pet.lambda_auth_name
+  name = random_pet.lambda_auth_name.id
 
   assume_role_policy = data.aws_iam_policy_document.lambda_exec_policy.json
 }
@@ -26,7 +26,7 @@ resource "aws_lambda_permission" "auth_lambda_gtw" {
 }
 
 resource "aws_lambda_function" "auth" {
-  function_name = random_pet.lambda_auth_name
+  function_name = random_pet.lambda_auth_name.id
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_auth.key

@@ -4,7 +4,7 @@ resource "random_pet" "lambda_telemetry_name" {
 }
 
 resource "aws_iam_role" "telemetry_lambda_exec" {
-  name = random_pet.lambda_telemetry_name
+  name = random_pet.lambda_telemetry_name.id
 
   assume_role_policy = data.aws_iam_policy_document.lambda_exec_policy.json
 }
@@ -25,7 +25,7 @@ resource "aws_lambda_permission" "telemetry_lambda_gtw" {
 }
 
 resource "aws_lambda_function" "telemetry" {
-  function_name = random_pet.lambda_telemetry_name
+  function_name = random_pet.lambda_telemetry_name.id
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_telemetry.key

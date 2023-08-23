@@ -4,7 +4,7 @@ resource "random_pet" "apigateway_name" {
 }
 
 resource "aws_apigatewayv2_api" "main" {
-  name          = random_pet.apigateway_name
+  name          = random_pet.apigateway_name.id
   protocol_type = "HTTP"
 
   cors_configuration {
