@@ -17,6 +17,7 @@ import (
 	questionsrc "github.com/games4l/backend/services/question_lambda/src"
 	telemetrysrc "github.com/games4l/backend/services/telemetry_lambda/src"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 func init() {
@@ -36,7 +37,7 @@ func main() {
 	signal.Notify(endCh, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
 	go func() {
-		server := Server{}
+		server := NewServer()
 
 		addr := os.Getenv("APP_LNADDR")
 		if addr == "" {
@@ -45,7 +46,7 @@ func main() {
 
 		logger.Info("Listening on addr " + addr)
 
-		if err := http.ListenAndServe(addr, &server); err != nil {
+		if err := http.ListenAndServe(addr, server); err != nil {
 			logger.Fatal(err)
 		}
 	}()
@@ -54,10 +55,25 @@ func main() {
 	logger.Info("Stopping ...")
 }
 
-type Server struct{}
+func NewServer() *Server {
+	return &Server{
+		crmd: cors.AllowAll(),
+	}
+}
+
+type Server struct {
+	crmd *cors.Cors
+}
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
+
+	if r.Method == "OPTIONS" {
+		s.crmd.HandlerFunc(w, r)
+		return
+	} else {
+		s.crmd.HandlerFunc(w, r)
+	}
 
 	req, err := ConvertRequest(r)
 	if err != nil {

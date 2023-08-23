@@ -9,6 +9,7 @@ require (
 	github.com/games4l/backend/services/question_lambda v0.0.0-20230819000515-5da8a3b823f3
 	github.com/games4l/backend/services/telemetry_lambda v0.0.0-20230819000515-5da8a3b823f3
 	github.com/joho/godotenv v1.5.1
+	github.com/rs/cors v1.9.0
 )
 
 require (
