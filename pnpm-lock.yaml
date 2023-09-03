@@ -53,6 +53,10 @@ importers:
         version: 4.4.9
 
   apps/web:
+    dependencies:
+      ts-results:
+        specifier: ^3.3.0
+        version: 3.3.0
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^2.4.5
@@ -2425,6 +2429,10 @@ packages:
     dependencies:
       typescript: 5.2.2
     dev: true
+
+  /ts-results@3.3.0:
+    resolution: {integrity: sha512-FWqxGX2NHp5oCyaMd96o2y2uMQmSu8Dey6kvyuFdRJ2AzfmWo3kWa4UsPlCGlfQ/qu03m09ZZtppMoY8EMHuiA==}
+    dev: false
 
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
