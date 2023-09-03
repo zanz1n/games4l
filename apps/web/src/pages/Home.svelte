@@ -12,8 +12,18 @@
 
 <div class="container">
   <div class="header">
-    <h1>Hostpital Reger</h1>
-    <h1>Poliedro</h1>
+    <img
+      height="50px"
+      width="150px"
+      src="/hospiral-reger-logo.png"
+      alt="Hospital Reger"
+    />
+    <img
+      height="40px"
+      width="130px"
+      src="/poliedro-logo.png"
+      alt="Hospital Reger"
+    />
   </div>
 
   <div class="main">
