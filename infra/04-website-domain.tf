@@ -10,7 +10,7 @@ resource "aws_cloudfront_distribution" "website" {
 
     domain_name = aws_s3_bucket_website_configuration.website_bucket.website_endpoint
 
-    origin_id = var.website_cloudflare_domain
+    origin_id = "www.${var.aws_route53_root_domain}"
   }
 
   enabled = true
@@ -21,7 +21,7 @@ resource "aws_cloudfront_distribution" "website" {
     compress               = true
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = var.website_cloudflare_domain
+    target_origin_id       = "www.${var.aws_route53_root_domain}"
     min_ttl                = 0
     default_ttl            = 1800
     max_ttl                = 86400
@@ -34,7 +34,7 @@ resource "aws_cloudfront_distribution" "website" {
     }
   }
 
-  aliases = [var.website_cloudflare_domain]
+  aliases = ["www.${var.aws_route53_root_domain}"]
 
   restrictions {
     geo_restriction {
@@ -50,12 +50,12 @@ resource "aws_cloudfront_distribution" "website" {
 
 resource "aws_acm_certificate" "website" {
   provider          = aws.virginia
-  domain_name       = var.website_cloudflare_domain
+  domain_name       = "www.${var.aws_route53_root_domain}"
   validation_method = "DNS"
 
   validation_option {
-    domain_name       = var.website_cloudflare_domain
-    validation_domain = var.cloudflare_root_domain
+    domain_name       = "www.${var.aws_route53_root_domain}"
+    validation_domain = var.aws_route53_root_domain
   }
 }
 
@@ -64,7 +64,7 @@ resource "aws_acm_certificate_validation" "website" {
   certificate_arn = aws_acm_certificate.website.arn
 }
 
-resource "cloudflare_record" "website_validation" {
+resource "aws_route53_record" "website_validation" {
   for_each = {
     for dvo in aws_acm_certificate.website.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -72,21 +72,24 @@ resource "cloudflare_record" "website_validation" {
       type   = dvo.resource_record_type
     }
   }
-  type  = each.value.type
-  name  = each.value.name
-  value = each.value.record
 
-  zone_id         = var.cloudflare_zoneid
-  proxied         = false
+  zone_id = var.aws_route53_zoneid
+
+  name    = each.value.name
+  type    = each.value.type
+  ttl     = 300
+  records = [each.value.record]
+
   allow_overwrite = true
 }
 
-resource "cloudflare_record" "website_record" {
-  zone_id = var.cloudflare_zoneid
+resource "aws_route53_record" "website_record" {
+  zone_id = var.aws_route53_zoneid
 
-  type            = "CNAME"
-  proxied         = false
+  name    = "www"
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_cloudfront_distribution.website.domain_name]
+
   allow_overwrite = true
-  name            = var.website_cloudflare_domain
-  value           = aws_cloudfront_distribution.website.domain_name
 }
