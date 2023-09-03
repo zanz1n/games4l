@@ -1,25 +1,10 @@
 <script lang="ts">
-  let counter = 1;
+  import { Router, Route } from "svelte-routing";
+  import Home from "./pages/Home.svelte";
 
-  function setCounter(n: number) {
-    counter = n;
-  }
+  export let url = "";
 </script>
 
-<main>
-  <h1>Hello World</h1>
-  <p>Counter: {counter}</p>
-  <button
-    on:click={() => {
-      setCounter(counter - 1);
-    }}>Decrement</button
-  >
-  <button
-    on:click={() => {
-      setCounter(counter + 1);
-    }}>Increment</button
-  >
-</main>
-
-<style>
-</style>
+<Router {url}>
+  <Route path="/" component={Home} />
+</Router>
