@@ -22,7 +22,7 @@ async function getJson() {
     return json;
 }
 
-const json = await getJson() as Question[];
+const json = (await getJson()) as Question[];
 
 export function questionsLength(): number {
     return json.length;
