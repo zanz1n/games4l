@@ -174,6 +174,7 @@ func HandleError(e error, w http.ResponseWriter) {
 func LogRequest(r *http.Request, status int, start time.Time) {
 	addr, err := net.ResolveTCPAddr("tcp", r.RemoteAddr)
 	if err != nil {
+		logger.Error("Failed to parse request ip: " + err.Error())
 		return
 	}
 
