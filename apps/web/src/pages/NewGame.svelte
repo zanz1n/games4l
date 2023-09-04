@@ -1,6 +1,10 @@
 <script lang="ts">
+  // @ts-ignore
+  import NewGameImage from "../assets/new-game.png?w=350px&format=avif;webp;png&as=picture";
+
   import { navigate } from "svelte-routing";
   import sharedStyles from "../shared.module.css";
+  import Picture from "../components/Picture.svelte";
 
   function onSubmit() {
     const name = (document.getElementById("name") as HTMLInputElement).value;
@@ -26,7 +30,7 @@
         class={`${sharedStyles.btn} btn-back`}>Voltar</button
       >
     </div>
-    <img height="192px" src="/new-game.png" alt="New Game" />
+    <Picture meta={NewGameImage} sizes="350px" alt="New Game" />
   </div>
 
   <div class="main center">

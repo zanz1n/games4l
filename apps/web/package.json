@@ -20,7 +20,8 @@
     "svelte-routing": "^2.2.0",
     "tslib": "^2.6.2",
     "typescript": "*",
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "vite-imagetools": "^5.0.8"
   },
   "dependencies": {
     "ts-results": "^3.3.0"

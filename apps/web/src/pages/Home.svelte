@@ -1,6 +1,15 @@
 <script lang="ts">
+  // @ts-ignore
+  import HospitalRegerLogo from "../assets/hospiral-reger-logo.png?w=150&format=avif;webp;png&as=picture";
+  // @ts-ignore
+  import MemoriesForLifeLogo from "../assets/memories-logo.png?w=280px&format=avif;webp;png&as=picture";
+  // @ts-ignore
+  import PoliedroLogo from "../assets/poliedro-logo.png?w=130px&format=avif;webp;png&as=picture";
+
   import { navigate } from "svelte-routing";
   import sharedStyles from "../shared.module.css";
+  import Picture from "../components/Picture.svelte";
+  console.log(HospitalRegerLogo);
 
   function navigateToTOSpace() {
     navigate("/to-space");
@@ -13,27 +22,12 @@
 
 <div class={sharedStyles.container}>
   <div class="header">
-    <img
-      height="50px"
-      width="150px"
-      src="/hospiral-reger-logo.png"
-      alt="Hospital Reger"
-    />
-    <img
-      height="40px"
-      width="130px"
-      src="/poliedro-logo.png"
-      alt="Hospital Reger"
-    />
+    <Picture meta={HospitalRegerLogo} sizes="150px" alt="Hospital Reger" />
+    <Picture meta={PoliedroLogo} sizes="130px" alt="Poliedro" />
   </div>
 
   <div class="main">
-    <img
-      width="280px"
-      height="280px"
-      src="/memories-logo.png"
-      alt="Memories For Life Logo"
-    />
+    <Picture meta={MemoriesForLifeLogo} sizes="280px" alt="Memories for Life" />
     <button on:click={navigateToNewGame} class={`${sharedStyles.btn} newgame`}
       >Novo Jogo</button
     >
