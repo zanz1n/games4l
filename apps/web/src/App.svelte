@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Router, Route } from "svelte-routing";
-  import Home from "./pages/Home.svelte";
-  import NewGame from "./pages/NewGame.svelte";
-  import Game from "./pages/Game.svelte";
+  import Home from "./pages/home.svelte";
+  import NewGame from "./pages/new-game.svelte";
+  import Game from "./pages/game.svelte";
 
   export let url = "";
 </script>
