@@ -11,6 +11,10 @@
     --purple: #9b6fe7;
     --red: #ff5555;
     --yellow: #e1e656;
+    --red-disabled: #fcaeae;
+    --yellow-disabled: #feffb7;
+    --purple-disabled: #c3b1e4;
+    --cyan-disabled: #bfe7f0;
 }
 
 * {
