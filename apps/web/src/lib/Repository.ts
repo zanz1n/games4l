@@ -5,7 +5,8 @@ export enum StorageError {
     DeserializationError,
     SetError,
     GetError,
-    DeleteError
+    DeleteError,
+    NotFound,
 }
 
 export function displayFriendlyErr(e: StorageError): string {
