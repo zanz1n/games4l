@@ -5,6 +5,10 @@
   import { navigate } from "svelte-routing";
   import sharedStyles from "../shared.module.css";
   import Picture from "../components/Picture.svelte";
+  import { SessionManager } from "../lib/Session";
+  import { displayFriendlyErr } from "../lib/Repository";
+
+  const sessionManager = SessionManager.getInstance();
 
   function onSubmit() {
     const name = (document.getElementById("name") as HTMLInputElement).value;
@@ -17,6 +21,20 @@
     if (isNaN(age) || 1 > age) {
       return alert("Insira uma idade válida!");
     }
+
+    sessionManager.setCurrent(name).then(async (result) => {
+      if (result.err) {
+        return alert(displayFriendlyErr(result.val));
+      }
+
+      result = await sessionManager.create(name, age);
+
+      if (result.err) {
+        return alert(displayFriendlyErr(result.val));
+      }
+
+      navigate("/game");
+    });
   }
 </script>
 
@@ -38,8 +56,8 @@
       <h1>Identificação do paciente</h1>
     </div>
 
-    <input id="name" type="text" placeholder="Nome" />
-    <input id="age" type="number" placeholder="Idade" />
+    <input name="name" id="name" type="text" placeholder="Nome" />
+    <input name="age" id="age" type="number" placeholder="Idade" />
   </div>
 
   <div class="center">
