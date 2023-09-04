@@ -9,7 +9,6 @@
   import { navigate } from "svelte-routing";
   import sharedStyles from "../shared.module.css";
   import Picture from "../components/Picture.svelte";
-  console.log(HospitalRegerLogo);
 
   function navigateToTOSpace() {
     navigate("/to-space");
