@@ -18,3 +18,9 @@ export interface Repository<T> {
     delete(key: string): Promise<Result<boolean, StorageError>>;
     getAll(): Promise<Result<T[], StorageError>>;
 }
+
+export interface PrimitiveRepository {
+    set(item: string): Promise<Result<void, StorageError>>;
+    get(): Promise<Result<Option<string>, StorageError>>;
+    delete(): Promise<Result<boolean, StorageError>>;
+}

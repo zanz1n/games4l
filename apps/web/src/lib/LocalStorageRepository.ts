@@ -1,13 +1,17 @@
 import { Ok, Err, None, Some } from "ts-results";
 import { StorageError } from "./Repository";
 import type { Result, Option } from "ts-results";
-import type { Repository } from "./Repository";
+import type { PrimitiveRepository, Repository } from "./Repository";
 
 export interface MapObject<T> {
     [key: string]: T | null;
 }
 
-export class LocalStorageRepository<T> implements Repository<T> {
+export interface ToString {
+    toString(): string;
+}
+
+export class LocalStorage<T> implements Repository<T> {
     constructor(private itemIdx: string) { }
 
     async set(key: string, item: T): Promise<Result<void, StorageError>> {
@@ -89,6 +93,46 @@ export class LocalStorageRepository<T> implements Repository<T> {
             return Ok(newArr);
         } catch (_) {
             return Err(StorageError.GetError);
+        }
+    }
+}
+
+export class LocalStoragePrimitive implements PrimitiveRepository {
+    constructor(private itemIdx: string) { }
+
+    async set(item: string): Promise<Result<void, StorageError>> {
+        try {
+            localStorage.setItem(this.itemIdx, item);
+            return Ok(void 0);
+        } catch (_) {
+            return Err(StorageError.SetError);
+        }
+    }
+
+    async get(): Promise<Result<Option<string>, StorageError>> {
+        try {
+            const item = localStorage.getItem(this.itemIdx);
+
+            if (!item) {
+                return Ok(None);
+            }
+
+            return Ok(Some(item));
+        } catch (_) {
+            return Err(StorageError.SetError);
+        }
+    }
+
+    async delete(): Promise<Result<boolean, StorageError>> {
+        try {
+            const has = !!localStorage.getItem(this.itemIdx);
+
+            if (has) {
+                localStorage.removeItem(this.itemIdx);
+            }
+            return Ok(has);
+        } catch (_) {
+            return Err(StorageError.DeleteError);
         }
     }
 }
