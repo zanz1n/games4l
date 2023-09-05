@@ -1,6 +1,6 @@
 <script lang="ts">
   // @ts-ignore
-  import NewGameImage from "../assets/new-game.png?w=350px&format=avif;webp;png&as=picture";
+  import NewGameImage from "../assets/new-game.png?w=525px&format=avif;webp;png&as=picture";
 
   import { navigate } from "svelte-routing";
   import sharedStyles from "../shared.module.css";
@@ -48,7 +48,7 @@
         class={`${sharedStyles.btn} btn-back`}>Voltar</button
       >
     </div>
-    <Picture meta={NewGameImage} sizes="350px" alt="New Game" />
+    <Picture loading="eager" meta={NewGameImage} sizes="350px" alt="New Game" />
   </div>
 
   <div class="main center">

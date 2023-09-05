@@ -1,6 +1,6 @@
 <script lang="ts">
   // @ts-ignore
-  import ToScreenPic from "../assets/to-screen.png?w=320px&format=avif;webp;png&as=picture";
+  import ToScreenPic from "../assets/to-screen.png?w=480px&format=avif;webp;png&as=picture";
 
   import { navigate } from "svelte-routing";
   import Picture from "../components/Picture.svelte";
@@ -102,7 +102,12 @@
       }}
       class={`${sharedStyles.btn} btn-back`}>Voltar</button
     >
-    <Picture meta={ToScreenPic} sizes="320px" alt="Tela da To" />
+    <Picture
+      loading="eager"
+      meta={ToScreenPic}
+      sizes="320px"
+      alt="Tela da To"
+    />
     <h1>Pacientes</h1>
   </div>
 

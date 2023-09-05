@@ -1,10 +1,10 @@
 <script lang="ts">
   // @ts-ignore
-  import HospitalRegerLogo from "../assets/hospiral-reger-logo.png?w=150&format=avif;webp;png&as=picture";
+  import HospitalRegerLogo from "../assets/hospiral-reger-logo.png?w=225px&format=avif;webp;png&as=picture";
   // @ts-ignore
-  import MemoriesForLifeLogo from "../assets/memories-logo.png?w=280px&format=avif;webp;png&as=picture";
+  import MemoriesForLifeLogo from "../assets/memories-logo.png?w=420px&format=avif;webp;png&as=picture";
   // @ts-ignore
-  import PoliedroLogo from "../assets/poliedro-logo.png?w=130px&format=avif;webp;png&as=picture";
+  import PoliedroLogo from "../assets/poliedro-logo.png?w=195px&format=avif;webp;png&as=picture";
 
   import { navigate } from "svelte-routing";
   import sharedStyles from "../shared.module.css";
@@ -26,7 +26,12 @@
   </div>
 
   <div class="main">
-    <Picture meta={MemoriesForLifeLogo} sizes="280px" alt="Memories for Life" />
+    <Picture
+      loading="eager"
+      meta={MemoriesForLifeLogo}
+      sizes="280px"
+      alt="Memories for Life"
+    />
     <button on:click={navigateToNewGame} class={`${sharedStyles.btn} newgame`}
       >Novo Jogo</button
     >
