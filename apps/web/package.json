@@ -21,7 +21,8 @@
     "tslib": "^2.6.2",
     "typescript": "*",
     "vite": "^4.4.9",
-    "vite-imagetools": "^5.0.8"
+    "vite-imagetools": "^5.0.8",
+    "vite-plugin-pwa": "^0.16.4"
   },
   "dependencies": {
     "ts-results": "^3.3.0"
