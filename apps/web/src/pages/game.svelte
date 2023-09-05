@@ -52,6 +52,23 @@
 
   let promise = fetchInfo();
 
+  async function handleSkip() {
+    const { session, question } = (await promise) as Info;
+
+    const result = await sessionManager.update(session.name, {
+      currentQuestion: session.currentQuestion + 1,
+      skiped: session.skiped + 1,
+    });
+
+    if (result.err) {
+      return alert(displayFriendlyErr(result.val));
+    }
+
+    disabled = [];
+
+    promise = fetchInfo();
+  }
+
   async function handleSubmission(n: number) {
     const { session, question } = (await promise) as Info;
 
@@ -105,7 +122,12 @@
           </h1>
         </div>
 
-        <button class={`${sharedStyles.btn} btn-skip`}>Pular</button>
+        <button
+          on:click={() => {
+            handleSkip();
+          }}
+          class={`${sharedStyles.btn} btn-skip`}>Pular</button
+        >
       </div>
 
       <div class="question">
