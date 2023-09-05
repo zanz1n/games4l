@@ -21,8 +21,18 @@
 
 <div class={sharedStyles.container}>
   <div class="header">
-    <Picture meta={HospitalRegerLogo} sizes="150px" alt="Hospital Reger" />
-    <Picture meta={PoliedroLogo} sizes="130px" alt="Poliedro" />
+    <Picture
+      loading="eager"
+      meta={HospitalRegerLogo}
+      sizes="150px"
+      alt="Hospital Reger"
+    />
+    <Picture
+      loading="eager"
+      meta={PoliedroLogo}
+      sizes="130px"
+      alt="Poliedro Educação"
+    />
   </div>
 
   <div class="main">
