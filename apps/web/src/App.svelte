@@ -4,6 +4,7 @@
   import NewGame from "./pages/new-game.svelte";
   import Game from "./pages/game.svelte";
   import Done from "./pages/done.svelte";
+  import ToSpace from "./pages/to-space.svelte";
 
   export let url = "";
 </script>
@@ -13,4 +14,5 @@
   <Route path="/new-game" component={NewGame} />
   <Route path="/game" component={Game} />
   <Route path="/done" component={Done} />
+  <Route path="/to-space" component={ToSpace} />
 </Router>
