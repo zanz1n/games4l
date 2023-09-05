@@ -10,7 +10,7 @@
   const questionLen = questionsLength();
   const sessionManager = SessionManager.getInstance();
 
-  const promise = (async () => {
+  const promise = (async function () {
     const session = await sessionManager.getCurrent();
     if (session.err) {
       return alert(displayFriendlyErr(session.val));
@@ -30,7 +30,7 @@
       return alert(displayFriendlyErr(result.val));
     }
 
-    setTimeout(() => {
+    setTimeout(function () {
       navigate("/");
     }, 7000);
   })();
@@ -42,7 +42,7 @@
 >
   {#await promise then}
     <button
-      on:click={() => {
+      on:click={function () {
         navigate("/");
       }}
       class={`${sharedStyles.btn} btn-back`}>Voltar</button
@@ -53,7 +53,7 @@
     </div>
 
     <button
-      on:click={() => {
+      on:click={function () {
         navigate("/to-space");
       }}
       class={`${sharedStyles.btn} to-sess`}>Espaço T.O</button

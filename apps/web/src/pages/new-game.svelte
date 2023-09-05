@@ -22,7 +22,7 @@
       return alert("Insira uma idade válida!");
     }
 
-    sessionManager.setCurrent(name).then(async (result) => {
+    sessionManager.setCurrent(name).then(async function (result) {
       if (result.err) {
         return alert(displayFriendlyErr(result.val));
       }
@@ -42,7 +42,7 @@
   <div class="center top">
     <div class="header">
       <button
-        on:click={() => {
+        on:click={function () {
           navigate("/");
         }}
         class={`${sharedStyles.btn} btn-back`}>Voltar</button

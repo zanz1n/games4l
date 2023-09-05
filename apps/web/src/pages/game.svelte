@@ -111,7 +111,7 @@
       <div class="top">
         <div class="left">
           <button
-            on:click={() => {
+            on:click={function () {
               navigate("/");
             }}
             class={`${sharedStyles.btn} btn-back`}>Voltar</button
@@ -123,7 +123,7 @@
         </div>
 
         <button
-          on:click={() => {
+          on:click={function () {
             handleSkip();
           }}
           class={`${sharedStyles.btn} btn-skip`}>Pular</button
@@ -137,7 +137,7 @@
       <div class="answers">
         {#each session.question.answers as answer, i}
           <button
-            on:click={() => {
+            on:click={function () {
               handleSubmission(i);
             }}
             disabled={disabled.includes(i)}
