@@ -107,11 +107,11 @@
   }
 
   .main input {
-    height: 52px;
+    height: 60px;
     width: 60%;
     min-width: 280px;
     font-size: 24px;
-    padding: 0 8px;
+    padding: 0 16px;
   }
 
   .main .title {
