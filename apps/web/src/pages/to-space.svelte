@@ -80,7 +80,7 @@
   }
 
   async function deleteSession(name: string) {
-    const cf = confirm("Deseja mesmo deletar " + name + "?");
+    const cf = confirm("Deseja mesmo excluir " + name + "?");
 
     if (cf) {
       const result = await sessionManager.delete(name);
