@@ -1,7 +1,8 @@
 import { Err, Ok, None } from "ts-results";
 import { createCurrentSessionRepository, createSessionRepository } from "./impl";
 import type { Option, Result } from "ts-results";
-import { StorageError, type PrimitiveRepository, type Repository } from "./Repository";
+import { StorageError } from "./Repository";
+import type { PrimitiveRepository, Repository } from "./Repository";
 
 export interface Session {
     name: string;
@@ -54,10 +55,8 @@ export class SessionManager {
         return item;
     }
 
-    async setCurrent(name: string): Promise<Result<void, StorageError>> {
-        const result = await this.currentSessionRepository.set(name);
-
-        return result;
+    setCurrent(name: string): Promise<Result<void, StorageError>> {
+        return this.currentSessionRepository.set(name);
     }
 
     async create(name: string, age: number): Promise<Result<void, StorageError>> {
@@ -107,5 +106,9 @@ export class SessionManager {
         }
 
         return Ok(val);
+    }
+
+    getAll(): Promise<Result<Session[], StorageError>> {
+        return this.sessionRepository.getAll();
     }
 }
