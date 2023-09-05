@@ -111,4 +111,12 @@ export class SessionManager {
     getAll(): Promise<Result<Session[], StorageError>> {
         return this.sessionRepository.getAll();
     }
+
+    delete(name: string): Promise<Result<boolean, StorageError>> {
+        return this.sessionRepository.delete(name);
+    }
+
+    get(name: string): Promise<Result<Option<Session>, StorageError>> {
+        return this.sessionRepository.get(name);
+    }
 }
