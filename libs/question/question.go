@@ -30,7 +30,7 @@ type Question struct {
 	Question string   `json:"question,omitempty" bson:"question,omitempty" validate:"required"`
 	Answers  []string `json:"answers,omitempty" bson:"answers,omitempty" validate:"required"`
 
-	CorrectAnswer int `json:"correct_answer,omitempty" bson:"correct_answer,omitempty" validate:"required"`
+	CorrectAnswer *int `json:"correct_answer,omitempty" bson:"correct_answer,omitempty" validate:"required"`
 
 	Type  QuestionType  `json:"type,omitempty" bson:"type,omitempty" validate:"required"`
 	Style QuestionStyle `json:"style,omitempty" bson:"style,omitempty" validate:"required"`
@@ -42,16 +42,16 @@ type Question struct {
 }
 
 func (q *Question) IsValid() bool {
-	if q.CorrectAnswer <= 0 {
+	if *q.CorrectAnswer <= 0 {
 		return false
 	}
 
 	if q.Type == QuestionType4Alt {
-		if len(q.Answers) != 4 || q.CorrectAnswer > 4 {
+		if len(q.Answers) != 4 || *q.CorrectAnswer > 4 {
 			return false
 		}
 	} else if q.Type == QuestionType2Alt {
-		if len(q.Answers) != 2 || q.CorrectAnswer > 2 {
+		if len(q.Answers) != 2 || *q.CorrectAnswer > 2 {
 			return false
 		}
 	} else {
@@ -73,7 +73,7 @@ func (q *Question) IsValid() bool {
 func (q *Question) Parse() *QuestionAlternativeFmt {
 	nq := QuestionAlternativeFmt{
 		Question:      q.Question,
-		CorrectAnswer: q.CorrectAnswer,
+		CorrectAnswer: *q.CorrectAnswer,
 		Type:          q.Type,
 		Style:         q.Style,
 		Audio:         nil,
@@ -116,9 +116,8 @@ type QuestionAlternativeFmt struct {
 
 	CorrectAnswer int `json:"ccr,omitempty" validate:"required"`
 
-	Audio *string `json:"audio,omitempty"` // Nullable
-
-	Type QuestionType `json:"type,omitempty" validate:"required"`
+	Audio *string      `json:"audio,omitempty"` // Nullable
+	Type  QuestionType `json:"type,omitempty" validate:"required"`
 
 	File *string `json:"file,omitempty"` // Nullable
 
@@ -173,7 +172,7 @@ func (q *QuestionAlternativeFmt) Parse() *Question {
 	nq := Question{
 		Question:      q.Question,
 		Answers:       []string{q.Answer1, q.Answer2},
-		CorrectAnswer: q.CorrectAnswer,
+		CorrectAnswer: &q.CorrectAnswer,
 		Type:          q.Type,
 		Style:         q.Style,
 		ImageWidth:    q.ImageWidth,
