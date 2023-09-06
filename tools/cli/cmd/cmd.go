@@ -24,6 +24,13 @@ func HandleCommand(
 		default:
 			return errors.New("invalid subcommand " + cmds[1])
 		}
+	case "question":
+		switch cmds[1] {
+		case "convert":
+			if err = HandleQuestionConvert(args); err != nil {
+				return err
+			}
+		}
 	default:
 		return errors.New("invalid command " + cmds[1])
 	}

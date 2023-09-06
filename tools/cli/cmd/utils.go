@@ -2,7 +2,11 @@ package cmd
 
 import (
 	"encoding/json"
+
+	"github.com/go-playground/validator/v10"
 )
+
+var validate = validator.New()
 
 type JSON map[string]any
 
