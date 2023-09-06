@@ -5,6 +5,7 @@
   import { displayFriendlyErr } from "../lib/Repository";
   import { getQuestion, questionsLength, type Question } from "../lib/Question";
   import GameImage from "../components/game/GameImage.svelte";
+  import GameSound from "../components/game/GameSound.svelte";
 
   interface Info {
     session: Session;
@@ -156,6 +157,8 @@
               questionType={session.question.type}
               assetName={session.question.file}
             />
+          {:else if session.question.style == "audio"}
+            <GameSound assetName={session.question.file} />
           {/if}
         {/if}
         <div class="prompt">
