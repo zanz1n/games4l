@@ -52,7 +52,7 @@ importers:
         specifier: ^4.4.9
         version: 4.4.9
 
-  apps/web:
+  apps/memories:
     dependencies:
       ts-results:
         specifier: ^3.3.0
