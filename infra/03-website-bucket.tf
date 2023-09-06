@@ -62,11 +62,11 @@ resource "aws_s3_bucket_policy" "website_policy" {
 
 resource "aws_s3_object" "files" {
   depends_on = [aws_s3_bucket_policy.website_policy]
-  for_each   = fileset("../${path.module}/apps/web/", "**")
+  for_each   = fileset("../${path.module}/apps/memories/dist/", "**")
   bucket     = aws_s3_bucket.website_bucket.id
 
   key          = each.value
   content_type = lookup(local.mime_types, regex("[^.]+$", each.value), null)
-  source       = "../${path.module}/apps/web/${each.value}"
-  etag         = filemd5("../${path.module}/apps/web/${each.value}")
+  source       = "../${path.module}/apps/memories/dist/${each.value}"
+  etag         = filemd5("../${path.module}/apps/memories/dist/${each.value}")
 }
