@@ -8,6 +8,8 @@
   interface Info {
     session: Session;
     question: Question;
+    questionSpl: string[];
+    bigText: boolean;
   }
 
   const sessionManager = SessionManager.getInstance();
@@ -44,9 +46,25 @@
       return null;
     }
 
+    let bigText = false;
+
+    const questionSpl = question.question.split("\n");
+
+    if (question.type == "2Alt") {
+      bigText = true;
+    } else if (
+      question.style != "image" &&
+      question.style != "video" &&
+      questionSpl.length < 4
+    ) {
+      bigText = true;
+    }
+
     return {
       session: session.val.val,
       question,
+      bigText,
+      questionSpl,
     };
   }
 
@@ -131,7 +149,13 @@
       </div>
 
       <div class="question">
-        <p>{session.question.question}</p>
+        <div class="prompt">
+          {#each session.questionSpl as line}
+            <p class={session.bigText ? "" : "small-p"}>
+              {line}
+            </p>
+          {/each}
+        </div>
       </div>
 
       <div class="answers">
@@ -192,10 +216,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
   }
 
-  .question p {
+  .question .prompt {
+    text-align: center;
+  }
+
+  .question .prompt p {
     font-size: 28px;
+  }
+
+  .question .prompt .small-p {
+    font-size: 21px;
   }
 
   .answers {
@@ -211,10 +244,6 @@
     color: var(--foreground);
     font-size: 26px;
   }
-
-  /* .answer-btn:disabled {
-    background-color: var(--foreground);
-  } */
 
   .answer-btn:disabled:hover {
     cursor: not-allowed;
