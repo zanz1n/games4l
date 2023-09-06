@@ -1,13 +1,16 @@
 <script lang="ts">
-  import { resolveAssetAddress } from "../../lib/Question";
-
   export let assetName: string;
 
-  const audioSrc = resolveAssetAddress(assetName) + ".webm";
+  function resolveAssetAddress(name: string) {
+    return "/questions/audio/" + name;
+  }
+
+  const audioSrc = resolveAssetAddress(assetName) + ".";
 </script>
 
-<audio controls >
-  <source src={audioSrc} />
+<audio controls>
+  <source type="audio/webm" src={audioSrc + "webm"} />
+  <source type="audio/mpeg" src={audioSrc + "mp3"} />
   <p class="err-msg">Seu navegador não suporta áudio!</p>
 </audio>
 

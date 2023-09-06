@@ -31,7 +31,3 @@ export function questionsLength(): number {
 export function getQuestion(id: number): Question | null {
     return json[id] as Question;
 }
-
-export function resolveAssetAddress(name: string) {
-    return "/questions/" + name;
-}

@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { resolveAssetAddress } from "../../lib/Question";
-
   export let assetName: string;
   export let questionType: "2Alt" | "4Alt";
+
+  function resolveAssetAddress(name: string) {
+    return "/questions/images/" + name;
+  }
 
   const imageSrc = resolveAssetAddress(assetName) + ".png";
 </script>
