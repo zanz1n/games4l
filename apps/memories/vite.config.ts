@@ -43,7 +43,7 @@ export default defineConfig({
             registerType: "autoUpdate",
             injectRegister: "inline",
             workbox: {
-                globPatterns: ["**/*.{js,css,html,ico,png,svg,gif,webp,avif,json}"],
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,gif,webp,avif,json,webm}"],
                 inlineWorkboxRuntime: true,
             }
         })
