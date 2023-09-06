@@ -163,7 +163,7 @@
         {/if}
         <div class="prompt">
           {#each session.questionSpl as line}
-            <p class={session.bigText ? "" : "small-p"}>
+            <p class={session.bigText ? "big-p" : "small-p"}>
               {line}
             </p>
           {/each}
@@ -235,12 +235,22 @@
     text-align: center;
   }
 
-  .question .prompt p {
+  .question .prompt .big-p {
     font-size: 28px;
   }
 
   .question .prompt .small-p {
     font-size: 21px;
+  }
+
+  @media screen and (min-height: 880px) {
+    .question .prompt .big-p {
+      font-size: 30px;
+    }
+
+    .question .prompt .small-p {
+      font-size: 30px;
+    }
   }
 
   .answers {
