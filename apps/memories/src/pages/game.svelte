@@ -4,6 +4,7 @@
   import sharedStyles from "../shared.module.css";
   import { displayFriendlyErr } from "../lib/Repository";
   import { getQuestion, questionsLength, type Question } from "../lib/Question";
+  import GameImage from "../components/game/GameImage.svelte";
 
   interface Info {
     session: Session;
@@ -149,6 +150,14 @@
       </div>
 
       <div class="question">
+        {#if !!session.question.file}
+          {#if session.question.style == "image"}
+            <GameImage
+              questionType={session.question.type}
+              assetName={session.question.file}
+            />
+          {/if}
+        {/if}
         <div class="prompt">
           {#each session.questionSpl as line}
             <p class={session.bigText ? "" : "small-p"}>

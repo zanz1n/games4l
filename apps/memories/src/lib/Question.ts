@@ -33,5 +33,5 @@ export function getQuestion(id: number): Question | null {
 }
 
 export function resolveAssetAddress(name: string) {
-    return name;
+    return "/questions/" + name;
 }

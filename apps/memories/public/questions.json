@@ -40,7 +40,7 @@
     "correct_answer": 1,
     "type": "4Alt",
     "style": "image",
-    "file": "image10",
+    "file": "silvio-santos",
     "image_width": 940,
     "image_height": 588
   },
@@ -53,7 +53,7 @@
     "correct_answer": 0,
     "type": "2Alt",
     "style": "image",
-    "file": "image15",
+    "file": "full-mug",
     "image_width": 940,
     "image_height": 483
   },
@@ -68,7 +68,7 @@
     "correct_answer": 0,
     "type": "4Alt",
     "style": "image",
-    "file": "image21",
+    "file": "chico-buarque",
     "image_width": 450,
     "image_height": 337
   },
@@ -83,7 +83,7 @@
     "correct_answer": 2,
     "type": "4Alt",
     "style": "image",
-    "file": "image3",
+    "file": "triangle",
     "image_width": 393,
     "image_height": 347
   },
@@ -173,7 +173,7 @@
     "correct_answer": 0,
     "type": "4Alt",
     "style": "image",
-    "file": "image8",
+    "file": "red-trafic-light",
     "image_width": 940,
     "image_height": 627
   },
@@ -201,7 +201,7 @@
     "correct_answer": 0,
     "type": "2Alt",
     "style": "image",
-    "file": "image23",
+    "file": "car1",
     "image_width": 940,
     "image_height": 627
   },
@@ -229,7 +229,7 @@
     "correct_answer": 1,
     "type": "2Alt",
     "style": "image",
-    "file": "image19",
+    "file": "book1",
     "image_width": 940,
     "image_height": 940
   },
@@ -244,7 +244,7 @@
     "correct_answer": 1,
     "type": "4Alt",
     "style": "image",
-    "file": "image12",
+    "file": "right-trafic-arrow",
     "image_width": 940,
     "image_height": 627
   },
@@ -272,7 +272,7 @@
     "correct_answer": 1,
     "type": "2Alt",
     "style": "image",
-    "file": "image24",
+    "file": "getulio-vargas",
     "image_width": 669,
     "image_height": 418
   },
@@ -315,7 +315,7 @@
     "correct_answer": 0,
     "type": "2Alt",
     "style": "image",
-    "file": "image14",
+    "file": "roberto-carlos",
     "image_width": 569,
     "image_height": 378
   },
@@ -328,7 +328,7 @@
     "correct_answer": 1,
     "type": "2Alt",
     "style": "image",
-    "file": "image25",
+    "file": "big-dog-small-cat",
     "image_width": 883,
     "image_height": 495
   },
@@ -358,7 +358,7 @@
     "correct_answer": 3,
     "type": "4Alt",
     "style": "image",
-    "file": "image2",
+    "file": "carmem-miranda",
     "image_width": 940,
     "image_height": 627
   },
@@ -373,7 +373,7 @@
     "correct_answer": 2,
     "type": "4Alt",
     "style": "image",
-    "file": "image6",
+    "file": "young-pele",
     "image_width": 940,
     "image_height": 850
   },
@@ -386,7 +386,7 @@
     "correct_answer": 1,
     "type": "2Alt",
     "style": "image",
-    "file": "image16",
+    "file": "chacrinha",
     "image_width": 601,
     "image_height": 324
   }
