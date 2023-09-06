@@ -1,0 +1,393 @@
+[
+  {
+    "question": "Complete o ditado popular:\n“Cachorro que ladra não ______”",
+    "answers": [
+      "Morde",
+      "Conversa",
+      "Mastiga",
+      "Come"
+    ],
+    "correct_answer": 0,
+    "type": "4Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Complete o ditado:\n“Deus ajuda quem cedo ________”",
+    "answers": [
+      "Acorda",
+      "Madruga",
+      "Almoça",
+      "Se cuida"
+    ],
+    "correct_answer": 1,
+    "type": "4Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Qual o nome desse apresentador de televisão?",
+    "answers": [
+      "Faustão",
+      "Silvio Santos",
+      "Tim Maia",
+      "Chacrinha"
+    ],
+    "correct_answer": 1,
+    "type": "4Alt",
+    "style": "image",
+    "file": "image10",
+    "image_width": 940,
+    "image_height": 588
+  },
+  {
+    "question": "A caneca está",
+    "answers": [
+      "Cheia",
+      "Vazia"
+    ],
+    "correct_answer": 0,
+    "type": "2Alt",
+    "style": "image",
+    "file": "image15",
+    "image_width": 940,
+    "image_height": 483
+  },
+  {
+    "question": "Quem é este famoso?",
+    "answers": [
+      "Chico Buarque",
+      "Pelé",
+      "Ayrton Senna",
+      "Quico de Chaves"
+    ],
+    "correct_answer": 0,
+    "type": "4Alt",
+    "style": "image",
+    "file": "image21",
+    "image_width": 450,
+    "image_height": 337
+  },
+  {
+    "question": "Qual é essa forma geométrica?",
+    "answers": [
+      "Círculo",
+      "Quadrado",
+      "Triângulo",
+      "Retângulo"
+    ],
+    "correct_answer": 2,
+    "type": "4Alt",
+    "style": "image",
+    "file": "image3",
+    "image_width": 393,
+    "image_height": 347
+  },
+  {
+    "question": "Tomo um banho de _____\nFico branca como a neve\nSe o luar é meu amigo\nCensurar ninguém se atreve\nÉ tão bom sonhar contigo\nÓ luar tão cândido",
+    "answers": [
+      "Lua",
+      "Chuva",
+      "Sol",
+      "Planta"
+    ],
+    "correct_answer": 0,
+    "type": "4Alt",
+    "style": "audio",
+    "file": "audio9",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Mas que nada\nSai da minha frente\nEu quero passar\nPois o samba está animado\nO que eu quero é ____",
+    "answers": [
+      "Amar",
+      "Viajar",
+      "Sambar",
+      "Beijar"
+    ],
+    "correct_answer": 2,
+    "type": "4Alt",
+    "style": "audio",
+    "file": "audio4",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Complete o ditado popular:\n“Quem ri por último, ri __”",
+    "answers": [
+      "Melhor",
+      "Pior",
+      "Com dor",
+      "Sem Graça"
+    ],
+    "correct_answer": 0,
+    "type": "4Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "A União faz a ___",
+    "answers": [
+      "Amizade",
+      "Saudade",
+      "Beleza",
+      "Força"
+    ],
+    "correct_answer": 3,
+    "type": "4Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Complete o ditado:\n“Filho de peixe, _________ é”",
+    "answers": [
+      "Ouriço",
+      "Água viva",
+      "Peixinho",
+      "Tubarão"
+    ],
+    "correct_answer": 2,
+    "type": "4Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Qual significado da cor vermelho no semáforo?",
+    "answers": [
+      "Pare",
+      "Vá",
+      "Desacelere",
+      "Estacione"
+    ],
+    "correct_answer": 0,
+    "type": "4Alt",
+    "style": "image",
+    "file": "image8",
+    "image_width": 940,
+    "image_height": 627
+  },
+  {
+    "question": "Nunca se esqueça, nem um segundo\nQue eu tenho o amor maior do mundo\nComo é grande o meu ______ por você",
+    "answers": [
+      "Calor",
+      "Amor",
+      "Alegria",
+      "Viver"
+    ],
+    "correct_answer": 1,
+    "type": "4Alt",
+    "style": "audio",
+    "file": "audio17",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "O carro está:",
+    "answers": [
+      "Em frente à casa",
+      "Ao lado da casa"
+    ],
+    "correct_answer": 0,
+    "type": "2Alt",
+    "style": "image",
+    "file": "image23",
+    "image_width": 940,
+    "image_height": 627
+  },
+  {
+    "question": "Não posso ficar\nNem mais um minuto com você\nSinto muito, amor\nMas não pode ser\nMoro em Jaçanã\nSe eu perder esse ____ \nQue sai agora às onze horas\nSó amanhã de manhã",
+    "answers": [
+      "Trêm",
+      "Tempo",
+      "Bicicleta",
+      "ônibus"
+    ],
+    "correct_answer": 0,
+    "type": "4Alt",
+    "style": "audio",
+    "file": "audio13",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Como o livro está em relação à mesa?",
+    "answers": [
+      "Em baixo",
+      "Em cima"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "image",
+    "file": "image19",
+    "image_width": 940,
+    "image_height": 940
+  },
+  {
+    "question": "Qual é a direção que a seta está indicando?",
+    "answers": [
+      "Esquerda",
+      "Direita",
+      "Cima",
+      "Baixo"
+    ],
+    "correct_answer": 1,
+    "type": "4Alt",
+    "style": "image",
+    "file": "image12",
+    "image_width": 940,
+    "image_height": 627
+  },
+  {
+    "question": "Mamãe, eu quero, mamãe, eu quero\nMamãe, eu quero mamar\nDá a chupeta, dá a chupeta\nDá a chupeta pro bebê não _____",
+    "answers": [
+      "Dançar",
+      "Mamar",
+      "Brincar",
+      "Chorar"
+    ],
+    "correct_answer": 3,
+    "type": "4Alt",
+    "style": "audio",
+    "file": "audio20",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Quem é o famoso?",
+    "answers": [
+      "Fernando Collor",
+      "Getúlio Vargas"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "image",
+    "file": "image24",
+    "image_width": 669,
+    "image_height": 418
+  },
+  {
+    "question": "Quando olhei a terra ardendo\nQual fogueira de São ________\nEu perguntei a Deus do céu, ai\nPor que tamanha judiação\nEu perguntei a Deus do céu, ai\nPor que tamanha judiação?",
+    "answers": [
+      "Pedro",
+      "Paulo",
+      "Carlos",
+      "João"
+    ],
+    "correct_answer": 3,
+    "type": "4Alt",
+    "style": "audio",
+    "file": "audio1",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Complete o ditado popular:\nA mentira tem perna _____",
+    "answers": [
+      "Ruim",
+      "Curta",
+      "De pau",
+      "Longa"
+    ],
+    "correct_answer": 1,
+    "type": "4Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Qual nome desse cantor:",
+    "answers": [
+      "Roberto Carlos",
+      "Caetano Veloso"
+    ],
+    "correct_answer": 0,
+    "type": "2Alt",
+    "style": "image",
+    "file": "image14",
+    "image_width": 569,
+    "image_height": 378
+  },
+  {
+    "question": "Quem é o maior?",
+    "answers": [
+      "Gato",
+      "Cachorro"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "image",
+    "file": "image25",
+    "image_width": 883,
+    "image_height": 495
+  },
+  {
+    "question": "Complete o ditado:\n“Cada macaco no seu  _____”",
+    "answers": [
+      "Canto",
+      "Mato",
+      "Aço",
+      "Galho"
+    ],
+    "correct_answer": 3,
+    "type": "4Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Carmen Miranda era uma famosa:",
+    "answers": [
+      "Médica",
+      "Presidenta",
+      "Atleta",
+      "Cantora"
+    ],
+    "correct_answer": 3,
+    "type": "4Alt",
+    "style": "image",
+    "file": "image2",
+    "image_width": 940,
+    "image_height": 627
+  },
+  {
+    "question": "Pelé é conhecido por ser um…",
+    "answers": [
+      "Cantor de bossa nova",
+      "Médico",
+      "Jogador de futebol",
+      "Ator da Globo"
+    ],
+    "correct_answer": 2,
+    "type": "4Alt",
+    "style": "image",
+    "file": "image6",
+    "image_width": 940,
+    "image_height": 850
+  },
+  {
+    "question": "Qual nome desse apresentador de televisão?",
+    "answers": [
+      "Flávio Cavalcanti",
+      "Chacrinha"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "image",
+    "file": "image16",
+    "image_width": 601,
+    "image_height": 324
+  }
+]
