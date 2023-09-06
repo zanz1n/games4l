@@ -28,5 +28,7 @@ test:
 	go test ./tools/cli/... -v --race
 
 deploy:
+	rm -rf ./apps/memories/dist
+	pnpm --filter memories build
 	make build-lambdas
 	cd infra && terraform apply
