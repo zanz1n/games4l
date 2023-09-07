@@ -6,15 +6,20 @@
     return "/questions/images/" + name;
   }
 
-  const imageSrc = resolveAssetAddress(assetName) + ".png";
+  const imageSrc = resolveAssetAddress(assetName) + ".";
 </script>
 
 <div class="image-box">
-  <img
-    class={questionType == "2Alt" ? "big-img" : "small-img"}
-    src={imageSrc}
-    alt={assetName}
-  />
+  <picture>
+    <source type="image/avif" srcset={imageSrc + "avif"} />
+    <source type="image/webp" srcset={imageSrc + "webp"} />
+    <img
+      src={imageSrc + "png"}
+      alt={assetName}
+      loading="eager"
+      class={questionType == "2Alt" ? "big-img" : "small-img"}
+    />
+  </picture>
 </div>
 
 <style>
