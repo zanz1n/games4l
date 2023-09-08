@@ -10,6 +10,7 @@ import (
 	"github.com/games4l/internal/httpcodes"
 	"github.com/games4l/internal/logger"
 	"github.com/games4l/internal/question"
+	"github.com/games4l/internal/utils"
 	"github.com/goccy/go-json"
 )
 
@@ -44,7 +45,7 @@ func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 		StatusCode:      httpcodes.StatusOK,
 		Headers:         applicationJsonHeader,
 		IsBase64Encoded: false,
-		Body: MarshalJSON(JSON{
+		Body: utils.MarshalJSON(JSON{
 			"message": "success",
 			"data":    result,
 		}),
@@ -58,7 +59,10 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		return nil, errors.DefaultErrorList.RouteRequiresAdminAuth
 	}
 
-	if err := AuthAdmin(authHeader, req.Body); err != nil {
+	if err := ap.AuthenticateAdminHeader(
+		authHeader,
+		utils.S2B(req.Body),
+	); err != nil {
 		return nil, err
 	}
 
@@ -73,7 +77,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 			return nil, errors.DefaultErrorList.MalformedOrTooBigBody
 		}
 
-		if err := validate.Struct(bodyP); err != nil || !bodyP.IsValid() {
+		if err := validate.Struct(&bodyP); err != nil || !bodyP.IsValid() {
 			return nil, errors.DefaultErrorList.InvalidRequestEntity
 		}
 
@@ -120,7 +124,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		StatusCode:      httpcodes.StatusOK,
 		Headers:         applicationJsonHeader,
 		IsBase64Encoded: false,
-		Body: MarshalJSON(JSON{
+		Body: utils.MarshalJSON(JSON{
 			"message": "created",
 			"data":    result,
 		}),
@@ -163,7 +167,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 			return nil, fErr
 		}
 
-		res.Body = MarshalJSON(JSON{
+		res.Body = utils.MarshalJSON(JSON{
 			"message": "success",
 			"data":    result,
 		})
@@ -182,7 +186,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 		return nil, err
 	}
 
-	res.Body = MarshalJSON(JSON{
+	res.Body = utils.MarshalJSON(JSON{
 		"message": "success",
 		"data":    result,
 	})

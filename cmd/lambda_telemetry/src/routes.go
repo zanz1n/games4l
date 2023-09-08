@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/games4l/internal/telemetry"
 	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/httpcodes"
 	"github.com/games4l/internal/logger"
+	"github.com/games4l/internal/telemetry"
 	"github.com/games4l/internal/utils"
 	"github.com/goccy/go-json"
 )
@@ -63,8 +63,8 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	if err != nil {
 		return nil, err
 	}
-
-	if err = AuthBySig(req.Headers["authorization"], req.Body); err != nil {
+	err = ap.AuthenticateAdminHeader(req.Headers["authorization"], utils.S2B(req.Body))
+	if err != nil {
 		result.PacientName = "<OMITTED>"
 	}
 
@@ -82,7 +82,10 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 }
 
 func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
-	if err := AuthBySig(req.Headers["authorization"], req.Body); err != nil {
+	if err := ap.AuthenticateAdminHeader(
+		req.Headers["authorization"],
+		utils.S2B(req.Body),
+	); err != nil {
 		return nil, err
 	}
 

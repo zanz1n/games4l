@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/httpcodes"
 	"github.com/games4l/internal/logger"
 	"github.com/games4l/internal/utils"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/games4l/internal/errors"
 )
 
 type ByteEncoding string
@@ -28,6 +28,13 @@ const (
 	UserRolePacient UserRole = "PACIENT"
 	UserRoleAdmin   UserRole = "ADMIN"
 	UserRoleClient  UserRole = "CLIENT"
+)
+
+type AuthMethod string
+
+const (
+	AuthMethodBearer    AuthMethod = "Bearer"
+	AuthMethodSignature AuthMethod = "Signature"
 )
 
 var ValidUserRoles = []UserRole{UserRoleAdmin, UserRoleClient, UserRolePacient}
@@ -145,16 +152,58 @@ func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes 
 
 	var expected string
 
-	if method == ByteEncodingHex {
+	switch method {
+	case ByteEncodingHex:
 		expected = hex.EncodeToString(sum)
-	} else if method == ByteEncodingBase64 {
+	case ByteEncodingBase64:
 		expected = base64.RawStdEncoding.EncodeToString(sum)
-	} else {
+	default:
 		return errors.DefaultErrorList.InvalidAuthSignatureEncodingMethod
 	}
 
 	if expected != string(givenBytes) {
 		return errors.DefaultErrorList.InvalidAuthSignature
+	}
+
+	return nil
+}
+
+func (ap *AuthProvider) AuthenticateUserHeader(header string) (*JwtUserData, errors.StatusCodeErr) {
+	info, err := ExtractAuthHeaderInfo(header)
+	if err != nil {
+		return nil, err
+	}
+
+	if info.Method != AuthMethodBearer {
+		return nil, errors.DefaultErrorList.InvalidAuthStrategy
+	}
+
+	return ap.AuthUser(info.Payload)
+}
+
+func (ap *AuthProvider) AuthenticateAdminHeader(header string, body []byte) errors.StatusCodeErr {
+	info, err := ExtractAuthHeaderInfo(header)
+	if err != nil {
+		return err
+	}
+
+	switch info.Method {
+	case AuthMethodBearer:
+		var user *JwtUserData
+
+		if user, err = ap.AuthUser(info.Payload); err != nil {
+			return err
+		}
+
+		if user.Role != UserRoleAdmin {
+			return errors.DefaultErrorList.RouteRequiresAdminAuth
+		}
+	case AuthMethodSignature:
+		if err = ap.ValidateSignature(info.Encoding, body, utils.S2B(info.Payload)); err != nil {
+			return err
+		}
+	default:
+		return errors.DefaultErrorList.InvalidAuthStrategy
 	}
 
 	return nil
