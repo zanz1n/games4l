@@ -36,6 +36,7 @@ resource "aws_lambda_function" "question" {
 
   environment {
     variables = {
+      NO_COLOR            = "1"
       MONGO_URI           = var.question_mongo_database_uri
       MONGO_DATABASE_NAME = var.question_mongo_database_name
       WEBHOOK_SIG         = var.webhook_signature

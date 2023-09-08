@@ -35,6 +35,7 @@ resource "aws_lambda_function" "telemetry" {
 
   environment {
     variables = {
+      NO_COLOR            = "1"
       MONGO_URI           = var.telemetry_mongo_database_uri
       MONGO_DATABASE_NAME = var.telemetry_mongo_database_name
       WEBHOOK_SIG         = var.webhook_signature

@@ -36,6 +36,7 @@ resource "aws_lambda_function" "auth" {
 
   environment {
     variables = {
+      NO_COLOR            = "1"
       BCRYPT_SALT_LEN     = 12
       MONGO_URI           = var.users_mongo_database_uri
       MONGO_DATABASE_NAME = var.users_mongo_database_name
