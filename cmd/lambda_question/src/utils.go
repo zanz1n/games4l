@@ -1,0 +1,93 @@
+package src
+
+import (
+	"strings"
+
+	"github.com/games4l/internal/auth"
+	"github.com/games4l/internal/errors"
+	"github.com/games4l/internal/question"
+	"github.com/go-playground/validator/v10"
+	"github.com/goccy/go-json"
+)
+
+var (
+	applicationJsonHeader = map[string]string{
+		"Content-Type": "application/json",
+	}
+	validate = validator.New()
+	ap       *auth.AuthProvider
+	dba      *question.QuestionService
+)
+
+type JSON map[string]interface{}
+
+func MarshalJSON(v any) string {
+	bytes, err := json.Marshal(v)
+	if err != nil {
+		return "{\"error\":\"the real message to be shown could not be encoded, this is not the intended one\"}"
+	}
+
+	return string(bytes)
+}
+
+func AuthAdmin(header string, body string) errors.StatusCodeErr {
+	authHeaderS := strings.Split(header, " ")
+	l := len(authHeaderS)
+
+	if l < 2 || l > 3 {
+		return errors.DefaultErrorList.RouteRequiresAdminAuth
+	}
+
+	if authHeaderS[0] == "Signature" {
+		if err := AuthBySig(header, body); err != nil {
+			return err
+		}
+	} else if authHeaderS[0] == "Bearer" {
+		jwtToken := authHeaderS[1]
+
+		// This may change depending on the jwt algorithm used
+		if len(jwtToken) < 100 || l > 2 {
+			return errors.DefaultErrorList.InvalidJwtTokenFormat
+		}
+
+		user, err := ap.AuthUser(jwtToken)
+
+		if err != nil {
+			return err
+		}
+
+		if user.Role != auth.UserRoleAdmin {
+			return errors.DefaultErrorList.RouteRequiresAdminAuth
+		}
+	} else {
+		return errors.DefaultErrorList.InvalidAuthStrategy
+	}
+
+	return nil
+}
+
+func AuthBySig(header string, body string) errors.StatusCodeErr {
+	authHeaderS := strings.Split(header, " ")
+
+	if len(authHeaderS) < 3 {
+		return errors.DefaultErrorList.RouteRequiresAdminAuth
+	}
+
+	if authHeaderS[0] != "Signature" {
+		return errors.DefaultErrorList.InvalidAuthStrategy
+	}
+
+	encodingS := auth.ByteEncoding(authHeaderS[1])
+
+	if encodingS != auth.ByteEncodingBase64 && encodingS != auth.ByteEncodingHex {
+		return errors.DefaultErrorList.InvalidAuthSignatureEncodingMethod
+	}
+
+	err := ap.ValidateSignature(encodingS, []byte(body), []byte(authHeaderS[2]))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -1,6 +1,0 @@
-github.com/games4l/backend/libs/logger v0.0.0-20230816225720-72e970fd52ef h1:Z69N0v8wcfwgqTJ2TmVUea6dNgh1oFcl4c1m/Ek0NqY=
-github.com/games4l/backend/libs/logger v0.0.0-20230816225720-72e970fd52ef/go.mod h1:i7Ml9BrUuw+NEIDUuxe01kKBFdlzMhOV9vblqmBidq0=
-github.com/games4l/backend/libs/utils v0.0.0-20230816225720-72e970fd52ef h1:PIrmXsQlJSOtp0LB9nkx8JjWmsrCjJbJxQ8863EOxhA=
-github.com/games4l/backend/libs/utils v0.0.0-20230816225720-72e970fd52ef/go.mod h1:lJ77fYqBSBV/gO5wGLXZW7ZYQtuqrk53L7WLqqMYF94=
-github.com/golang-jwt/jwt/v4 v4.5.0 h1:7cYmW1XlMY7h7ii7UhUyChSgS5wUJEnm9uZVTGqOWzg=
-github.com/golang-jwt/jwt/v4 v4.5.0/go.mod h1:m21LjoU+eqJr34lmDMbreY2eSTRJ1cv77w39/MY0Ch0=
