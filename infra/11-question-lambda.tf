@@ -62,8 +62,8 @@ resource "aws_cloudwatch_log_group" "question" {
 data "archive_file" "lambda_question" {
   type = "zip"
 
-  source_dir  = "../${path.module}/services/question_lambda/dist"
-  output_path = "../${path.module}/services/dist/question_lambda.zip"
+  source_dir  = "../${path.module}/dist/lambda_question"
+  output_path = "../${path.module}/dist/lambda_question.zip"
 }
 
 resource "aws_s3_object" "lambda_question" {

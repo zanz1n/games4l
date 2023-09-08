@@ -61,8 +61,8 @@ resource "aws_cloudwatch_log_group" "telemetry" {
 data "archive_file" "lambda_telemetry" {
   type = "zip"
 
-  source_dir  = "../${path.module}/services/telemetry_lambda/dist"
-  output_path = "../${path.module}/services/dist/telemetry_lambda.zip"
+  source_dir  = "../${path.module}/dist/lambda_telemetry"
+  output_path = "../${path.module}/dist/lambda_telemetry.zip"
 }
 
 resource "aws_s3_object" "lambda_telemetry" {

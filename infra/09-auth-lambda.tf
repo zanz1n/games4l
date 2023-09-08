@@ -63,8 +63,8 @@ resource "aws_cloudwatch_log_group" "auth" {
 data "archive_file" "lambda_auth" {
   type = "zip"
 
-  source_dir  = "../${path.module}/services/auth_lambda/dist"
-  output_path = "../${path.module}/services/dist/auth_lambda.zip"
+  source_dir  = "../${path.module}/dist/lambda_auth"
+  output_path = "../${path.module}/dist/lambda_auth.zip"
 }
 
 resource "aws_s3_object" "lambda_auth" {
