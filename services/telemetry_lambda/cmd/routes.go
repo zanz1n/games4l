@@ -1,4 +1,4 @@
-package src
+package cmd
 
 import (
 	"context"
@@ -6,14 +6,14 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/games4l/backend/libs/logger"
-	"github.com/games4l/backend/libs/telemetry"
 	"github.com/games4l/backend/libs/utils"
 	"github.com/games4l/backend/libs/utils/httpcodes"
+	"github.com/games4l/backend/services/telemetry_lambda/repository"
 	"github.com/goccy/go-json"
 )
 
 func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, utils.StatusCodeErr) {
-	telemetryData := telemetry.CreateTelemetryUnitData{}
+	telemetryData := repository.CreateTelemetryUnitData{}
 
 	json.Unmarshal([]byte(req.Body), &telemetryData)
 
@@ -34,7 +34,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	return &events.APIGatewayProxyResponse{
 		StatusCode: httpcodes.StatusCreated,
 		Headers:    applicationJsonHeader,
-		Body: MarshalJSON(JSON{
+		Body: utils.MarshalJSON(JSON{
 			"message": "data created",
 			"data":    result,
 		}),
@@ -71,7 +71,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 		StatusCode:      httpcodes.StatusOK,
 		Headers:         applicationJsonHeader,
 		IsBase64Encoded: false,
-		Body: MarshalJSON(JSON{
+		Body: utils.MarshalJSON(JSON{
 			"data":    result,
 			"message": "",
 		}),
@@ -109,7 +109,7 @@ func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxy
 		StatusCode:      httpcodes.StatusOK,
 		Headers:         applicationJsonHeader,
 		IsBase64Encoded: false,
-		Body: MarshalJSON(JSON{
+		Body: utils.MarshalJSON(JSON{
 			"message": "success",
 			"data":    result,
 		}),

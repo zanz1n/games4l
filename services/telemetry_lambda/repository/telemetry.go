@@ -1,4 +1,4 @@
-package telemetry
+package repository
 
 import (
 	"context"
@@ -7,45 +7,18 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"unicode"
 
 	"github.com/games4l/backend/libs/logger"
 	"github.com/games4l/backend/libs/utils"
-	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
-	"golang.org/x/text/unicode/norm"
-)
-
-var (
-	normalizer = transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
-	validate   = validator.New()
 )
 
 type Config struct {
 	ProjectEpoch int64
 	MongoDbName  string
-}
-
-type CreateTelemetryUnitData struct {
-	DoneAt       int64  `json:"done_at,omitempty" validate:"required"`
-	CompleteTime int64  `json:"complete_time,omitempty" validate:"required"`
-	Answereds    []int8 `json:"answereds,omitempty" validate:"required"`
-	QuestionID   uint   `json:"quest_id,omitempty" validate:"required"`
-	PacientName  string `json:"pacient_name,omitempty" validate:"required"`
-}
-
-type TelemetryUnit struct {
-	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty" validate:"required"`
-	CreatedAt    primitive.DateTime `bson:"created_at,omitempty" json:"created_at,omitempty" validate:"required"`
-	DoneAt       primitive.DateTime `bson:"done_at,omitempty" json:"done_at,omitempty" validate:"required"`
-	CompleteTime int64              `bson:"complete_time,omitempty" json:"complete_time,omitempty" validate:"required"`
-	Answereds    []int8             `bson:"answereds,omitempty" json:"answered,omitempty" validate:"required"`
-	QuestionID   uint               `bson:"quest_id,omitempty" json:"quest_id,omitempty" validate:"required"`
-	PacientName  string             `bson:"pacient_name,omitempty" json:"pacient_name,omitempty" validate:"required"`
 }
 
 type TelemetryService struct {
@@ -55,17 +28,7 @@ type TelemetryService struct {
 	cfg    *Config
 }
 
-type similarNameResult struct {
-	res []TelemetryUnit
-	err utils.StatusCodeErr
-}
-
-type findOneResult struct {
-	res *TelemetryUnit
-	err utils.StatusCodeErr
-}
-
-func NewTelemetryDataService(c *mongo.Client, cfg *Config) *TelemetryService {
+func NewTelemetryService(c *mongo.Client, cfg *Config) *TelemetryService {
 	db := c.Database(cfg.MongoDbName)
 
 	col := db.Collection("telemetry_data")
@@ -76,25 +39,6 @@ func NewTelemetryDataService(c *mongo.Client, cfg *Config) *TelemetryService {
 		col:    col,
 		cfg:    cfg,
 	}
-}
-
-func eliminateDuplicates(arr []TelemetryUnit) []TelemetryUnit {
-	cache := make(map[string]struct{})
-
-	newArr := []TelemetryUnit{}
-
-	var (
-		ok bool
-		v  TelemetryUnit
-	)
-	for _, v = range arr {
-		if _, ok = cache[v.ID.Hex()]; !ok {
-			newArr = append(newArr, v)
-			cache[v.ID.Hex()] = struct{}{}
-		}
-	}
-
-	return newArr
 }
 
 func (ds *TelemetryService) FindByIdWithCtx(ctx context.Context, id string) (*TelemetryUnit, utils.StatusCodeErr) {

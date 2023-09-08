@@ -1,13 +1,12 @@
-package src
+package cmd
 
 import (
 	"strings"
 
 	"github.com/games4l/backend/libs/auth"
-	"github.com/games4l/backend/libs/telemetry"
 	"github.com/games4l/backend/libs/utils"
+	"github.com/games4l/backend/services/telemetry_lambda/repository"
 	"github.com/go-playground/validator/v10"
-	"github.com/goccy/go-json"
 )
 
 var (
@@ -15,20 +14,11 @@ var (
 		"Content-Type": "application/json",
 	}
 	validate = validator.New()
-	dba      *telemetry.TelemetryService
+	dba      *repository.TelemetryService
 	ap       *auth.AuthProvider
 )
 
 type JSON map[string]interface{}
-
-func MarshalJSON(v any) string {
-	bytes, err := json.Marshal(v)
-	if err != nil {
-		return "{\"error\":\"the real message to be shown could not be encoded, this is not the intended one\"}"
-	}
-
-	return string(bytes)
-}
 
 func AuthBySig(header string, body string) utils.StatusCodeErr {
 	authHeaderS := strings.Split(header, " ")

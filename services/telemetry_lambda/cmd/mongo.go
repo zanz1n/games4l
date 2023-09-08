@@ -1,4 +1,4 @@
-package src
+package cmd
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/games4l/backend/libs/logger"
-	"github.com/games4l/backend/libs/telemetry"
+	"github.com/games4l/backend/services/telemetry_lambda/repository"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -36,7 +36,7 @@ func Connect() error {
 		return errors.New("failed to connect to mongodb: " + err.Error())
 	}
 
-	dba = telemetry.NewTelemetryDataService(client, &telemetry.Config{
+	dba = repository.NewTelemetryService(client, &repository.Config{
 		ProjectEpoch: 1684542947161,
 		MongoDbName:  dbName,
 	})

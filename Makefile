@@ -1,7 +1,6 @@
 work-tidy:
 	cd ./libs/auth && go mod tidy -e
 	cd ./libs/logger && go mod tidy -e
-	cd ./libs/telemetry && go mod tidy -e
 	cd ./libs/utils && go mod tidy -e
 	cd ./libs/user && go mod tidy -e
 	cd ./libs/question && go mod tidy -e

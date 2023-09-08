@@ -3,7 +3,6 @@ go 1.21
 use (
 	./libs/auth
 	./libs/logger
-	./libs/telemetry
 	./libs/utils
 	./libs/user
 	./libs/question

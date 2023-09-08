@@ -1,4 +1,4 @@
-package src
+package cmd
 
 import (
 	"os"
@@ -48,7 +48,7 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 			StatusCode:      fErr.Status(),
 			Headers:         applicationJsonHeader,
 			IsBase64Encoded: false,
-			Body: MarshalJSON(JSON{
+			Body: utils.MarshalJSON(JSON{
 				"error": utils.FirstUpper(fErr.Error()),
 			}),
 		}
