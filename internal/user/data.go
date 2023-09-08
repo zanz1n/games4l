@@ -60,7 +60,7 @@ func NewUserService(client *mongo.Client, ap *auth.AuthProvider, cfg *Config) *U
 	}
 }
 
-func (s *UserService) SignInUser(ctx context.Context, credential string, passwd string) (string, errors.StatusCodeErr) {
+func (s *UserService) SignInUser(ctx context.Context, credential string, passwd string) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
@@ -76,12 +76,12 @@ func (s *UserService) SignInUser(ctx context.Context, credential string, passwd 
 	}
 
 	if err != nil {
-		return "", errors.DefaultErrorList.UserUnauthorized
+		return "", errors.ErrUserUnauthorized
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passwd))
 	if err != nil {
-		return "", errors.DefaultErrorList.UserUnauthorized
+		return "", errors.ErrUserUnauthorized
 	}
 
 	tokenPayload, err := s.ap.GenerateUserJwtToken(auth.JwtUserData{
@@ -91,20 +91,20 @@ func (s *UserService) SignInUser(ctx context.Context, credential string, passwd 
 	}, s.cfg.JwtExpiryTime)
 
 	if err != nil {
-		return "", errors.DefaultErrorList.InternalServerError
+		return "", errors.ErrInternalServerError
 	}
 
 	return tokenPayload, nil
 }
 
-func (s *UserService) FindByID(ctx context.Context, hexID string) (*User, errors.StatusCodeErr) {
+func (s *UserService) FindByID(ctx context.Context, hexID string) (*User, error) {
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
 	oid, err := primitive.ObjectIDFromHex(hexID)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.InvalidObjectID
+		return nil, errors.ErrInvalidObjectID
 	}
 
 	user := User{}
@@ -112,23 +112,23 @@ func (s *UserService) FindByID(ctx context.Context, hexID string) (*User, errors
 	err = s.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&user)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.EntityNotFound
+		return nil, errors.ErrEntityNotFound
 	}
 
 	return &user, nil
 }
 
-func (s *UserService) CreateUser(ctx context.Context, role auth.UserRole, data *CreateUserData) (*User, errors.StatusCodeErr) {
+func (s *UserService) CreateUser(ctx context.Context, role auth.UserRole, data *CreateUserData) (*User, error) {
 	if !utils.SliceContains(auth.ValidUserRoles, role) {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	if !emailIsValid(data.Email) {
-		return nil, errors.DefaultErrorList.InvalidEmail
+		return nil, errors.ErrInvalidEmail
 	}
 
 	if err := validate.Struct(*data); err != nil {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -137,7 +137,7 @@ func (s *UserService) CreateUser(ctx context.Context, role auth.UserRole, data *
 	passwdEnc, err := bcrypt.GenerateFromPassword([]byte(data.Password), s.cfg.BcryptSaltLength)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	oid := primitive.NewObjectID()
@@ -151,7 +151,7 @@ func (s *UserService) CreateUser(ctx context.Context, role auth.UserRole, data *
 	}
 
 	if _, err = s.col.InsertOne(ctx, user); err != nil {
-		return nil, errors.DefaultErrorList.EntityAlreadyExists
+		return nil, errors.ErrEntityAlreadyExists
 	}
 
 	return &user, nil

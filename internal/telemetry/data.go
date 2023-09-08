@@ -2,7 +2,6 @@ package telemetry
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"github.com/games4l/internal/errors"
 )
 
 type CreateTelemetryUnitData struct {
@@ -25,10 +24,10 @@ type TelemetryUnit struct {
 
 type similarNameResult struct {
 	res []TelemetryUnit
-	err errors.StatusCodeErr
+	err error
 }
 
 type findOneResult struct {
 	res *TelemetryUnit
-	err errors.StatusCodeErr
+	err error
 }

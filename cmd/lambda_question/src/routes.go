@@ -14,7 +14,7 @@ import (
 	"github.com/goccy/go-json"
 )
 
-func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	limitParam, ok := req.QueryStringParameters["limit"]
 
 	limit := 1000
@@ -22,14 +22,14 @@ func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	if ok {
 		l, err := strconv.Atoi(limitParam)
 		if err != nil || l <= 0 {
-			return nil, errors.DefaultErrorList.InvalidRequestEntity
+			return nil, errors.ErrInvalidRequestEntity
 		}
 		limit = l
 	}
 
 	if err := Connect(); err != nil {
 		logger.Error("Connect call failed: " + err.Error())
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 6*time.Second)
@@ -52,11 +52,11 @@ func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	}, nil
 }
 
-func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	authHeader, ok := req.Headers["authorization"]
 
 	if !ok {
-		return nil, errors.DefaultErrorList.RouteRequiresAdminAuth
+		return nil, errors.ErrRouteRequiresAdminAuth
 	}
 
 	if err := ap.AuthenticateAdminHeader(
@@ -74,11 +74,11 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		bodyP := question.Question{}
 
 		if err := json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-			return nil, errors.DefaultErrorList.MalformedOrTooBigBody
+			return nil, errors.ErrMalformedOrTooBigBody
 		}
 
 		if err := validate.Struct(&bodyP); err != nil || !bodyP.IsValid() {
-			return nil, errors.DefaultErrorList.InvalidRequestEntity
+			return nil, errors.ErrInvalidRequestEntity
 		}
 
 		qb = &bodyP
@@ -86,16 +86,16 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 		bodyP := question.QuestionAlternativeFmt{}
 
 		if err := json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-			return nil, errors.DefaultErrorList.MalformedOrTooBigBody
+			return nil, errors.ErrMalformedOrTooBigBody
 		}
 
 		if err := validate.Struct(bodyP); err != nil || !bodyP.IsValid() {
-			return nil, errors.DefaultErrorList.InvalidRequestEntity
+			return nil, errors.ErrInvalidRequestEntity
 		}
 
 		qb = bodyP.Parse()
 	} else {
-		return nil, errors.DefaultErrorList.InvalidFMTQueryParam
+		return nil, errors.ErrInvalidFMTQueryParam
 	}
 
 	nidParam := req.QueryStringParameters["nid"]
@@ -103,12 +103,12 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	nid, err := strconv.Atoi(nidParam)
 
 	if err != nil || 0 >= nid {
-		return nil, errors.DefaultErrorList.InvalidNIDQueryParam
+		return nil, errors.ErrInvalidNIDQueryParam
 	}
 
 	if err := Connect(); err != nil {
 		logger.Error("Connect call failed: " + err.Error())
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -131,7 +131,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	}, nil
 }
 
-func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	idParam, ok := req.QueryStringParameters["id"]
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -147,18 +147,18 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 		idParam, ok = req.QueryStringParameters["nid"]
 
 		if !ok {
-			return nil, errors.DefaultErrorList.InvalidRequestEntity
+			return nil, errors.ErrInvalidRequestEntity
 		}
 
 		id, err := strconv.Atoi(idParam)
 
 		if err != nil {
-			return nil, errors.DefaultErrorList.InvalidNIDQueryParam
+			return nil, errors.ErrInvalidNIDQueryParam
 		}
 
 		if err := Connect(); err != nil {
 			logger.Error("Connect call failed: " + err.Error())
-			return nil, errors.DefaultErrorList.InternalServerError
+			return nil, errors.ErrInternalServerError
 		}
 
 		result, fErr := dba.GetByNumID(ctx, id)
@@ -177,7 +177,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 
 	if err := Connect(); err != nil {
 		logger.Error("Connect call failed: " + err.Error())
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	result, err := dba.GetByID(ctx, idParam)

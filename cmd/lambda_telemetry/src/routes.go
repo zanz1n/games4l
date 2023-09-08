@@ -13,7 +13,7 @@ import (
 	"github.com/goccy/go-json"
 )
 
-func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	telemetryData := telemetry.CreateTelemetryUnitData{}
 
 	json.Unmarshal([]byte(req.Body), &telemetryData)
@@ -21,7 +21,7 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	err := validate.Struct(telemetryData)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.MalformedOrTooBigBody
+		return nil, errors.ErrMalformedOrTooBigBody
 	}
 
 	Connect()
@@ -43,16 +43,16 @@ func HandlePost(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRespo
 	}, nil
 }
 
-func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	idParam, ok := req.PathParameters["id"]
 
 	if !ok || idParam == "" {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	if err := Connect(); err != nil {
 		logger.Error("Connect call failed: " + err.Error())
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)
@@ -81,7 +81,7 @@ func HandleGetByID(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRe
 	return &res, nil
 }
 
-func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	if err := ap.AuthenticateAdminHeader(
 		req.Headers["authorization"],
 		utils.S2B(req.Body),
@@ -92,12 +92,12 @@ func HandleGetByName(req events.APIGatewayProxyRequest) (*events.APIGatewayProxy
 	nameParam, ok := req.QueryStringParameters["name"]
 
 	if !ok {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	if err := Connect(); err != nil {
 		logger.Error("Connect call failed: " + err.Error())
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 7*time.Second)

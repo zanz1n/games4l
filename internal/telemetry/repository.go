@@ -41,7 +41,7 @@ func NewTelemetryService(c *mongo.Client, cfg *Config) *TelemetryService {
 	}
 }
 
-func (ds *TelemetryService) FindByIdWithCtx(ctx context.Context, id string) (*TelemetryUnit, errors.StatusCodeErr) {
+func (ds *TelemetryService) FindByIdWithCtx(ctx context.Context, id string) (*TelemetryUnit, error) {
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
@@ -58,13 +58,13 @@ func (ds *TelemetryService) FindByIdWithCtx(ctx context.Context, id string) (*Te
 
 	select {
 	case <-ctx.Done():
-		return nil, errors.DefaultErrorList.ServerOperationTookTooLong
+		return nil, errors.ErrServerOperationTookTooLong
 	case result := <-done:
 		return result.res, result.err
 	}
 }
 
-func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, errors.StatusCodeErr) {
+func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -73,33 +73,33 @@ func (ds *TelemetryService) FindById(id string) (*TelemetryUnit, errors.StatusCo
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.InvalidObjectID
+		return nil, errors.ErrInvalidObjectID
 	}
 
 	err = ds.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&tu)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.EntityNotFound
+		return nil, errors.ErrEntityNotFound
 	}
 
 	return &tu, nil
 }
 
-func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUnit, errors.StatusCodeErr) {
+func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUnit, error) {
 	err := validate.Struct(*data)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	for _, answred := range data.Answereds {
 		if answred > 4 || answred < 1 {
-			return nil, errors.DefaultErrorList.InvalidRequestEntity
+			return nil, errors.ErrInvalidRequestEntity
 		}
 	}
 
 	if data.DoneAt < ds.cfg.ProjectEpoch {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -108,7 +108,7 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	normalizedName, _, err := transform.String(normalizer, strings.ToLower(data.PacientName))
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	tu := TelemetryUnit{
@@ -126,26 +126,26 @@ func (ds *TelemetryService) Create(data *CreateTelemetryUnitData) (*TelemetryUni
 	_, err = ds.col.InsertOne(ctx, tu)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	return &tu, nil
 }
 
-func (ds *TelemetryService) FindSimilarNameWithCtx(ctx context.Context, name string) ([]TelemetryUnit, errors.StatusCodeErr) {
+func (ds *TelemetryService) FindSimilarNameWithCtx(ctx context.Context, name string) ([]TelemetryUnit, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
 	spl := strings.Split(name, " ")
 
 	if len(spl) < 2 || len(spl) > 9 {
-		return nil, errors.DefaultErrorList.SurnameSearchInvalid
+		return nil, errors.ErrSurnameSearchInvalid
 	}
 
 	deadline, ok := ctx.Deadline()
 
 	if !ok {
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	done := make(chan similarNameResult)
@@ -163,11 +163,11 @@ func (ds *TelemetryService) FindSimilarNameWithCtx(ctx context.Context, name str
 	case result := <-done:
 		return result.res, result.err
 	case <-ctx.Done():
-		return nil, errors.DefaultErrorList.ServerOperationTookTooLong
+		return nil, errors.ErrServerOperationTookTooLong
 	}
 }
 
-func (ds *TelemetryService) FindSimilarName(deadline time.Time, name string) ([]TelemetryUnit, errors.StatusCodeErr) {
+func (ds *TelemetryService) FindSimilarName(deadline time.Time, name string) ([]TelemetryUnit, error) {
 	spl := strings.Split(name, " ")
 
 	queryStart := time.Now()

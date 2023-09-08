@@ -47,7 +47,7 @@ func NewQuestionService(c *mongo.Client, cfg *Config) *QuestionService {
 	}
 }
 
-func (s *QuestionService) GetMany(ctx context.Context, limit int64) ([]QuestionDbData, errors.StatusCodeErr) {
+func (s *QuestionService) GetMany(ctx context.Context, limit int64) ([]QuestionDbData, error) {
 	maxExecTime := 20 * time.Second
 
 	if deadLine, ok := ctx.Deadline(); ok {
@@ -59,7 +59,7 @@ func (s *QuestionService) GetMany(ctx context.Context, limit int64) ([]QuestionD
 
 	cursor, err := s.col.Find(ctx, bson.D{}, &options.FindOptions{Limit: &limit})
 	if err != nil {
-		return nil, errors.DefaultErrorList.EntityNotFound
+		return nil, errors.ErrEntityNotFound
 	}
 
 	result := []QuestionDbData{}
@@ -68,19 +68,19 @@ func (s *QuestionService) GetMany(ctx context.Context, limit int64) ([]QuestionD
 	defer cancel2()
 
 	if err := cursor.All(ctx2, &result); err != nil {
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	return result, nil
 }
 
-func (s *QuestionService) Create(ctx context.Context, numId int, data *Question) (*QuestionDbData, errors.StatusCodeErr) {
+func (s *QuestionService) Create(ctx context.Context, numId int, data *Question) (*QuestionDbData, error) {
 	if err := validate.Struct(*data); err != nil {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	if !data.IsValid() {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
@@ -99,31 +99,31 @@ func (s *QuestionService) Create(ctx context.Context, numId int, data *Question)
 	_, err := s.col.InsertOne(ctx, insertData)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.EntityAlreadyExists
+		return nil, errors.ErrEntityAlreadyExists
 	}
 
 	return &insertData, nil
 }
 
-func (s *QuestionService) Update(ctx context.Context, hexID string, data *QuestionUpdateData) errors.StatusCodeErr {
+func (s *QuestionService) Update(ctx context.Context, hexID string, data *QuestionUpdateData) error {
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
 	oid, err := primitive.ObjectIDFromHex(hexID)
 
 	if err != nil {
-		return errors.DefaultErrorList.InvalidObjectID
+		return errors.ErrInvalidObjectID
 	}
 
 	if _, err = s.col.UpdateByID(ctx, oid, *data); err != nil {
 		logger.Error("%s", err.Error())
-		return errors.DefaultErrorList.InternalServerError
+		return errors.ErrInternalServerError
 	}
 
 	return nil
 }
 
-func (s *QuestionService) GetByNumID(ctx context.Context, numId int) (*QuestionDbData, errors.StatusCodeErr) {
+func (s *QuestionService) GetByNumID(ctx context.Context, numId int) (*QuestionDbData, error) {
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
@@ -132,11 +132,11 @@ func (s *QuestionService) GetByNumID(ctx context.Context, numId int) (*QuestionD
 	err := s.col.FindOne(ctx, bson.D{{Key: "n_id", Value: numId}}).Decode(&result)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.EntityNotFound
+		return nil, errors.ErrEntityNotFound
 	}
 
 	if err = validate.Struct(result); err != nil {
-		return nil, errors.DefaultErrorList.EntityNotFound
+		return nil, errors.ErrEntityNotFound
 
 		// Implement here: delete the result after it's invalidated
 	}
@@ -144,14 +144,14 @@ func (s *QuestionService) GetByNumID(ctx context.Context, numId int) (*QuestionD
 	return &result, nil
 }
 
-func (s *QuestionService) GetByID(ctx context.Context, hexID string) (*QuestionDbData, errors.StatusCodeErr) {
+func (s *QuestionService) GetByID(ctx context.Context, hexID string) (*QuestionDbData, error) {
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
 	oid, err := primitive.ObjectIDFromHex(hexID)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.InvalidObjectID
+		return nil, errors.ErrInvalidObjectID
 	}
 
 	result := QuestionDbData{}
@@ -159,11 +159,11 @@ func (s *QuestionService) GetByID(ctx context.Context, hexID string) (*QuestionD
 	err = s.col.FindOne(ctx, bson.D{{Key: "_id", Value: oid}}).Decode(&result)
 
 	if err != nil {
-		return nil, errors.DefaultErrorList.EntityNotFound
+		return nil, errors.ErrEntityNotFound
 	}
 
 	if err = validate.Struct(result); err != nil {
-		return nil, errors.DefaultErrorList.EntityNotFound
+		return nil, errors.ErrEntityNotFound
 
 		// Implement here: delete the result after it's invalidated
 	}

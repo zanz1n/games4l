@@ -12,10 +12,10 @@ type AuthInfo struct {
 	Payload  string
 }
 
-func ExtractAuthHeaderInfo(header string) (*AuthInfo, errors.StatusCodeErr) {
+func ExtractAuthHeaderInfo(header string) (*AuthInfo, error) {
 	headerS := strings.Split(header, " ")
 	if len(headerS) < 3 {
-		return nil, errors.DefaultErrorList.RouteRequiresAdminAuth
+		return nil, errors.ErrRouteRequiresAdminAuth
 	}
 
 	info := AuthInfo{}
@@ -29,7 +29,7 @@ func ExtractAuthHeaderInfo(header string) (*AuthInfo, errors.StatusCodeErr) {
 		case ByteEncodingBase64:
 		case ByteEncodingHex:
 		default:
-			return nil, errors.DefaultErrorList.InvalidAuthSignatureEncodingMethod
+			return nil, errors.ErrInvalidAuthSignatureEncodingMethod
 		}
 
 		info.Payload = headerS[2]
@@ -38,7 +38,7 @@ func ExtractAuthHeaderInfo(header string) (*AuthInfo, errors.StatusCodeErr) {
 
 		info.Payload = headerS[1]
 	} else {
-		return nil, errors.DefaultErrorList.InvalidAuthStrategy
+		return nil, errors.ErrInvalidAuthStrategy
 	}
 
 	return &info, nil

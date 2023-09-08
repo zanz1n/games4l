@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/games4l/internal/errors"
-	"github.com/games4l/internal/httpcodes"
 	"github.com/games4l/internal/logger"
 	"github.com/games4l/internal/utils"
 	"github.com/golang-jwt/jwt/v4"
@@ -57,7 +56,7 @@ func NewAuthProvider(sigKey []byte, jwtKey []byte) *AuthProvider {
 	}
 }
 
-func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, errors.StatusCodeErr) {
+func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, error) {
 	var (
 		valId       string
 		valUsername string
@@ -68,8 +67,6 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, errors.StatusCod
 			ok     bool
 			claims jwt.MapClaims
 		)
-
-		formatErr := fmt.Errorf(errors.DefaultErrorList.InvalidJwtTokenFormat.Error())
 
 		if _, ok = t.Method.(*jwt.SigningMethodHMAC); !ok {
 			headerAlg, ok := t.Header["alg"].(string)
@@ -82,38 +79,38 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, errors.StatusCod
 
 		if claims, ok = t.Claims.(jwt.MapClaims); !ok {
 			logger.Error("Jwt token invalidation: is not jwt.MapClaims")
-			return nil, formatErr
+			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if valId, ok = claims["id"].(string); !ok {
 			logger.Error("Jwt token invalidation: does not contain an id")
-			return nil, formatErr
+			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if valUsername, ok = claims["username"].(string); !ok {
 			logger.Error("Jwt token invalidation: does not contain an username")
-			return nil, formatErr
+			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if valRole, ok = claims["role"].(string); !ok {
 			logger.Error("Jwt token invalidation: does not contain a role")
-			return nil, formatErr
+			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if !utils.SliceContains(ValidUserRoles, UserRole(valRole)) {
 			logger.Error("Jwt token invalidation: the role is not valid")
-			return nil, formatErr
+			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if t.Claims.(jwt.MapClaims)["exp"].(float64) < float64(time.Now().Unix()) {
-			return nil, fmt.Errorf(errors.DefaultErrorList.JwtTokenExpired.Error())
+			return nil, errors.ErrJwtTokenExpired
 		}
 
 		return []byte(ap.jwtKey), nil
 	})
 
 	if err != nil || !token.Valid {
-		return nil, errors.NewStatusCodeErr(err.Error(), httpcodes.StatusUnauthorized)
+		return nil, err
 	}
 
 	return &JwtUserData{
@@ -136,16 +133,16 @@ func (ap *AuthProvider) GenerateUserJwtToken(info JwtUserData, exp time.Duration
 	return tokenEnc, err
 }
 
-func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes []byte) errors.StatusCodeErr {
+func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes []byte) error {
 	var err error
 
 	digest := sha256.New()
 
 	if _, err = digest.Write(body); err != nil {
-		return errors.DefaultErrorList.MalformedOrTooBigBody
+		return errors.ErrMalformedOrTooBigBody
 	}
 	if _, err = digest.Write(ap.sigKey); err != nil {
-		return errors.DefaultErrorList.MalformedOrTooBigBody
+		return errors.ErrMalformedOrTooBigBody
 	}
 
 	sum := digest.Sum([]byte{})
@@ -158,30 +155,30 @@ func (ap *AuthProvider) ValidateSignature(method ByteEncoding, body, givenBytes 
 	case ByteEncodingBase64:
 		expected = base64.RawStdEncoding.EncodeToString(sum)
 	default:
-		return errors.DefaultErrorList.InvalidAuthSignatureEncodingMethod
+		return errors.ErrInvalidAuthSignatureEncodingMethod
 	}
 
 	if expected != string(givenBytes) {
-		return errors.DefaultErrorList.InvalidAuthSignature
+		return errors.ErrInvalidAuthSignature
 	}
 
 	return nil
 }
 
-func (ap *AuthProvider) AuthenticateUserHeader(header string) (*JwtUserData, errors.StatusCodeErr) {
+func (ap *AuthProvider) AuthenticateUserHeader(header string) (*JwtUserData, error) {
 	info, err := ExtractAuthHeaderInfo(header)
 	if err != nil {
 		return nil, err
 	}
 
 	if info.Method != AuthMethodBearer {
-		return nil, errors.DefaultErrorList.InvalidAuthStrategy
+		return nil, errors.ErrInvalidAuthStrategy
 	}
 
 	return ap.AuthUser(info.Payload)
 }
 
-func (ap *AuthProvider) AuthenticateAdminHeader(header string, body []byte) errors.StatusCodeErr {
+func (ap *AuthProvider) AuthenticateAdminHeader(header string, body []byte) error {
 	info, err := ExtractAuthHeaderInfo(header)
 	if err != nil {
 		return err
@@ -196,14 +193,14 @@ func (ap *AuthProvider) AuthenticateAdminHeader(header string, body []byte) erro
 		}
 
 		if user.Role != UserRoleAdmin {
-			return errors.DefaultErrorList.RouteRequiresAdminAuth
+			return errors.ErrRouteRequiresAdminAuth
 		}
 	case AuthMethodSignature:
 		if err = ap.ValidateSignature(info.Encoding, body, utils.S2B(info.Payload)); err != nil {
 			return err
 		}
 	default:
-		return errors.DefaultErrorList.InvalidAuthStrategy
+		return errors.ErrInvalidAuthStrategy
 	}
 
 	return nil

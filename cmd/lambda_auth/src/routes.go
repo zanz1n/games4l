@@ -26,20 +26,20 @@ type CreateUserBody struct {
 	Role     auth.UserRole `json:"role,omitempty" validate:"required"`
 }
 
-func HandleSignIn(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandleSignIn(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	bodyP := SigInBody{}
 
 	if err := json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-		return nil, errors.DefaultErrorList.MalformedOrTooBigBody
+		return nil, errors.ErrMalformedOrTooBigBody
 	}
 
 	if err := validate.Struct(bodyP); err != nil {
-		return nil, errors.DefaultErrorList.InvalidRequestEntity
+		return nil, errors.ErrInvalidRequestEntity
 	}
 
 	if err := Connect(); err != nil {
 		logger.Error("Connect call failed: " + err.Error())
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -62,19 +62,19 @@ func HandleSignIn(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyRes
 	}, nil
 }
 
-func HandleUserCreation(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, errors.StatusCodeErr) {
+func HandleUserCreation(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	var (
-		cErr errors.StatusCodeErr
+		cErr error
 		err  error
 	)
 	bodyP := CreateUserBody{}
 
 	if err = json.Unmarshal([]byte(req.Body), &bodyP); err != nil {
-		return nil, errors.DefaultErrorList.MalformedOrTooBigBody
+		return nil, errors.ErrMalformedOrTooBigBody
 	}
 
 	if err = validate.Struct(bodyP); err != nil {
-		return nil, errors.DefaultErrorList.MalformedOrTooBigBody
+		return nil, errors.ErrMalformedOrTooBigBody
 	}
 
 	cErr = ap.AuthenticateAdminHeader(req.Headers["authorization"], utils.S2B(req.Body))
@@ -84,7 +84,7 @@ func HandleUserCreation(req events.APIGatewayProxyRequest) (*events.APIGatewayPr
 
 	if err = Connect(); err != nil {
 		logger.Error("Connect call failed: " + err.Error())
-		return nil, errors.DefaultErrorList.InternalServerError
+		return nil, errors.ErrInternalServerError
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

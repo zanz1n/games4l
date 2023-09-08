@@ -22,7 +22,7 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 	prefix := os.Getenv("API_GATEWAY_PREFIX")
 
 	var (
-		fErr errors.StatusCodeErr
+		fErr error
 		res  *events.APIGatewayProxyResponse
 	)
 
@@ -32,26 +32,30 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 		} else if req.HTTPMethod == "GET" {
 			res, fErr = HandleGetByName(req)
 		} else {
-			fErr = errors.DefaultErrorList.MethodNotAllowed
+			fErr = errors.ErrMethodNotAllowed
 		}
 	} else if hPrx(req.Path, "/"+prefix+"/telemetry/") || hPrx(req.Path, "/telemetry") {
 		if req.HTTPMethod == "GET" {
 			res, fErr = HandleGetByID(req)
 		} else {
-			fErr = errors.DefaultErrorList.MethodNotAllowed
+			fErr = errors.ErrMethodNotAllowed
 		}
 	} else {
-		fErr = errors.DefaultErrorList.NoSuchRoute
+		fErr = errors.ErrNoSuchRoute
 	}
 
 	if fErr != nil {
+		errInfo := errors.GetStatusErr(fErr)
+		errBody := errors.ErrorBody{
+			Message:   errInfo.Message(),
+			ErrorCode: errInfo.CustomCode(),
+		}
+
 		res = &events.APIGatewayProxyResponse{
-			StatusCode:      fErr.Status(),
+			StatusCode:      errInfo.HttpCode(),
 			Headers:         applicationJsonHeader,
 			IsBase64Encoded: false,
-			Body: utils.MarshalJSON(JSON{
-				"error": utils.FirstUpper(fErr.Error()),
-			}),
+			Body:            utils.B2S(errBody.Marshal()),
 		}
 	}
 
