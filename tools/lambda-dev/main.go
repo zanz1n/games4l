@@ -15,7 +15,7 @@ import (
 	"github.com/games4l/backend/libs/logger"
 	authsrc "github.com/games4l/backend/services/auth_lambda/src"
 	questionsrc "github.com/games4l/backend/services/question_lambda/src"
-	telemetrysrc "github.com/games4l/backend/services/telemetry_lambda/src"
+	telemetrysrc "github.com/games4l/backend/services/telemetry_lambda/cmd"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )

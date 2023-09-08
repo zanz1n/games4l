@@ -3,7 +3,7 @@ module github.com/games4l/backend/tools/cli
 go 1.21
 
 require (
-	github.com/games4l/backend/libs/question v0.0.0-20230905231801-c9feb1db90bd
+	github.com/games4l/backend/libs/question v0.0.0-20230907033314-c395ae85ba95
 	github.com/go-playground/validator/v10 v10.15.3
 	github.com/goccy/go-json v0.10.2
 	github.com/joho/godotenv v1.5.1
