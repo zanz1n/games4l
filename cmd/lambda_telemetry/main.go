@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/games4l/cmd/telemetry_lambda/src"
+	"github.com/games4l/cmd/lambda_telemetry/src"
 	"github.com/games4l/internal/errors"
 )
 
