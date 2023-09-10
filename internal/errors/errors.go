@@ -9,7 +9,7 @@ func GetStatusErr(key error) StatusError {
 
 	if !ok {
 		return &statusErrorImpl{
-			code:     0,
+			code:     50000,
 			httpCode: 500,
 			message:  "Unknown err: " + key.Error(),
 		}
