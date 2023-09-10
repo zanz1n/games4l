@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/games4l/internal/question"
+	"github.com/games4l/internal/entity/question"
 	"github.com/goccy/go-json"
 )
 
@@ -43,8 +43,8 @@ func ConvertQuestionOldToNew(inBuf []byte, indexType string) ([]byte, error) {
 			// Implicit copy
 			q := question
 
-			newQuest := q.Parse()
-			*newQuest.CorrectAnswer = *newQuest.CorrectAnswer - 1
+			newQuest := q.IntoQuestion()
+			newQuest.CorrectAnswer = newQuest.CorrectAnswer - 1
 			newArr[i] = newQuest
 		}
 
@@ -70,8 +70,8 @@ func ConvertQuestionOldToNew(inBuf []byte, indexType string) ([]byte, error) {
 			// Implicit copy
 			q := question
 
-			newQuest := q.Parse()
-			*newQuest.CorrectAnswer = *newQuest.CorrectAnswer - 1
+			newQuest := q.IntoQuestion()
+			newQuest.CorrectAnswer = newQuest.CorrectAnswer - 1
 			newArr[i] = newQuest
 			i++
 		}

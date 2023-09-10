@@ -2,6 +2,7 @@ package src
 
 import (
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/games4l/internal/auth"
@@ -21,18 +22,18 @@ func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse,
 		res  *events.APIGatewayProxyResponse
 	)
 
-	if req.Path == "/"+prefix+"/question" || req.Path == "/question" {
+	if strings.HasPrefix(req.Path, "/question") || strings.HasPrefix(req.Path, "/"+prefix+"/question") {
 		if req.HTTPMethod == "GET" {
-			_, ok1 := req.QueryStringParameters["id"]
-			_, ok2 := req.QueryStringParameters["uid"]
-
-			if ok1 || ok2 {
-				res, fErr = HandleGetByID(req)
+			if _, ok := req.PathParameters["id"]; ok {
+				res, fErr = HandleGetOne(req)
 			} else {
 				res, fErr = HandleGetMany(req)
 			}
 		} else if req.HTTPMethod == "POST" {
-			res, fErr = HandlePost(req)
+			res, fErr = HandlePostOne(req)
+		} else if req.HTTPMethod == "PATCH" || req.HTTPMethod == "PUT" {
+			fErr = errors.ErrMethodNotAllowed
+			// update one route
 		} else {
 			fErr = errors.ErrMethodNotAllowed
 		}

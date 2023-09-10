@@ -57,11 +57,8 @@ var (
 	ErrInvalidAuthStrategy = New(
 		"invalid authorization strategy",
 	)
-	ErrInvalidFMTQueryParam = New(
-		"the 'fmt' query param mus be 'old' or 'new', no other string is accepted",
-	)
-	ErrInvalidNIDQueryParam = New(
-		"the 'nid' query param is required and it must be a valid unsigned integer",
+	ErrInvalidIntegerIdPathParam = New(
+		"the path param 'id' must be a valid integer",
 	)
 )
 
@@ -174,15 +171,9 @@ var mpe = map[error]StatusError{
 		message:  "A estratégia do cabeçalho de autenticação é inválida",
 	},
 
-	ErrInvalidFMTQueryParam: &statusErrorImpl{
+	ErrInvalidIntegerIdPathParam: &statusErrorImpl{
 		code:     40006,
 		httpCode: httpcodes.StatusBadRequest,
-		message:  "O parâmetro query-string 'fmt' pode ser apenas 'old' ou 'new'",
-	},
-
-	ErrInvalidNIDQueryParam: &statusErrorImpl{
-		code:     40007,
-		httpCode: httpcodes.StatusBadRequest,
-		message:  "O parâmetro query-string 'nid' precisa ser um inteiro sem sinal (>0) válido",
+		message:  "O parâmetro de diretório 'id' precisa ser um inteiro válido",
 	},
 }

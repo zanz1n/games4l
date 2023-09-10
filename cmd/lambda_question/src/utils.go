@@ -2,7 +2,7 @@ package src
 
 import (
 	"github.com/games4l/internal/auth"
-	"github.com/games4l/internal/question"
+	"github.com/games4l/internal/sqli"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -12,7 +12,7 @@ var (
 	}
 	validate = validator.New()
 	ap       *auth.AuthProvider
-	dba      *question.QuestionService
+	dba      sqli.Querier
 )
 
 type JSON map[string]interface{}
