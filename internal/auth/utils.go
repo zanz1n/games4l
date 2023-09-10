@@ -14,15 +14,15 @@ type AuthInfo struct {
 
 func ExtractAuthHeaderInfo(header string) (*AuthInfo, error) {
 	headerS := strings.Split(header, " ")
-	if len(headerS) < 3 {
+	if len(headerS) < 2 {
 		return nil, errors.ErrRouteRequiresAdminAuth
 	}
 
-	info := AuthInfo{}
+	info := AuthInfo{
+		Method: AuthMethod(headerS[0]),
+	}
 
-	method := AuthMethod(headerS[0])
-
-	if method == AuthMethodSignature {
+	if info.Method == AuthMethodSignature {
 		info.Encoding = ByteEncoding(headerS[1])
 
 		switch info.Encoding {
@@ -33,7 +33,7 @@ func ExtractAuthHeaderInfo(header string) (*AuthInfo, error) {
 		}
 
 		info.Payload = headerS[2]
-	} else if method == AuthMethodBearer {
+	} else if info.Method == AuthMethodBearer {
 		info.Encoding = ""
 
 		info.Payload = headerS[1]
