@@ -1,5 +1,7 @@
 package errors
 
+import "github.com/games4l/internal/httpcodes"
+
 var (
 	ErrEntityNotFound = New(
 		"the entity could not be found",
@@ -65,122 +67,122 @@ var (
 
 var mpe = map[error]StatusError{
 	ErrEntityNotFound: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40401,
+		httpCode: httpcodes.StatusNotFound,
 		message:  "Não foi possível encontrar a entidade",
 	},
 
 	ErrInvalidObjectID: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40001,
+		httpCode: httpcodes.StatusBadRequest,
 		message:  "O object id do request não tem um encoding hexadecimal válido",
 	},
 
 	ErrUserUnauthorized: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40101,
+		httpCode: httpcodes.StatusUnauthorized,
 		message:  "Usuário não existe ou a senha não é a correta",
 	},
 
 	ErrInvalidJwtTokenFormat: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40102,
+		httpCode: httpcodes.StatusUnauthorized,
 		message:  "O token de autenticação é inválido, faça login novamente",
 	},
 
 	ErrJwtTokenExpired: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40103,
+		httpCode: httpcodes.StatusUnauthorized,
 		message:  "O token de autenticação está expirado, faça login novamente",
 	},
 
 	ErrInvalidAuthSignature: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40104,
+		httpCode: httpcodes.StatusUnauthorized,
 		message:  "A assinatura de autenticação apresentada não é válida, faça login novamente",
 	},
 
 	ErrInvalidAuthSignatureEncodingMethod: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40105,
+		httpCode: httpcodes.StatusUnauthorized,
 		message:  "A assinatura de autenticação apresentada não é válida, faça login novamente",
 	},
 
 	ErrMalformedOrTooBigBody: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40002,
+		httpCode: httpcodes.StatusBadRequest,
 		message:  "O corpo da requisição está incompleto ou é muito grande, verifique sua conexão com a internet",
 	},
 
 	ErrInternalServerError: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     50000,
+		httpCode: httpcodes.StatusInternalServerError,
 		message:  "Algo deu errado enquando processavamos sua requisição, tente novamente mais tarde",
 	},
 
 	ErrInvalidRequestEntity: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40003,
+		httpCode: httpcodes.StatusBadRequest,
 		message:  "A entidade no corpo da requisição é inválida",
 	},
 
 	ErrEntityAlreadyExists: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40901,
+		httpCode: httpcodes.StatusConflict,
 		message:  "Não foi possível criar pois a entidade já existe",
 	},
 
 	ErrServerOperationTookTooLong: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     50401,
+		httpCode: httpcodes.StatusGatewayTimeout,
 		message:  "A operação demorou muito para ser concluída e foi cancelada, tente novamente mais tarde",
 	},
 
 	ErrSurnameSearchInvalid: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40004,
+		httpCode: httpcodes.StatusBadRequest,
 		message:  "Pelo menos um sobrenome precisa ser fornecido",
 	},
 
 	ErrInvalidEmail: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40005,
+		httpCode: httpcodes.StatusBadRequest,
 		message:  "O email apresentado é inválido",
 	},
 
 	ErrNoSuchRoute: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40400,
+		httpCode: httpcodes.StatusNotFound,
 		message:  "Essa rota não existe na api",
 	},
 
 	ErrMethodNotAllowed: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40500,
+		httpCode: httpcodes.StatusMethodNotAllowed,
 		message:  "Requisições com esse método não são aceitas nessa rota",
 	},
 
 	ErrRouteRequiresAdminAuth: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40301,
+		httpCode: httpcodes.StatusForbidden,
 		message:  "A rota precisa de autorização administrativa",
 	},
 
 	ErrInvalidAuthStrategy: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40106,
+		httpCode: httpcodes.StatusUnauthorized,
 		message:  "A estratégia do cabeçalho de autenticação é inválida",
 	},
 
 	ErrInvalidFMTQueryParam: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40006,
+		httpCode: httpcodes.StatusBadRequest,
 		message:  "O parâmetro query-string 'fmt' pode ser apenas 'old' ou 'new'",
 	},
 
 	ErrInvalidNIDQueryParam: &statusErrorImpl{
-		code:     -0,
-		httpCode: -0,
+		code:     40007,
+		httpCode: httpcodes.StatusBadRequest,
 		message:  "O parâmetro query-string 'nid' precisa ser um inteiro sem sinal (>0) válido",
 	},
 }
