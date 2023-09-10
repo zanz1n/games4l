@@ -36,12 +36,11 @@ resource "aws_lambda_function" "question" {
 
   environment {
     variables = {
-      NO_COLOR            = "1"
-      MONGO_URI           = var.question_mongo_database_uri
-      MONGO_DATABASE_NAME = var.question_mongo_database_name
-      WEBHOOK_SIG         = var.webhook_signature
-      API_GATEWAY_PREFIX  = var.environment_type
-      JWT_SIG             = var.jwt_signature
+      NO_COLOR           = "1"
+      WEBHOOK_SIG        = var.webhook_signature
+      API_GATEWAY_PREFIX = var.environment_type
+      JWT_SIG            = var.jwt_signature
+      DATABASE_URL       = var.postgres_database_uri
     }
   }
 

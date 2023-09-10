@@ -44,15 +44,9 @@ variable "users_mongo_database_name" {
   sensitive   = true
 }
 
-variable "question_mongo_database_uri" {
+variable "postgres_database_uri" {
   type        = string
-  description = "mongodb database uri"
-  sensitive   = true
-}
-
-variable "question_mongo_database_name" {
-  type        = string
-  description = "mongodb database name"
+  description = "postgresql uri"
   sensitive   = true
 }
 
