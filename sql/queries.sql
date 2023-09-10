@@ -5,10 +5,10 @@ SELECT * FROM "question" WHERE "id" = $1;
 INSERT INTO
     "question" (
         "question",
-        "answer1",
-        "answer2",
-        "answer3",
-        "answer4",
+        "answer_1",
+        "answer_2",
+        "answer_3",
+        "answer_4",
         "correct_answer",
         "type",
         "style",
@@ -16,5 +16,18 @@ INSERT INTO
     )
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
 
--- name: GetMany :many
-SELECT * FROM "question" LIMIT $1;
+-- name: GetManyQuestions :many
+SELECT * FROM "question" ORDER BY "id" LIMIT $1;
+
+-- name: UpdateQuestionById :one
+UPDATE "question"
+SET
+    "updated_at" = CURRENT_TIMESTAMP,
+    "question" = $1,
+    "answer_1" = $2,
+    "answer_2" = $3,
+    "answer_3" = $4,
+    "answer_4" = $5,
+    "correct_answer" = $6,
+    "type" = $7
+WHERE "id" = $8 RETURNING *;
