@@ -61,8 +61,9 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, error) {
 		valId       string
 		valUsername string
 		valRole     string
+		err         error = nil
 	)
-	token, err := jwt.Parse(payload, func(t *jwt.Token) (interface{}, error) {
+	token, _ := jwt.Parse(payload, func(t *jwt.Token) (interface{}, error) {
 		var (
 			ok     bool
 			claims jwt.MapClaims
@@ -79,30 +80,36 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, error) {
 
 		if claims, ok = t.Claims.(jwt.MapClaims); !ok {
 			logger.Error("Jwt token invalidation: is not jwt.MapClaims")
+			err = errors.ErrInvalidJwtTokenFormat
 			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if valId, ok = claims["id"].(string); !ok {
 			logger.Error("Jwt token invalidation: does not contain an id")
+			err = errors.ErrInvalidJwtTokenFormat
 			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if valUsername, ok = claims["username"].(string); !ok {
 			logger.Error("Jwt token invalidation: does not contain an username")
+			err = errors.ErrInvalidJwtTokenFormat
 			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if valRole, ok = claims["role"].(string); !ok {
 			logger.Error("Jwt token invalidation: does not contain a role")
+			err = errors.ErrInvalidJwtTokenFormat
 			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if !utils.SliceContains(ValidUserRoles, UserRole(valRole)) {
 			logger.Error("Jwt token invalidation: the role is not valid")
+			err = errors.ErrInvalidJwtTokenFormat
 			return nil, errors.ErrInvalidJwtTokenFormat
 		}
 
 		if t.Claims.(jwt.MapClaims)["exp"].(float64) < float64(time.Now().Unix()) {
+			err = errors.ErrJwtTokenExpired
 			return nil, errors.ErrJwtTokenExpired
 		}
 
