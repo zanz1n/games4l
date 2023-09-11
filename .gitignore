@@ -8,3 +8,4 @@ config.json
 .docker_volumes/
 node_modules/
 *.zip
+/bin
