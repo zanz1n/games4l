@@ -60,6 +60,12 @@ var (
 	ErrInvalidIntegerIdPathParam = New(
 		"the path param 'id' must be a valid integer",
 	)
+	ErrNoMultipartForm = New(
+		"no multipart form present in the request",
+	)
+	ErrFailedToReadMultipartForm = New(
+		"failed to read the request multipart form",
+	)
 )
 
 var mpe = map[error]StatusError{
@@ -175,5 +181,17 @@ var mpe = map[error]StatusError{
 		code:     40006,
 		httpCode: httpcodes.StatusBadRequest,
 		message:  "O parâmetro de diretório 'id' precisa ser um inteiro válido",
+	},
+
+	ErrNoMultipartForm: &statusErrorImpl{
+		code:     40007,
+		httpCode: httpcodes.StatusBadRequest,
+		message:  "Nenhum multpart form presente na requisição",
+	},
+
+	ErrFailedToReadMultipartForm: &statusErrorImpl{
+		code:     40008,
+		httpCode: httpcodes.StatusBadRequest,
+		message:  "Falha ao ler o multipart form da requisição, verifique se o tamanhos dos arquivos não excedem 32mb",
 	},
 }
