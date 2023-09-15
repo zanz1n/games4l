@@ -1,17 +1,17 @@
-package lambda
+package apigwt
 
 import (
 	"bytes"
+	"encoding/base64"
 	"mime"
 	"mime/multipart"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/games4l/internal/utils"
 	"github.com/games4l/pkg/errors"
 )
 
 func ParseMultipartForm(req *events.APIGatewayProxyRequest, maxMemSize int64) (*multipart.Form, error) {
-	ct, ok := req.Headers["content-type"]
+	ct, ok := req.Headers["Content-Type"]
 	if !ok || ct == "" {
 		return nil, errors.ErrNoMultipartForm
 	}
@@ -26,8 +26,13 @@ func ParseMultipartForm(req *events.APIGatewayProxyRequest, maxMemSize int64) (*
 		return nil, errors.ErrNoMultipartForm
 	}
 
+	buf, err := base64.StdEncoding.DecodeString(req.Body)
+	if err != nil {
+		return nil, errors.ErrNoMultipartForm
+	}
+
 	mpr := multipart.NewReader(
-		bytes.NewReader(utils.S2B(req.Body)),
+		bytes.NewReader(buf),
 		boundary,
 	)
 
