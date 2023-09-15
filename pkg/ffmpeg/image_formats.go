@@ -1,6 +1,7 @@
 package ffmpeg
 
 import (
+	"bytes"
 	"io"
 	"os"
 	"os/exec"
@@ -29,15 +30,7 @@ func (p *Provider) ScaleDownPng(s io.Reader) ([]byte, error) {
 		"pipe:",
 	)
 
-	pipedin, err := cmd.StdinPipe()
-	if err != nil {
-		logger.Error("Failed to pipe ffmpeg process stdin: " + err.Error())
-		return nil, errors.ErrInvalidFormMedia
-	}
-
-	io.Copy(pipedin, s)
-
-	defer pipedin.Close()
+	cmd.Stdin = s
 
 	outBuf, err := cmd.Output()
 	if err != nil {
@@ -63,15 +56,7 @@ func (p *Provider) PngToWebp(b []byte) ([]byte, error) {
 		"pipe:",
 	)
 
-	pipedin, err := cmd.StdinPipe()
-	if err != nil {
-		logger.Error("Failed to pipe ffmpeg process stdin: " + err.Error())
-		return nil, errors.ErrInternalServerError
-	}
-
-	defer pipedin.Close()
-
-	pipedin.Write(b)
+	cmd.Stdin = bytes.NewReader(b)
 
 	outBuf, err := cmd.Output()
 	if err != nil {
@@ -109,18 +94,11 @@ func (p *Provider) PngToAvif(b []byte) ([]byte, error) {
 		fp,
 	)
 
-	pipedin, err := cmd.StdinPipe()
-	if err != nil {
-		logger.Error("Failed to pipe ffmpeg process stdin: " + err.Error())
-		return nil, errors.ErrInternalServerError
-	}
+	cmd.Stdin = bytes.NewReader(b)
 
-	defer func() {
-		pipedin.Close()
-		os.Remove(fp)
-	}()
+	defer os.Remove(fp)
 
-	if err = cmd.Run(); err != nil {
+	if err := cmd.Run(); err != nil {
 		logger.Error("Failed to get ffmpeg process output buffer: " + err.Error())
 		return nil, errors.ErrInvalidFormMedia
 	}

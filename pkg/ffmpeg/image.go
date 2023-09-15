@@ -38,6 +38,8 @@ func (p *Provider) GetImageStreamInfo(buf io.Reader) (*ImageInfo, error) {
 		"pipe:",
 	)
 
+	cmd.Stdin = buf
+
 	out, err := cmd.Output()
 	if err != nil {
 		logger.Warn("Failed to execute ffprobe process: " + err.Error())
@@ -47,9 +49,11 @@ func (p *Provider) GetImageStreamInfo(buf io.Reader) (*ImageInfo, error) {
 	info := ImageInfo{}
 
 	if err = json.Unmarshal(out, &info); err != nil {
+		logger.Error("Failed to unmarshal ffprobe json output: " + err.Error())
 		return nil, errors.ErrInvalidFormMedia
 	}
 	if err = validate.Struct(&info); err != nil {
+		logger.Error("Failed to validate ffperobe out: " + err.Error())
 		return nil, errors.ErrInvalidFormMedia
 	}
 
