@@ -1,0 +1,11 @@
+dist/
+config.json
+.env
+*.log
+*.bin
+.idea/
+.vscode/
+.docker_volumes/
+node_modules/
+*.zip
+/bin
