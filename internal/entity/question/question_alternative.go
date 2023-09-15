@@ -5,29 +5,25 @@ import "time"
 type QuestionAlternativeFmt struct {
 	ID int32 `json:"id"`
 
-	CreatedAt time.Time `json:"created_at,omitempty" validate:"required"`
-	UpdatedAt time.Time `json:"updated_at,omitempty" validate:"required"`
+	CreatedAt time.Time `json:"created_at" validate:"required"`
+	UpdatedAt time.Time `json:"updated_at" validate:"required"`
 
-	Question string `json:"quest,omitempty" validate:"required"`
+	Question string `json:"quest" validate:"required"`
 
-	Answer1 string  `json:"a1,omitempty" validate:"required"`
-	Answer2 string  `json:"a2,omitempty" validate:"required"`
+	Answer1 string  `json:"a1" validate:"required"`
+	Answer2 string  `json:"a2" validate:"required"`
 	Answer3 *string `json:"a3"` // Nullable
 	Answer4 *string `json:"a4"` // Nullable
 
-	CorrectAnswer int32 `json:"ccr"`
+	CorrectAnswer int32 `json:"ccr" validate:"gte=0,lte=3"`
 
-	Type  QuestionType  `json:"type,omitempty" validate:"required"`
-	Style QuestionStyle `json:"style,omitempty" validate:"required"`
+	Type  QuestionType  `json:"type" validate:"required"`
+	Style QuestionStyle `json:"style" validate:"required"`
 
 	Difficulty uint8 `json:"difficulty"`
 }
 
 func (q *QuestionAlternativeFmt) IsValid() bool {
-	if q.CorrectAnswer <= 0 {
-		return false
-	}
-
 	if q.Style != QuestionStyleAudio &&
 		q.Style != QuestionStyleImage &&
 		q.Style != QuestionStyleText {

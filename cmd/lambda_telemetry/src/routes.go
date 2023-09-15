@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/games4l/internal/errors"
-	"github.com/games4l/internal/httpcodes"
 	"github.com/games4l/internal/logger"
 	"github.com/games4l/internal/telemetry"
 	"github.com/games4l/internal/utils"
+	"github.com/games4l/internal/utils/httpcodes"
+	"github.com/games4l/pkg/errors"
 	"github.com/goccy/go-json"
 )
 

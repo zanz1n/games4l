@@ -8,41 +8,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/logger"
 	"github.com/games4l/internal/utils"
+	"github.com/games4l/pkg/errors"
 	"github.com/golang-jwt/jwt/v4"
 )
-
-type ByteEncoding string
-
-const (
-	ByteEncodingBase64 ByteEncoding = "BASE64"
-	ByteEncodingHex    ByteEncoding = "HEX"
-)
-
-type UserRole string
-
-const (
-	UserRolePacient UserRole = "PACIENT"
-	UserRoleAdmin   UserRole = "ADMIN"
-	UserRoleClient  UserRole = "CLIENT"
-)
-
-type AuthMethod string
-
-const (
-	AuthMethodBearer    AuthMethod = "Bearer"
-	AuthMethodSignature AuthMethod = "Signature"
-)
-
-var ValidUserRoles = []UserRole{UserRoleAdmin, UserRoleClient, UserRolePacient}
-
-type JwtUserData struct {
-	Role     UserRole `json:"role"`
-	Username string   `json:"username"`
-	ID       string   `json:"id"`
-}
 
 type AuthProvider struct {
 	sigKey []byte

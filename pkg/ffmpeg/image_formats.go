@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"path"
 
-	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/logger"
+	"github.com/games4l/pkg/errors"
 	"github.com/google/uuid"
 )
 

@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/logger"
 	"github.com/games4l/internal/sqli"
+	"github.com/games4l/pkg/errors"
 	"github.com/jackc/pgx/v5"
 )
 

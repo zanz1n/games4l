@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/logger"
+	"github.com/games4l/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

@@ -3,8 +3,38 @@ package auth
 import (
 	"strings"
 
-	"github.com/games4l/internal/errors"
+	"github.com/games4l/pkg/errors"
 )
+
+type ByteEncoding string
+
+const (
+	ByteEncodingBase64 ByteEncoding = "BASE64"
+	ByteEncodingHex    ByteEncoding = "HEX"
+)
+
+type UserRole string
+
+const (
+	UserRolePacient UserRole = "PACIENT"
+	UserRoleAdmin   UserRole = "ADMIN"
+	UserRoleClient  UserRole = "CLIENT"
+)
+
+type AuthMethod string
+
+const (
+	AuthMethodBearer    AuthMethod = "Bearer"
+	AuthMethodSignature AuthMethod = "Signature"
+)
+
+var ValidUserRoles = []UserRole{UserRoleAdmin, UserRoleClient, UserRolePacient}
+
+type JwtUserData struct {
+	Role     UserRole `json:"role"`
+	Username string   `json:"username"`
+	ID       string   `json:"id"`
+}
 
 type AuthInfo struct {
 	Method   AuthMethod

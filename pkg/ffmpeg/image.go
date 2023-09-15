@@ -6,8 +6,8 @@ import (
 	"io"
 	"os/exec"
 
-	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/logger"
+	"github.com/games4l/pkg/errors"
 )
 
 type ImageInfoStream struct {

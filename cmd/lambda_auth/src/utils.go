@@ -2,7 +2,6 @@ package src
 
 import (
 	"github.com/games4l/internal/auth"
-
 	"github.com/games4l/internal/user"
 	"github.com/go-playground/validator/v10"
 )

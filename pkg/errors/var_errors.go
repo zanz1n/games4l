@@ -1,6 +1,6 @@
 package errors
 
-import "github.com/games4l/internal/httpcodes"
+import "github.com/games4l/internal/utils/httpcodes"
 
 var (
 	ErrEntityNotFound = New(

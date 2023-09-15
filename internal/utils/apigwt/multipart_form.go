@@ -6,8 +6,8 @@ import (
 	"mime/multipart"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/utils"
+	"github.com/games4l/pkg/errors"
 )
 
 func ParseMultipartForm(req *events.APIGatewayProxyRequest, maxMemSize int64) (*multipart.Form, error) {

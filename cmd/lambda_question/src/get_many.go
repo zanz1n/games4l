@@ -8,9 +8,9 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/games4l/internal/entity/entityconv"
 	"github.com/games4l/internal/entity/question"
-	"github.com/games4l/internal/errors"
-	"github.com/games4l/internal/httpcodes"
 	"github.com/games4l/internal/utils"
+	"github.com/games4l/internal/utils/httpcodes"
+	"github.com/games4l/pkg/errors"
 )
 
 func HandleGetMany(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {

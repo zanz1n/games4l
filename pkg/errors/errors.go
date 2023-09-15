@@ -4,6 +4,18 @@ import (
 	"github.com/goccy/go-json"
 )
 
+func GetErrorMessage(code uint) (e StatusError, ok bool) {
+	ok = false
+
+	for _, e = range mpe {
+		if e.CustomCode() == code {
+			return e, true
+		}
+	}
+
+	return e, false
+}
+
 func GetStatusErr(key error) StatusError {
 	v, ok := mpe[key]
 

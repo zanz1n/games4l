@@ -6,8 +6,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/games4l/internal/auth"
-	"github.com/games4l/internal/errors"
 	"github.com/games4l/internal/utils"
+	"github.com/games4l/pkg/errors"
 )
 
 func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
