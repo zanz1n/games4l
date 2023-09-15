@@ -67,10 +67,10 @@ var (
 		"failed to read the request multipart form",
 	)
 	ErrInvalidFormMedia = New(
-		"the multipart form contains invalid media",
+		"the provided media is invalid",
 	)
 	ErrBadSizedFormMedia = New(
-		"the multipart form media is badly sized",
+		"the provided media is badly sized",
 	)
 )
 
@@ -204,12 +204,12 @@ var mpe = map[error]StatusError{
 	ErrInvalidFormMedia: &statusErrorImpl{
 		code:     40009,
 		httpCode: httpcodes.StatusBadRequest,
-		message:  "A mídia presente no multipart form é inválida",
+		message:  "A mídia fotnecida é inválida (poorly encoded content)",
 	},
 
 	ErrBadSizedFormMedia: &statusErrorImpl{
 		code:     40010,
 		httpCode: httpcodes.StatusBadRequest,
-		message:  "A mídia presente no multipart form não tem um tamanho válido, verifique se (2 > width/height > 1/2) caso seja uma imagem",
+		message:  "A mídia fornecida tem um tamanho inválido, verifique se (2 > width/height > 1/2) caso seja uma imagem",
 	},
 }
