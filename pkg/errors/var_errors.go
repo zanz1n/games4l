@@ -192,7 +192,7 @@ var mpe = map[error]StatusError{
 	ErrNoMultipartForm: &statusErrorImpl{
 		code:     40007,
 		httpCode: httpcodes.StatusBadRequest,
-		message:  "Nenhum multpart form presente na requisição",
+		message:  "Nenhum multpart form válido presente na requisição",
 	},
 
 	ErrFailedToReadMultipartForm: &statusErrorImpl{
