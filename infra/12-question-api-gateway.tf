@@ -25,7 +25,7 @@ resource "aws_apigatewayv2_route" "get_questions" {
 resource "aws_apigatewayv2_route" "put_question" {
   api_id = aws_apigatewayv2_api.main.id
 
-  route_key = "PUT /question"
+  route_key = "PUT /question/{id}"
 
   target = "integrations/${aws_apigatewayv2_integration.lambda_question.id}"
 }
@@ -33,7 +33,7 @@ resource "aws_apigatewayv2_route" "put_question" {
 resource "aws_apigatewayv2_route" "patch_question" {
   api_id = aws_apigatewayv2_api.main.id
 
-  route_key = "PATCH /question"
+  route_key = "PATCH /question/{id}"
 
   target = "integrations/${aws_apigatewayv2_integration.lambda_question.id}"
 }
