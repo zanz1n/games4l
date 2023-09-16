@@ -204,7 +204,7 @@ var mpe = map[error]StatusError{
 	ErrInvalidFormMedia: &statusErrorImpl{
 		code:     40009,
 		httpCode: httpcodes.StatusBadRequest,
-		message:  "A mídia fotnecida é inválida (poorly encoded content)",
+		message:  "A mídia fornecida é inválida (poorly encoded content)",
 	},
 
 	ErrBadSizedFormMedia: &statusErrorImpl{
