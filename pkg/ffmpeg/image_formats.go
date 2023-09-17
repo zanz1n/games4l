@@ -70,7 +70,7 @@ func (p *Provider) PngToWebp(b []byte) ([]byte, error) {
 func (p *Provider) PngToAvif(b []byte) ([]byte, error) {
 	fp := path.Join(p.tempFilePath, uuid.NewString())
 
-	cmd := exec.Command("ffmpeg",
+	cmd := exec.Command(p.ffmpegBinPath,
 		"-v",
 		"error",
 		"-f",
@@ -99,7 +99,7 @@ func (p *Provider) PngToAvif(b []byte) ([]byte, error) {
 	defer os.Remove(fp)
 
 	if err := cmd.Run(); err != nil {
-		logger.Error("Failed to get ffmpeg process output buffer: " + err.Error())
+		logger.Error("Failed to run ffmpeg process: " + err.Error())
 		return nil, errors.ErrInvalidFormMedia
 	}
 
