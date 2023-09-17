@@ -32,5 +32,5 @@ SET
     "type" = $7
 WHERE "id" = $8 RETURNING *;
 
--- name: DeleteQuestionById :exec
-DELETE FROM "question" WHERE "id" = $1;
+-- name: DeleteQuestionById :one
+DELETE FROM "question" WHERE "id" = $1 RETURNING *;

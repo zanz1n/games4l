@@ -64,13 +64,28 @@ func (q *Queries) CreateQuestion(ctx context.Context, arg *CreateQuestionParams)
 	return &i, err
 }
 
-const deleteQuestionById = `-- name: DeleteQuestionById :exec
-DELETE FROM "question" WHERE "id" = $1
+const deleteQuestionById = `-- name: DeleteQuestionById :one
+DELETE FROM "question" WHERE "id" = $1 RETURNING id, created_at, updated_at, question, answer_1, answer_2, answer_3, answer_4, correct_answer, type, style, difficulty
 `
 
-func (q *Queries) DeleteQuestionById(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, deleteQuestionById, id)
-	return err
+func (q *Queries) DeleteQuestionById(ctx context.Context, id int32) (*Question, error) {
+	row := q.db.QueryRow(ctx, deleteQuestionById, id)
+	var i Question
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Question,
+		&i.Answer1,
+		&i.Answer2,
+		&i.Answer3,
+		&i.Answer4,
+		&i.CorrectAnswer,
+		&i.Type,
+		&i.Style,
+		&i.Difficulty,
+	)
+	return &i, err
 }
 
 const getManyQuestions = `-- name: GetManyQuestions :many
