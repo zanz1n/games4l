@@ -31,3 +31,6 @@ SET
     "correct_answer" = $6,
     "type" = $7
 WHERE "id" = $8 RETURNING *;
+
+-- name: DeleteQuestionById :exec
+DELETE FROM "question" WHERE "id" = $1;
