@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"io"
 	"net"
 	"net/http"
@@ -19,8 +20,7 @@ func ConvertRequest(r *http.Request) (*events.APIGatewayProxyRequest, error) {
 
 	query := r.URL.Query()
 
-	return &events.APIGatewayProxyRequest{
-		Body:                            b2s(bodyBytes),
+	lambdaReq := events.APIGatewayProxyRequest{
 		Path:                            r.URL.Path,
 		Resource:                        r.URL.Host,
 		HTTPMethod:                      r.Method,
@@ -32,7 +32,16 @@ func ConvertRequest(r *http.Request) (*events.APIGatewayProxyRequest, error) {
 		PathParameters:                  make(map[string]string),
 		RequestContext:                  *new(events.APIGatewayProxyRequestContext),
 		StageVariables:                  make(map[string]string),
-	}, nil
+	}
+
+	if r.Header.Get("Content-Type") != "application/json" {
+		lambdaReq.IsBase64Encoded = true
+		lambdaReq.Body = base64.StdEncoding.EncodeToString(bodyBytes)
+	} else {
+		lambdaReq.Body = b2s(bodyBytes)
+	}
+
+	return &lambdaReq, nil
 }
 
 func ConvertMultivalueMap(multivalue map[string][]string, lowerfy bool) map[string]string {
