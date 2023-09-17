@@ -11,7 +11,7 @@ import (
 var validate = validator.New()
 
 func NewQuestionHandlers(
-	qs *repository.QuestionRepositorySingleton,
+	qs repository.Singleton,
 	ss *s3u.S3Singleton,
 	fmpg *ffmpeg.Provider,
 	s3Bucket string,
@@ -28,7 +28,7 @@ func NewQuestionHandlers(
 }
 
 type QuestionHandlers struct {
-	qs           *repository.QuestionRepositorySingleton
+	qs           repository.Singleton
 	ss           *s3u.S3Singleton
 	s3ImagesPath string
 	logger       log.Logger

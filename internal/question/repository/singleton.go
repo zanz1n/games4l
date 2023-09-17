@@ -5,21 +5,25 @@ import (
 	"github.com/games4l/pkg/errors"
 )
 
-func NewSingleton(url string) *QuestionRepositorySingleton {
-	return &QuestionRepositorySingleton{
+type Singleton interface {
+	GetInstance() (QuestionRepository, error)
+}
+
+func NewPostgresSingleton(url string) Singleton {
+	return &questionRepositorySingleton{
 		r:      nil,
 		url:    url,
 		logger: log.NewLogger("question_singleton"),
 	}
 }
 
-type QuestionRepositorySingleton struct {
+type questionRepositorySingleton struct {
 	r      QuestionRepository
 	url    string
 	logger log.Logger
 }
 
-func (s *QuestionRepositorySingleton) GetInstance() (QuestionRepository, error) {
+func (s *questionRepositorySingleton) GetInstance() (QuestionRepository, error) {
 	if s.r != nil {
 		return s.r, nil
 	}
