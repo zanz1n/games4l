@@ -25,7 +25,7 @@ func (s *QuestionRepositorySingleton) GetInstance() (QuestionRepository, error) 
 	}
 
 	var err error
-	s.r, err = Connect(s.url)
+	s.r, err = NewPostgres(s.url)
 	if err != nil {
 		s.logger.Error("Failed to connect to postgres: " + err.Error())
 		return nil, errors.ErrInternalServerError
