@@ -5,7 +5,6 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	authsrc "github.com/games4l/cmd/lambda_auth/src"
-	questionsrc "github.com/games4l/cmd/lambda_question/src"
 	telemetrysrc "github.com/games4l/cmd/lambda_telemetry/src"
 	"github.com/go-chi/chi/v5"
 )
@@ -25,11 +24,11 @@ func HandleRequest(ht HandleType) http.HandlerFunc {
 			response, err = authsrc.Handler(*req)
 
 		case HandlerTypeQuestion:
-			response, err = questionsrc.Handler(*req)
+			response, err = questionServer.RequestHandler(*req)
 
 		case HandlerTypeQuestionParams:
 			req.PathParameters["id"] = chi.URLParam(r, "id")
-			response, err = questionsrc.Handler(*req)
+			response, err = questionServer.RequestHandler(*req)
 
 		case HandlerTypeTelemetry:
 			response, err = telemetrysrc.Handler(*req)

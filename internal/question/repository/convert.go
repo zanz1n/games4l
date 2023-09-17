@@ -1,4 +1,4 @@
-package entityconv
+package repository
 
 import (
 	"github.com/games4l/internal/question"
@@ -6,7 +6,43 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-func CreateQuestionParamsToDbEntity(q *question.QuestionCreateData) *sqli.CreateQuestionParams {
+func updateQuestionParamsToDbEntity(id int32, q *question.QuestionUpdateData) *sqli.UpdateQuestionByIdParams {
+	nq := sqli.UpdateQuestionByIdParams{
+		ID:            id,
+		Question:      q.Question,
+		Answer1:       q.Answers[0],
+		Answer2:       q.Answers[1],
+		CorrectAnswer: int16(q.CorrectAnswer),
+	}
+
+	if len(q.Answers) == 4 {
+		nq.Type = sqli.QuestionType4Alt
+
+		nq.Answer3 = pgtype.Text{
+			Valid:  true,
+			String: q.Answers[2],
+		}
+		nq.Answer4 = pgtype.Text{
+			Valid:  true,
+			String: q.Answers[3],
+		}
+	} else {
+		nq.Type = sqli.QuestionType2Alt
+
+		nq.Answer3 = pgtype.Text{
+			Valid:  false,
+			String: "",
+		}
+		nq.Answer4 = pgtype.Text{
+			Valid:  false,
+			String: "",
+		}
+	}
+
+	return &nq
+}
+
+func createQuestionParamsToDbEntity(q *question.QuestionCreateData) *sqli.CreateQuestionParams {
 	nq := sqli.CreateQuestionParams{
 		Question:      q.Question,
 		Answer1:       q.Answers[0],
@@ -46,7 +82,7 @@ func CreateQuestionParamsToDbEntity(q *question.QuestionCreateData) *sqli.Create
 	return &nq
 }
 
-func QuestionToApiEntity(m *sqli.Question) *question.Question {
+func questionToApiEntity(m *sqli.Question) *question.Question {
 	q := question.Question{
 		ID:            m.ID,
 		CreatedAt:     m.CreatedAt.Time,

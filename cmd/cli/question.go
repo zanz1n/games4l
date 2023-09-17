@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/games4l/internal/entity/question"
+	"github.com/games4l/internal/question"
 	"github.com/goccy/go-json"
 )
 

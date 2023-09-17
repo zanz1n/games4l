@@ -7,12 +7,15 @@ import (
 	"syscall"
 	"time"
 
+	questionh "github.com/games4l/cmd/lambda_question/handler"
 	"github.com/games4l/internal/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
+
+var questionServer *questionh.Server
 
 func init() {
 	if os.Getenv("APP_ENV") == "" {
@@ -27,6 +30,8 @@ func init() {
 }
 
 func main() {
+	questionServer = questionh.NewEnvServer()
+
 	endCh := make(chan os.Signal, 1)
 	signal.Notify(endCh, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 
