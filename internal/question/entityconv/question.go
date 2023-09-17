@@ -1,7 +1,7 @@
 package entityconv
 
 import (
-	"github.com/games4l/internal/entity/question"
+	"github.com/games4l/internal/question"
 	"github.com/games4l/internal/sqli"
 	"github.com/jackc/pgx/v5/pgtype"
 )
