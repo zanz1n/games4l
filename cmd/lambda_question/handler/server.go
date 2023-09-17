@@ -15,7 +15,7 @@ import (
 )
 
 func NewEnvServer() *Server {
-	qs := repository.NewSingleton(os.Getenv("DATABASE_URL"))
+	qs := repository.NewPostgresSingleton(os.Getenv("DATABASE_URL"))
 	sc := s3u.NewS3Singleton("sa-east-1")
 	fmp := ffmpeg.NewProvider("/tmp/", "ffmpeg", "ffprobe")
 
