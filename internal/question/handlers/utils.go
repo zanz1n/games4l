@@ -14,12 +14,10 @@ import (
 func multipartToApiQuestion(
 	mp *multipart.Form,
 ) (*question.QuestionCreateData, io.ReadCloser, error) {
-	files, ok := mp.File["file"]
-	if !ok || len(files) != 1 {
-		return nil, nil, errors.ErrInvalidFormMedia
-	}
-
 	rawData, ok := mp.Value["data"]
+	if !ok {
+		return nil, nil, errors.ErrInvalidRequestEntity
+	}
 
 	q := question.QuestionCreateData{}
 
@@ -38,9 +36,14 @@ func multipartToApiQuestion(
 		return nil, nil, errors.ErrInvalidRequestEntity
 	}
 
-	file, err := files[0].Open()
-	if err != nil {
-		return nil, nil, errors.ErrInvalidFormMedia
+	var file io.ReadCloser = nil
+
+	files, ok := mp.File["file"]
+	if ok && len(files) == 1 {
+		file, err = files[0].Open()
+		if err != nil {
+			return nil, nil, errors.ErrInvalidFormMedia
+		}
 	}
 
 	return &q, file, nil
