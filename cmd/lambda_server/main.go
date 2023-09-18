@@ -58,8 +58,8 @@ func main() {
 
 	r.Get("/question/{id}", HandleRequest(HandlerTypeQuestionParams))
 	r.Get("/question", HandleRequest(HandlerTypeQuestion))
-	r.Put("/question", HandleRequest(HandlerTypeQuestion))
-	r.Patch("/question", HandleRequest(HandlerTypeQuestion))
+	r.Put("/question/{id}", HandleRequest(HandlerTypeQuestionParams))
+	r.Patch("/question/{id}", HandleRequest(HandlerTypeQuestionParams))
 	r.Post("/question", HandleRequest(HandlerTypeQuestion))
 
 	go func() {

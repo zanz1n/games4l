@@ -52,8 +52,7 @@ func (s *Server) RequestHandler(req events.APIGatewayProxyRequest) (events.APIGa
 		} else if req.HTTPMethod == "POST" {
 			res, fErr = s.HandlePostOne(req)
 		} else if req.HTTPMethod == "PATCH" || req.HTTPMethod == "PUT" {
-			fErr = errors.ErrMethodNotAllowed
-			// update one route
+			res, fErr = s.HandleUpdateOne(req)
 		} else {
 			fErr = errors.ErrMethodNotAllowed
 		}

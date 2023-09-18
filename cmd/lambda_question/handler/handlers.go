@@ -67,3 +67,27 @@ func (s *Server) HandlePostOne(req events.APIGatewayProxyRequest) (*events.APIGa
 		Body:            utils.MarshalJSON(q),
 	}, nil
 }
+
+func (s *Server) HandleUpdateOne(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
+	err := s.ap.AuthenticateAdminHeader(req.Headers["authorization"], utils.S2B(req.Body))
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := strconv.Atoi(req.PathParameters["id"])
+	if err != nil {
+		return nil, errors.ErrInvalidIntegerIdPathParam
+	}
+
+	q, err := s.h.UpdateOne(id, utils.S2B(req.Body))
+	if err != nil {
+		return nil, err
+	}
+
+	return &events.APIGatewayProxyResponse{
+		StatusCode:      q.StatusCode,
+		Headers:         applicationJsonHeader,
+		IsBase64Encoded: false,
+		Body:            utils.MarshalJSON(q),
+	}, nil
+}
