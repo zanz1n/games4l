@@ -8,6 +8,7 @@ import (
 	"time"
 
 	questionh "github.com/games4l/cmd/lambda_question/handler"
+	telemetryh "github.com/games4l/cmd/lambda_telemetry/handler"
 	"github.com/games4l/internal/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -15,7 +16,10 @@ import (
 	"github.com/rs/cors"
 )
 
-var questionServer *questionh.Server
+var (
+	questionServer  *questionh.Server
+	telemetryServer *telemetryh.Server
+)
 
 func init() {
 	if os.Getenv("APP_ENV") == "" {
@@ -31,6 +35,7 @@ func init() {
 
 func main() {
 	questionServer = questionh.NewEnvServer()
+	telemetryServer = telemetryh.NewEnvServer()
 
 	endCh := make(chan os.Signal, 1)
 	signal.Notify(endCh, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

@@ -1,33 +1,33 @@
 package telemetry
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
-type CreateTelemetryUnitData struct {
-	DoneAt       int64  `json:"done_at,omitempty" validate:"required"`
-	CompleteTime int64  `json:"complete_time,omitempty" validate:"required"`
-	Answereds    []int8 `json:"answereds,omitempty" validate:"required"`
-	QuestionID   uint   `json:"quest_id,omitempty" validate:"required"`
-	PacientName  string `json:"pacient_name,omitempty" validate:"required"`
+type Registry struct {
+	ID           string    `json:"id"`
+	CreatedAt    time.Time `json:"created_at"`
+	DoneAt       time.Time `json:"done_at"`
+	CompleteTime int64     `json:"complete_time"`
+	Answereds    []int8    `json:"answereds"`
+	QuestionID   int32     `json:"question_id"`
+	PacientName  string    `json:"pacient_name"`
 }
 
-type TelemetryUnit struct {
-	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty" validate:"required"`
-	CreatedAt    primitive.DateTime `bson:"created_at,omitempty" json:"created_at,omitempty" validate:"required"`
-	DoneAt       primitive.DateTime `bson:"done_at,omitempty" json:"done_at,omitempty" validate:"required"`
-	CompleteTime int64              `bson:"complete_time,omitempty" json:"complete_time,omitempty" validate:"required"`
-	Answereds    []int8             `bson:"answereds,omitempty" json:"answered,omitempty" validate:"required"`
-	QuestionID   uint               `bson:"quest_id,omitempty" json:"quest_id,omitempty" validate:"required"`
-	PacientName  string             `bson:"pacient_name,omitempty" json:"pacient_name,omitempty" validate:"required"`
+type CreateRegistryData struct {
+	DoneAt       int64  `json:"done_at" validate:"gt=1693710000"` // At least 3/9/2023
+	CompleteTime int64  `json:"complete_time" validate:"gt=200"`
+	Answereds    []int8 `json:"answereds" validate:"required"`
+	QuestionID   int32  `json:"question_id" validate:"gte=1"`
+	PacientName  string `json:"pacient_name" validate:"required"`
 }
 
-type similarNameResult struct {
-	res []TelemetryUnit
-	err error
-}
+func (d *CreateRegistryData) IsValid() bool {
+	for _, a := range d.Answereds {
+		if a > 3 {
+			return false
+		}
+	}
 
-type findOneResult struct {
-	res *TelemetryUnit
-	err error
+	return true
 }
