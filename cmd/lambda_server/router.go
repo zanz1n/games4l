@@ -47,11 +47,11 @@ func HandleRequest(ht HandleType) http.HandlerFunc {
 			return
 		}
 
-		w.WriteHeader(response.StatusCode)
-		w.Write(s2b(response.Body))
-
 		for k, v := range response.Headers {
 			w.Header().Add(k, v)
 		}
+
+		w.WriteHeader(response.StatusCode)
+		w.Write(s2b(response.Body))
 	}
 }
