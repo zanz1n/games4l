@@ -78,3 +78,7 @@ func (s *Server) RequestHandler(req events.APIGatewayProxyRequest) (events.APIGa
 
 	return *res, nil
 }
+
+var applicationJsonHeader = map[string]string{
+	"Content-Type": "application/json",
+}
