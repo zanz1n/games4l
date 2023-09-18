@@ -13,13 +13,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func NewMongo(url string, dbName string) (TelemetryRepository, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	c, err := mongo.Connect(ctx)
+	serverApi := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(url).SetServerAPIOptions(serverApi)
+
+	c, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		return nil, err
 	}
