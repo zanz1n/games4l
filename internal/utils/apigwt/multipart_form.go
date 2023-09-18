@@ -7,7 +7,6 @@ import (
 	"mime/multipart"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/games4l/internal/logger"
 	"github.com/games4l/pkg/errors"
 )
 
@@ -44,7 +43,6 @@ func ParseMultipartForm(req *events.APIGatewayProxyRequest, maxMemSize int64) (*
 
 	mp, err := mpr.ReadForm(maxMemSize)
 	if err != nil {
-		logger.Debug(err.Error())
 		return nil, errors.ErrFailedToReadMultipartForm
 	}
 
