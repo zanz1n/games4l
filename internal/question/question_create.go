@@ -4,11 +4,11 @@ type QuestionCreateData struct {
 	Question string   `json:"question" validate:"required"`
 	Answers  []string `json:"answers" validate:"required"`
 
-	CorrectAnswer int32 `json:"correct_answer"`
+	CorrectAnswer int32 `json:"correct_answer" validate:"gte=0,lte=3"`
 
 	Style QuestionStyle `json:"style" validate:"required"`
 
-	Difficulty uint8 `json:"difficulty"`
+	Difficulty uint8 `json:"difficulty" validate:"gte=1,lte=255"`
 }
 
 func (q *QuestionCreateData) IsValid() bool {
