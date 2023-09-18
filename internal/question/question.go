@@ -5,16 +5,16 @@ import "time"
 type Question struct {
 	ID int32 `json:"id,omitempty" validate:"required"`
 
-	CreatedAt time.Time `json:"created_at,omitempty" validate:"required"`
-	UpdatedAt time.Time `json:"updated_at,omitempty" validate:"required"`
+	CreatedAt time.Time `json:"created_at" validate:"required"`
+	UpdatedAt time.Time `json:"updated_at" validate:"required"`
 
 	Question string   `json:"question,omitempty" validate:"required"`
 	Answers  []string `json:"answers,omitempty" validate:"required"`
 
-	CorrectAnswer int32 `json:"correct_answer"`
+	CorrectAnswer int32 `json:"correct_answer" validate:"gte=0,lte=3"`
 
-	Type  QuestionType  `json:"type,omitempty" validate:"required"`
-	Style QuestionStyle `json:"style,omitempty" validate:"required"`
+	Type  QuestionType  `json:"type" validate:"required"`
+	Style QuestionStyle `json:"style" validate:"required"`
 
 	Difficulty uint8 `json:"difficulty"`
 }

@@ -1,12 +1,12 @@
 package question
 
 type QuestionCreateData struct {
-	Question string   `json:"question,omitempty" validate:"required"`
-	Answers  []string `json:"answers,omitempty" validate:"required"`
+	Question string   `json:"question" validate:"required"`
+	Answers  []string `json:"answers" validate:"required"`
 
 	CorrectAnswer int32 `json:"correct_answer"`
 
-	Style QuestionStyle `json:"style,omitempty" validate:"required"`
+	Style QuestionStyle `json:"style" validate:"required"`
 
 	Difficulty uint8 `json:"difficulty"`
 }
