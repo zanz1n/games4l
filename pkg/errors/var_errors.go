@@ -2,6 +2,12 @@ package errors
 
 import "github.com/games4l/internal/utils/httpcodes"
 
+var ise = &statusErrorImpl{
+	code:     50000,
+	httpCode: httpcodes.StatusInternalServerError,
+	message:  "Algo deu errado enquando processavamos sua requisição, tente novamente mais tarde",
+}
+
 var (
 	ErrEntityNotFound = New(
 		"the entity could not be found",
@@ -72,6 +78,9 @@ var (
 	ErrBadSizedFormMedia = New(
 		"the provided media is badly sized",
 	)
+	ErrFileObjectNotFound = New(
+		"the file object cannot be found",
+	)
 )
 
 var mpe = map[error]StatusError{
@@ -123,11 +132,7 @@ var mpe = map[error]StatusError{
 		message:  "O corpo da requisição está incompleto ou é muito grande, verifique sua conexão com a internet",
 	},
 
-	ErrInternalServerError: &statusErrorImpl{
-		code:     50000,
-		httpCode: httpcodes.StatusInternalServerError,
-		message:  "Algo deu errado enquando processavamos sua requisição, tente novamente mais tarde",
-	},
+	ErrInternalServerError: ise,
 
 	ErrInvalidRequestEntity: &statusErrorImpl{
 		code:     40003,
@@ -212,4 +217,6 @@ var mpe = map[error]StatusError{
 		httpCode: httpcodes.StatusBadRequest,
 		message:  "A mídia fornecida tem um tamanho inválido, verifique se (2 > width/height > 1/2) caso seja uma imagem",
 	},
+
+	ErrFileObjectNotFound: ise,
 }

@@ -6,20 +6,21 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/games4l/internal/auth"
+	"github.com/games4l/internal/bucket"
 	"github.com/games4l/internal/question/handlers"
 	"github.com/games4l/internal/question/repository"
 	"github.com/games4l/internal/utils"
-	"github.com/games4l/internal/utils/s3u"
 	"github.com/games4l/pkg/errors"
 	"github.com/games4l/pkg/ffmpeg"
 )
 
 func NewEnvServer() *Server {
 	qs := repository.NewPostgresSingleton(os.Getenv("DATABASE_URL"))
-	sc := s3u.NewS3Singleton("sa-east-1")
 	fmp := ffmpeg.NewProvider("/tmp/", "ffmpeg", "ffprobe")
 
-	h := handlers.NewQuestionHandlers(qs, sc, fmp, os.Getenv("APP_QUESTION_BUCKET_NAME"), "question/images/")
+	b := bucket.NewS3(os.Getenv("APP_QUESTION_BUCKET_NAME"), "sa-east-1")
+
+	h := handlers.NewQuestionHandlers(qs, b, fmp, "question/images/")
 
 	ap := auth.NewAuthProvider([]byte(os.Getenv("WEBHOOK_SIG")), []byte(os.Getenv("JWT_SIG")))
 

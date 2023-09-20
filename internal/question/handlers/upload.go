@@ -2,25 +2,14 @@ package handlers
 
 import (
 	"bytes"
-	"context"
-	"io"
-	"strconv"
-	"time"
+	"fmt"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/games4l/pkg/errors"
 )
 
 func (h *QuestionHandlers) uploadImage(id int32, ext string, fallbackExts []string, buf []byte) error {
-	s3c, err := h.ss.GetInstance()
-	if err != nil {
-		return err
-	}
-
-	err = h.upload(
-		"questions/images/"+strconv.Itoa(int(id))+"."+ext,
+	err := h.bucket.Store(
+		fmt.Sprintf("%s%d.%s", h.iap, id, ext),
 		"image/"+ext,
 		bytes.NewReader(buf),
 	)
@@ -34,48 +23,18 @@ func (h *QuestionHandlers) uploadImage(id int32, ext string, fallbackExts []stri
 		dbc.DeleteById(id)
 
 		if len(fallbackExts) > 0 {
-			objects := make([]types.ObjectIdentifier, len(fallbackExts))
+			objects := make([]string, len(fallbackExts))
 
 			for i, v := range fallbackExts {
-				objects[i] = types.ObjectIdentifier{
-					Key: aws.String("questions/images/" + strconv.Itoa(int(id)) + "." + v),
-				}
+				objects[i] = fmt.Sprintf("%s%d.%s", h.iap, id, v)
 			}
 
-			_, err = s3c.DeleteObjects(context.Background(), &s3.DeleteObjectsInput{
-				Bucket: &h.s3Bucket,
-				Delete: &types.Delete{
-					Objects: objects,
-				},
-			})
+			err = h.bucket.DestroyMany(objects)
 			if err != nil {
 				h.logger.Error("Failed to delete already uploaded s3 images: " + err.Error())
 			}
 		}
 
-		return errors.ErrInternalServerError
-	}
-
-	return nil
-}
-
-func (h *QuestionHandlers) upload(key, mime string, r io.Reader) error {
-	s3c, err := h.ss.GetInstance()
-	if err != nil {
-		return err
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	_, err = s3c.PutObject(ctx, &s3.PutObjectInput{
-		Bucket:      &h.s3Bucket,
-		Key:         &key,
-		ContentType: &mime,
-		Body:        r,
-	})
-	if err != nil {
-		h.logger.Error("Failed to upload s3 object: " + err.Error())
 		return errors.ErrInternalServerError
 	}
 
