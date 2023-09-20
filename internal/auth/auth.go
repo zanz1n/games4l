@@ -86,8 +86,10 @@ func (ap *AuthProvider) AuthUser(payload string) (*JwtUserData, error) {
 		return []byte(ap.jwtKey), nil
 	})
 
-	if err != nil || !token.Valid {
+	if err != nil {
 		return nil, err
+	} else if !token.Valid {
+		return nil, errors.ErrInvalidJwtTokenFormat
 	}
 
 	return &JwtUserData{
