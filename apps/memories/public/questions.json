@@ -3,27 +3,10 @@
     "question": "Complete o ditado popular:\n“Cachorro que ladra não ______”",
     "answers": [
       "Morde",
-      "Conversa",
-      "Mastiga",
       "Come"
     ],
     "correct_answer": 0,
-    "type": "4Alt",
-    "style": "text",
-    "file": null,
-    "image_width": null,
-    "image_height": null
-  },
-  {
-    "question": "Complete o ditado:\n“Deus ajuda quem cedo ________”",
-    "answers": [
-      "Acorda",
-      "Madruga",
-      "Almoça",
-      "Se cuida"
-    ],
-    "correct_answer": 1,
-    "type": "4Alt",
+    "type": "2Alt",
     "style": "text",
     "file": null,
     "image_width": null,
@@ -33,12 +16,10 @@
     "question": "Qual o nome desse apresentador de televisão?",
     "answers": [
       "Faustão",
-      "Silvio Santos",
-      "Tim Maia",
-      "Chacrinha"
+      "Silvio Santos"
     ],
     "correct_answer": 1,
-    "type": "4Alt",
+    "type": "2Alt",
     "style": "image",
     "file": "silvio-santos",
     "image_width": 940,
@@ -60,13 +41,11 @@
   {
     "question": "Quem é este famoso?",
     "answers": [
-      "Chico Buarque",
       "Pelé",
-      "Ayrton Senna",
       "Quico de Chaves"
     ],
     "correct_answer": 0,
-    "type": "4Alt",
+    "type": "2Alt",
     "style": "image",
     "file": "chico-buarque",
     "image_width": 450,
@@ -75,28 +54,24 @@
   {
     "question": "Qual é essa forma geométrica?",
     "answers": [
-      "Círculo",
       "Quadrado",
-      "Triângulo",
-      "Retângulo"
+      "Triângulo"
     ],
-    "correct_answer": 2,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "image",
     "file": "triangle",
     "image_width": 393,
     "image_height": 347
   },
   {
-    "question": "Tomo um banho de _____\nFico branca como a neve\nSe o luar é meu amigo\nCensurar ninguém se atreve\nÉ tão bom sonhar contigo\nÓ luar tão cândido",
+    "question": "Complete a letra da música:\nTomo banho de lua\nFico _______ como a neve\nSe o luar é meu amigo\nCensurar ninguém se atreve\nÉ tão bom sonhar contigo\nÓ luar tão cândido",
     "answers": [
-      "Lua",
-      "Chuva",
-      "Sol",
-      "Planta"
+      "Azul",
+      "Branca"
     ],
-    "correct_answer": 0,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "audio",
     "file": "banho-de-lua",
     "image_width": null,
@@ -106,42 +81,36 @@
     "question": "Mas que nada\nSai da minha frente\nEu quero passar\nPois o samba está animado\nO que eu quero é ____",
     "answers": [
       "Amar",
-      "Viajar",
-      "Sambar",
-      "Beijar"
+      "Sambar"
     ],
-    "correct_answer": 2,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "audio",
     "file": "mas-que-nada",
     "image_width": null,
     "image_height": null
   },
   {
-    "question": "Complete o ditado popular:\n“Quem ri por último, ri __”",
+    "question": "Complete o ditado popular:\n_________ ri por último ri melhor",
     "answers": [
-      "Melhor",
-      "Pior",
-      "Com dor",
-      "Sem Graça"
+      "Quem",
+      "Quando"
     ],
     "correct_answer": 0,
-    "type": "4Alt",
+    "type": "2Alt",
     "style": "text",
     "file": null,
     "image_width": null,
     "image_height": null
   },
   {
-    "question": "A União faz a ___",
+    "question": "A União faz a ______",
     "answers": [
       "Amizade",
-      "Saudade",
-      "Beleza",
       "Força"
     ],
-    "correct_answer": 3,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "text",
     "file": null,
     "image_width": null,
@@ -151,12 +120,10 @@
     "question": "Complete o ditado:\n“Filho de peixe, _________ é”",
     "answers": [
       "Ouriço",
-      "Água viva",
-      "Peixinho",
-      "Tubarão"
+      "Peixinho"
     ],
-    "correct_answer": 2,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "text",
     "file": null,
     "image_width": null,
@@ -166,12 +133,10 @@
     "question": "Qual significado da cor vermelho no semáforo?",
     "answers": [
       "Pare",
-      "Vá",
-      "Desacelere",
       "Estacione"
     ],
     "correct_answer": 0,
-    "type": "4Alt",
+    "type": "2Alt",
     "style": "image",
     "file": "red-trafic-light",
     "image_width": 940,
@@ -181,12 +146,10 @@
     "question": "Nunca se esqueça, nem um segundo\nQue eu tenho o amor maior do mundo\nComo é grande o meu ______ por você",
     "answers": [
       "Calor",
-      "Amor",
-      "Alegria",
-      "Viver"
+      "Amor"
     ],
     "correct_answer": 1,
-    "type": "4Alt",
+    "type": "2Alt",
     "style": "audio",
     "file": "como-e-grande-meu-amor",
     "image_width": null,
@@ -208,13 +171,11 @@
   {
     "question": "Não posso ficar\nNem mais um minuto com você\nSinto muito, amor\nMas não pode ser\nMoro em Jaçanã\nSe eu perder esse ____ \nQue sai agora às onze horas\nSó amanhã de manhã",
     "answers": [
-      "Trêm",
-      "Tempo",
       "Bicicleta",
-      "ônibus"
+      "Trêm"
     ],
-    "correct_answer": 0,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "audio",
     "file": "trem-das-onze",
     "image_width": null,
@@ -236,28 +197,24 @@
   {
     "question": "Qual é a direção que a seta está indicando?",
     "answers": [
-      "Esquerda",
       "Direita",
-      "Cima",
-      "Baixo"
+      "Esquerda"
     ],
-    "correct_answer": 1,
-    "type": "4Alt",
+    "correct_answer": 0,
+    "type": "2Alt",
     "style": "image",
     "file": "right-trafic-arrow",
     "image_width": 940,
     "image_height": 627
   },
   {
-    "question": "Mamãe, eu quero, mamãe, eu quero\nMamãe, eu quero mamar\nDá a chupeta, dá a chupeta\nDá a chupeta pro bebê não _____",
+    "question": "Complete a marchinha:\nMamãe, eu quero, mamãe eu quero\nMamãe eu quero mamar\nDá a chupeta, dá a chupeta\nDá a chupeta pro bebê não _________",
     "answers": [
-      "Dançar",
       "Mamar",
-      "Brincar",
       "Chorar"
     ],
-    "correct_answer": 3,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "audio",
     "file": "mamae-eu-quero",
     "image_width": null,
@@ -277,15 +234,13 @@
     "image_height": 418
   },
   {
-    "question": "Quando olhei a terra ardendo\nQual fogueira de São ________\nEu perguntei a Deus do céu, ai\nPor que tamanha judiação\nEu perguntei a Deus do céu, ai\nPor que tamanha judiação?",
+    "question": "Complete a letra da música:\nQuando olhei a terra ardendo\nQual fogueira de São João\nEu perguntei a Deus do céu, ai\nPor que tamanha judiação\nEu perguntei a Deus do céu, ai\nPor que tamanha _________",
     "answers": [
-      "Pedro",
-      "Paulo",
-      "Carlos",
-      "João"
+      "Felicidade",
+      "Judiação"
     ],
-    "correct_answer": 3,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "audio",
     "file": "asa-branca",
     "image_width": null,
@@ -294,23 +249,21 @@
   {
     "question": "Complete o ditado popular:\nA mentira tem perna _____",
     "answers": [
-      "Ruim",
-      "Curta",
-      "De pau",
-      "Longa"
+      "Longa",
+      "Curta"
     ],
     "correct_answer": 1,
-    "type": "4Alt",
+    "type": "2Alt",
     "style": "text",
     "file": null,
     "image_width": null,
     "image_height": null
   },
   {
-    "question": "Qual nome desse cantor:",
+    "question": "Qual nome desse cantor?",
     "answers": [
       "Roberto Carlos",
-      "Caetano Veloso"
+      "Fábio Júnior"
     ],
     "correct_answer": 0,
     "type": "2Alt",
@@ -335,13 +288,11 @@
   {
     "question": "Complete o ditado:\n“Cada macaco no seu  _____”",
     "answers": [
-      "Canto",
-      "Mato",
-      "Aço",
-      "Galho"
+      "Galho",
+      "Canto"
     ],
-    "correct_answer": 3,
-    "type": "4Alt",
+    "correct_answer": 0,
+    "type": "2Alt",
     "style": "text",
     "file": null,
     "image_width": null,
@@ -350,28 +301,24 @@
   {
     "question": "Carmen Miranda era uma famosa:",
     "answers": [
-      "Médica",
-      "Presidenta",
-      "Atleta",
-      "Cantora"
+      "Cantora",
+      "Médica"
     ],
-    "correct_answer": 3,
-    "type": "4Alt",
+    "correct_answer": 1,
+    "type": "2Alt",
     "style": "image",
     "file": "carmem-miranda",
     "image_width": 940,
     "image_height": 627
   },
   {
-    "question": "Pelé é conhecido por ser um…",
+    "question": "Pelé é conhecido por ser um...",
     "answers": [
-      "Cantor de bossa nova",
-      "Médico",
       "Jogador de futebol",
       "Ator da Globo"
     ],
-    "correct_answer": 2,
-    "type": "4Alt",
+    "correct_answer": 0,
+    "type": "2Alt",
     "style": "image",
     "file": "young-pele",
     "image_width": 940,
@@ -389,5 +336,107 @@
     "file": "chacrinha",
     "image_width": 601,
     "image_height": 324
+  },
+  {
+    "question": "Qual a resposta do cálculo abaixo?",
+    "answers": [
+      "5",
+      "9"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "image",
+    "file": "2-plus-3",
+    "image_width": null,
+    "image_height": 324
+  },
+  {
+    "question": "Qual a resposta do cálculo abaixo?",
+    "answers": [
+      "15",
+      "10"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "image",
+    "file": "2-times-5",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "A junção das cores primárias amarelo e vermelho gera qual cor?",
+    "answers": [
+      "Laranja",
+      "Roxo"
+    ],
+    "correct_answer": 0,
+    "type": "2Alt",
+    "style": "text",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Qual a cor do coelho?",
+    "answers": [
+      "Branco",
+      "Preto"
+    ],
+    "correct_answer": 0,
+    "type": "2Alt",
+    "style": "image",
+    "file": "white-rabbit",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "A qual figura geométrica a pizza se assemelha?",
+    "answers": [
+      "Quadrado",
+      "Círculo"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "text",
+    "file": null,
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Qual o resultados da subtração a seguir?",
+    "answers": [
+      "6",
+      "5"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "image",
+    "file": "17-minus-12",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "Quem é este famoso?",
+    "answers": [
+      "Chico Buarque",
+      "Pelé"
+    ],
+    "correct_answer": 0,
+    "type": "2Alt",
+    "style": "image",
+    "file": "young-pele",
+    "image_width": null,
+    "image_height": null
+  },
+  {
+    "question": "A junção das cores primárias vermelho e azul gera qual cor?",
+    "answers": [
+      "Rosa",
+      "Roxo"
+    ],
+    "correct_answer": 1,
+    "type": "2Alt",
+    "style": "text",
+    "image_width": null,
+    "image_height": null
   }
 ]
