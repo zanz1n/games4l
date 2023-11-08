@@ -42,9 +42,9 @@
     "question": "Quem é este famoso?",
     "answers": [
       "Pelé",
-      "Quico de Chaves"
+      "Quico Buarque"
     ],
-    "correct_answer": 0,
+    "correct_answer": 1,
     "type": "2Alt",
     "style": "image",
     "file": "chico-buarque",
@@ -417,10 +417,10 @@
   {
     "question": "Quem é este famoso?",
     "answers": [
-      "Chico Buarque",
+      "Chico de Chaves",
       "Pelé"
     ],
-    "correct_answer": 0,
+    "correct_answer": 1,
     "type": "2Alt",
     "style": "image",
     "file": "young-pele",
