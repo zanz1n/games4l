@@ -6,6 +6,14 @@
   import { getQuestion, questionsLength, type Question } from "../lib/Question";
   import GameImage from "../components/game/GameImage.svelte";
   import GameSound from "../components/game/GameSound.svelte";
+  import { sleep } from "../lib/utils";
+
+  const successVideoEle = document.getElementById(
+    "hidden-success"
+  )! as HTMLVideoElement;
+  const failVideoEle = document.getElementById(
+    "hidden-fail"
+  ) as HTMLVideoElement;
 
   interface Info {
     session: Session;
@@ -19,11 +27,17 @@
   let disabled = [] as number[];
 
   async function displaySucess() {
-    confirm("Correto");
+    successVideoEle.classList.remove("hidden-hidden");
+    successVideoEle.play();
+    await sleep(6000);
+    successVideoEle.classList.add("hidden-hidden");
   }
 
   async function displayFail() {
-    confirm("Tente novamente");
+    failVideoEle.classList.remove("hidden-hidden");
+    failVideoEle.play();
+    await sleep(4000);
+    failVideoEle.classList.add("hidden-hidden");
   }
 
   async function fetchInfo(): Promise<Info | null> {
@@ -37,7 +51,7 @@
 
     if (session.val.none) {
       alert("Selecione ou crie uma conta antes de iniciar o jogo!");
-      navigate("/") as never;
+      navigate("/");
       return null;
     }
 

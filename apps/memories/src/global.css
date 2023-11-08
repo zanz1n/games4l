@@ -35,3 +35,27 @@ html,
 body {
     height: 100%;
 }
+
+#hidden-success {
+    position: absolute;
+    -webkit-filter: opacity(78%);
+    filter: opacity(78%);
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+#hidden-fail {
+    position: absolute;
+    -webkit-filter: opacity(78%);
+    filter: opacity(78%);
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+.hidden-hidden {
+    display: none;
+}
