@@ -1,6 +1,6 @@
 [
   {
-    "question": "Complete o ditado popular:\n“Cachorro que ladra não ______”",
+    "question": "Complete o ditado:\nCachorro que ladra não ________",
     "answers": [
       "Morde",
       "Come"
@@ -26,7 +26,7 @@
     "image_height": 588
   },
   {
-    "question": "A caneca está",
+    "question": "A caneca está:",
     "answers": [
       "Cheia",
       "Vazia"
@@ -65,12 +65,12 @@
     "image_height": 347
   },
   {
-    "question": "Complete a letra da música:\nTomo banho de lua\nFico _______ como a neve\nSe o luar é meu amigo\nCensurar ninguém se atreve\nÉ tão bom sonhar contigo\nÓ luar tão cândido",
+    "question": "Complete a letra da música:\nTomo um banho de _________\nFico branca como a neve\nSe o luar é meu amigo\nCensurar ninguém se atreve\nÉ tão bom sonhar contigo\nÓ luar tão cândido",
     "answers": [
-      "Azul",
-      "Branca"
+      "Lua",
+      "Chuva"
     ],
-    "correct_answer": 1,
+    "correct_answer": 0,
     "type": "2Alt",
     "style": "audio",
     "file": "banho-de-lua",
@@ -78,7 +78,7 @@
     "image_height": null
   },
   {
-    "question": "Mas que nada\nSai da minha frente\nEu quero passar\nPois o samba está animado\nO que eu quero é ____",
+    "question": "Complete a música:\nMas que nada\nSai da minha frente\nEu quero passar\nPois o samba está animado\nO que eu quero é _______",
     "answers": [
       "Amar",
       "Sambar"
@@ -104,7 +104,7 @@
     "image_height": null
   },
   {
-    "question": "A União faz a ______",
+    "question": "Complete o ditado:\nA união faz a _______",
     "answers": [
       "Amizade",
       "Força"
@@ -117,7 +117,7 @@
     "image_height": null
   },
   {
-    "question": "Complete o ditado:\n“Filho de peixe, _________ é”",
+    "question": "Complete o ditado:\nFilho de peixe __________ é",
     "answers": [
       "Ouriço",
       "Peixinho"
@@ -130,7 +130,7 @@
     "image_height": null
   },
   {
-    "question": "Qual significado da cor vermelho no semáforo?",
+    "question": "Qual o significado da cor vermelha no semáforo?",
     "answers": [
       "Pare",
       "Estacione"
@@ -143,7 +143,7 @@
     "image_height": 627
   },
   {
-    "question": "Nunca se esqueça, nem um segundo\nQue eu tenho o amor maior do mundo\nComo é grande o meu ______ por você",
+    "question": "Complete a música:\nNunca se esqueça, nem um segundo\nQue eu tenho o amor maior do mundo\nComo é grande o meu ________ por você",
     "answers": [
       "Calor",
       "Amor"
@@ -169,7 +169,7 @@
     "image_height": 627
   },
   {
-    "question": "Não posso ficar\nNem mais um minuto com você\nSinto muito, amor\nMas não pode ser\nMoro em Jaçanã\nSe eu perder esse ____ \nQue sai agora às onze horas\nSó amanhã de manhã",
+    "question": "Complete a música:\nNão posso ficar\nNem mais um minuto com você\nSinto muito, amor\nMas não pode ser\nMoro em Jaçanã\nSe eu perder esse ________\nQue sai agora às onze horas\nSó amanhã de manhã",
     "answers": [
       "Bicicleta",
       "Trêm"
@@ -195,7 +195,7 @@
     "image_height": 940
   },
   {
-    "question": "Qual é a direção que a seta está indicando?",
+    "question": "Qual a direção que a seta está indicando?",
     "answers": [
       "Direita",
       "Esquerda"
@@ -234,7 +234,7 @@
     "image_height": 418
   },
   {
-    "question": "Complete a letra da música:\nQuando olhei a terra ardendo\nQual fogueira de São João\nEu perguntei a Deus do céu, ai\nPor que tamanha judiação\nEu perguntei a Deus do céu, ai\nPor que tamanha _________",
+    "question": "Complete a letra da música:\nQuando olhei a terra ardendo\nQual fogueira de São João\nEu perguntei a Deus do céu, ai\nPor que tamanha judiação\nEu perguntei a Deus do céu, ai\nPor que tamanha __________",
     "answers": [
       "Felicidade",
       "Judiação"
@@ -247,7 +247,7 @@
     "image_height": null
   },
   {
-    "question": "Complete o ditado popular:\nA mentira tem perna _____",
+    "question": "Complete o ditado popular:\nA mentira tem perna ______",
     "answers": [
       "Longa",
       "Curta"
@@ -260,7 +260,7 @@
     "image_height": null
   },
   {
-    "question": "Qual nome desse cantor?",
+    "question": "Qual o nome desse cantor?",
     "answers": [
       "Roberto Carlos",
       "Fábio Júnior"
@@ -286,7 +286,7 @@
     "image_height": 495
   },
   {
-    "question": "Complete o ditado:\n“Cada macaco no seu  _____”",
+    "question": "Complete o ditado:\nCada macaco no seu ________",
     "answers": [
       "Galho",
       "Canto"
@@ -396,13 +396,13 @@
     ],
     "correct_answer": 1,
     "type": "2Alt",
-    "style": "text",
-    "file": null,
+    "style": "image",
+    "file": "pizza",
     "image_width": null,
     "image_height": null
   },
   {
-    "question": "Qual o resultados da subtração a seguir?",
+    "question": "Qual o resultado da subtração a seguir?",
     "answers": [
       "6",
       "5"
@@ -417,7 +417,7 @@
   {
     "question": "Quem é este famoso?",
     "answers": [
-      "Chico de Chaves",
+      "Chico Buarque",
       "Pelé"
     ],
     "correct_answer": 1,
